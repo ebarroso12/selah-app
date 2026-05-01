@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 const ADMIN_EMAIL = "edson.barroso@gmail.com";
 
-const PUBLIC_PATHS = ["/login", "/register", "/forgot-password", "/reset-password"];
+const PUBLIC_PATHS = ["/login", "/register", "/forgot-password", "/reset-password", "/preview"];
 const ADMIN_PATHS = ["/admin"];
 const PENDING_PATH = "/pending-approval";
 
