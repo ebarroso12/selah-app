@@ -21,11 +21,28 @@
   --text-muted:  #A09880;
   --text-subtle: #5C5647;
 
+  /* Dourado Divino — glória e santidade */
   --gold:        #C9A84C;
   --gold-light:  #E2C464;
   --gold-dark:   #A07830;
   --gold-bg:     rgba(201,168,76,0.12);
   --gold-glow:   rgba(201,168,76,0.3);
+
+  /* Vinho Apostólico — autoridade profética */
+  --wine:        #7B1F3A;
+  --wine-light:  #A02850;
+  --wine-dark:   #560F28;
+  --wine-bg:     rgba(123,31,58,0.15);
+  --wine-glow:   rgba(123,31,58,0.35);
+  --wine-border: rgba(123,31,58,0.4);
+
+  /* Verde Cura — vida e esperança */
+  --heal:        #2A7A4B;
+  --heal-light:  #38A363;
+  --heal-dark:   #1A5C36;
+  --heal-bg:     rgba(42,122,75,0.15);
+  --heal-glow:   rgba(42,122,75,0.3);
+  --heal-border: rgba(42,122,75,0.4);
 
   --danger:      #F87171;
   --success:     #34D399;
@@ -49,6 +66,20 @@
   --gold-dark:   #6A5010;
   --gold-bg:     rgba(140,106,16,0.1);
   --gold-glow:   rgba(140,106,16,0.25);
+
+  --wine:        #6B1030;
+  --wine-light:  #8C1840;
+  --wine-dark:   #4A0820;
+  --wine-bg:     rgba(107,16,48,0.1);
+  --wine-glow:   rgba(107,16,48,0.25);
+  --wine-border: rgba(107,16,48,0.3);
+
+  --heal:        #1E6B3A;
+  --heal-light:  #288C4E;
+  --heal-dark:   #145228;
+  --heal-bg:     rgba(30,107,58,0.1);
+  --heal-glow:   rgba(30,107,58,0.25);
+  --heal-border: rgba(30,107,58,0.3);
 }
 
 /* ─── Base ────────────────────────────────────────────────────────────────── */
@@ -98,7 +129,6 @@
     background: var(--bg-sidebar);
     border-right: 1px solid var(--border);
   }
-  /* No modo claro a sidebar é escura — texto deve ser claro */
   .sidebar .sidebar-text-primary { color: rgba(245,242,235,0.92); }
   .sidebar .sidebar-text-muted   { color: rgba(245,242,235,0.45); }
   .sidebar .sidebar-text-label   { color: rgba(201,168,76,0.55); }
@@ -140,6 +170,24 @@
     -webkit-backdrop-filter: blur(10px);
   }
 
+  /* ── Card Vinho (Dr. Edson / Kairo) ─────────────────────────────────────── */
+  .card-wine {
+    background: linear-gradient(135deg, rgba(123,31,58,0.18) 0%, rgba(8,13,26,0.95) 100%);
+    border: 1px solid var(--wine-border);
+    border-radius: var(--radius-card);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  /* ── Card Verde (Cura / Legendários) ────────────────────────────────────── */
+  .card-heal {
+    background: linear-gradient(135deg, rgba(42,122,75,0.15) 0%, rgba(8,13,26,0.95) 100%);
+    border: 1px solid var(--heal-border);
+    border-radius: var(--radius-card);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
   /* ── Botões ─────────────────────────────────────────────────────────────── */
   .btn-primary {
     display: inline-flex;
@@ -167,6 +215,59 @@
     transform: translateY(-1px);
   }
   .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; transform: none; filter: none; }
+
+  .btn-wine {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, var(--wine) 0%, var(--wine-light) 100%);
+    color: #F5F2EB;
+    font-family: var(--font-cinzel);
+    font-weight: 700;
+    font-size: 0.8125rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.8rem 1.875rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    box-shadow: 0 2px 14px var(--wine-glow);
+  }
+  .btn-wine:hover {
+    filter: brightness(1.15);
+    box-shadow: 0 4px 22px var(--wine-glow);
+    transform: translateY(-1px);
+  }
+  .btn-wine:disabled { opacity: 0.45; cursor: not-allowed; transform: none; filter: none; }
+
+  .btn-heal {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, var(--heal) 0%, var(--heal-light) 100%);
+    color: #F5F2EB;
+    font-family: var(--font-cinzel);
+    font-weight: 700;
+    font-size: 0.8125rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.8rem 1.875rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    box-shadow: 0 2px 14px var(--heal-glow);
+  }
+  .btn-heal:hover {
+    filter: brightness(1.15);
+    box-shadow: 0 4px 22px var(--heal-glow);
+    transform: translateY(-1px);
+  }
 
   .btn-outline {
     display: inline-flex;
@@ -264,6 +365,8 @@
     border-radius: 9999px;
   }
   .badge-gold    { background: var(--gold-bg); color: var(--gold-light); border: 1px solid rgba(201,168,76,0.35); }
+  .badge-wine    { background: var(--wine-bg); color: #E8A0B0; border: 1px solid var(--wine-border); }
+  .badge-heal    { background: var(--heal-bg); color: #7ECFA0; border: 1px solid var(--heal-border); }
   .badge-pending { background: rgba(251,191,36,0.12); color: #FBBF24; border: 1px solid rgba(251,191,36,0.3); }
   .badge-success { background: rgba(52,211,153,0.12); color: #34D399; border: 1px solid rgba(52,211,153,0.3); }
   .badge-danger  { background: rgba(248,113,113,0.12); color: #F87171; border: 1px solid rgba(248,113,113,0.3); }
@@ -276,12 +379,51 @@
   }
 
   .glow-gold { box-shadow: 0 0 28px var(--gold-glow), 0 0 56px rgba(201,168,76,0.07); }
+  .glow-wine { box-shadow: 0 0 28px var(--wine-glow), 0 0 56px rgba(123,31,58,0.07); }
+  .glow-heal { box-shadow: 0 0 28px var(--heal-glow), 0 0 56px rgba(42,122,75,0.07); }
 
   .text-gradient-gold {
     background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 50%, var(--gold) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  .text-gradient-wine {
+    background: linear-gradient(135deg, var(--wine-dark) 0%, var(--wine-light) 60%, var(--wine) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-heal {
+    background: linear-gradient(135deg, var(--heal-dark) 0%, var(--heal-light) 60%, var(--heal) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Kairo Chat ─────────────────────────────────────────────────────────── */
+  .kairo-bubble-user {
+    background: linear-gradient(135deg, var(--wine) 0%, var(--wine-light) 100%);
+    color: #F5F2EB;
+    border-radius: 1rem 1rem 0.25rem 1rem;
+    padding: 0.75rem 1rem;
+    max-width: 80%;
+    align-self: flex-end;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  .kairo-bubble-ai {
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.2);
+    color: var(--text);
+    border-radius: 1rem 1rem 1rem 0.25rem;
+    padding: 0.75rem 1rem;
+    max-width: 85%;
+    align-self: flex-start;
+    font-size: 0.9rem;
+    line-height: 1.6;
   }
 
   /* ── Theme Toggle ───────────────────────────────────────────────────────── */

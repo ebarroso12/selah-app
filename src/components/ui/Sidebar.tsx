@@ -12,6 +12,7 @@ interface NavItem {
   href: string;
   label: string;
   icon: React.ReactNode;
+  accent?: "gold" | "wine" | "heal";
 }
 
 const navItems: NavItem[] = [
@@ -71,6 +72,30 @@ const navItems: NavItem[] = [
   },
 ];
 
+// Itens especiais com cores temáticas
+const specialItems: NavItem[] = [
+  {
+    href: "/dr-edson",
+    label: "Dr. Edson",
+    accent: "wine",
+    icon: (
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+      </svg>
+    ),
+  },
+  {
+    href: "/legendarios",
+    label: "Legendários",
+    accent: "heal",
+    icon: (
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+      </svg>
+    ),
+  },
+];
+
 interface SidebarProps {
   profile: Profile;
   isAdmin: boolean;
@@ -85,6 +110,27 @@ export default function Sidebar({ profile, isAdmin }: SidebarProps) {
     await supabase.auth.signOut();
     router.push("/login");
     router.refresh();
+  }
+
+  function getAccentStyle(accent?: string, active?: boolean) {
+    if (!active) return {};
+    if (accent === "wine") return {
+      background: "rgba(123,31,58,0.18)",
+      color: "#E8A0B0",
+      borderLeftColor: "var(--wine)",
+    };
+    if (accent === "heal") return {
+      background: "rgba(42,122,75,0.18)",
+      color: "#7ECFA0",
+      borderLeftColor: "var(--heal)",
+    };
+    return {};
+  }
+
+  function getAccentHoverStyle(accent?: string) {
+    if (accent === "wine") return "rgba(123,31,58,0.1)";
+    if (accent === "heal") return "rgba(42,122,75,0.1)";
+    return "rgba(201,168,76,0.08)";
   }
 
   return (
@@ -111,6 +157,43 @@ export default function Sidebar({ profile, isAdmin }: SidebarProps) {
             <Link key={item.href} href={item.href} className={`sidebar-link ${active ? "active" : ""}`}>
               {item.icon}
               <span>{item.label}</span>
+            </Link>
+          );
+        })}
+
+        {/* Seção especial: Casa de Oração */}
+        <div className="pt-4 pb-1 px-3">
+          <p className="text-xs" style={{
+            color: "rgba(201,168,76,0.45)",
+            fontFamily: "var(--font-cinzel)",
+            letterSpacing: "0.12em"
+          }}>
+            Casa de Oração
+          </p>
+        </div>
+
+        {specialItems.map((item) => {
+          const active = pathname === item.href || pathname.startsWith(item.href + "/");
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="sidebar-link"
+              style={active ? getAccentStyle(item.accent, true) : {}}
+            >
+              <span style={{
+                color: active
+                  ? (item.accent === "wine" ? "#E8A0B0" : item.accent === "heal" ? "#7ECFA0" : "var(--gold)")
+                  : "rgba(245,242,235,0.6)"
+              }}>
+                {item.icon}
+              </span>
+              <span>{item.label}</span>
+              {item.accent === "wine" && (
+                <span className="ml-auto badge badge-wine" style={{ fontSize: "0.5rem", padding: "0.1rem 0.4rem" }}>
+                  IA
+                </span>
+              )}
             </Link>
           );
         })}
