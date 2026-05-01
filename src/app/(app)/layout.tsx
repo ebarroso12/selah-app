@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Sidebar from "@/components/ui/Sidebar";
+import MobileNav from "@/components/ui/MobileNav";
 import type { Profile } from "@/types/database";
 
 const ADMIN_EMAIL = "edson.barroso@gmail.com";
@@ -27,9 +28,13 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar profile={profile} isAdmin={isAdmin} />
-      <main className="flex-1 overflow-y-auto">
+      <main
+        className="flex-1 overflow-y-auto"
+        style={{ paddingBottom: "5rem" }}
+      >
         {children}
       </main>
+      <MobileNav />
     </div>
   );
 }
