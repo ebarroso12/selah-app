@@ -32,14 +32,15 @@ function setVercelEnv(key, value) {
   if (!value || value.trim() === "") { info(`${key} ignorado (vazio)`); return; }
   try {
     execSync(`vercel env rm ${key} production --yes 2>/dev/null || true`, { stdio: "pipe" });
-    const proc = execSync(`vercel env add ${key} production`, {
+    execSync(`vercel env add ${key} production`, {
       input: value.trim() + "\n",
       encoding: "utf-8",
       stdio: ["pipe", "pipe", "pipe"],
     });
     ok(`${key} configurado`);
-  } catch (e) {
-    console.error(`  Erro ao configurar ${key}:`, e.message.split("\n")[0]);
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error(`  Erro ao configurar ${key}:`, msg.split("\n")[0]);
   }
 }
 
@@ -121,10 +122,6 @@ const envLines = [
   `WHATSAPP_TOKEN=${waToken}`,
   `WHATSAPP_PHONE_NUMBER_ID=${waPhoneId}`,
 ].filter((l) => !l.endsWith("="));
-
-const existingEnv = existsSync(".env.local")
-  ? require("fs").readFileSync(".env.local", "utf-8")
-  : "";
 
 writeFileSync(".env.local.new", envLines.join("\n") + "\n");
 ok(".env.local.new criado (renomeie para .env.local)");

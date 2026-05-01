@@ -81,7 +81,7 @@ export default async function ComunidadePage({
       {testimonies.length === 0 ? (
         <div className="card p-12 text-center">
           <p className="scripture text-base mb-2" style={{ color: "rgba(255,255,255,0.4)" }}>
-            "Eles o venceram por causa do sangue do Cordeiro e pela palavra do seu testemunho."
+            &quot;Eles o venceram por causa do sangue do Cordeiro e pela palavra do seu testemunho.&quot;
           </p>
           <p className="text-xs mt-2" style={{ color: "rgba(201,162,39,0.5)", fontFamily: "var(--font-cinzel)" }}>
             Apocalipse 12:11
@@ -93,7 +93,7 @@ export default async function ComunidadePage({
       ) : (
         <div className="grid gap-5">
           {testimonies.map((t) => {
-            const profile = t.profile as any;
+            const profile = t.profile as { full_name?: string; church_name?: string } | null;
             return (
               <article key={t.id} className="card p-6">
                 <div className="flex items-start justify-between gap-4 mb-4 flex-wrap">

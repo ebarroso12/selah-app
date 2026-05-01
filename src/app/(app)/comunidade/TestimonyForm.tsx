@@ -64,7 +64,7 @@ export default function TestimonyForm() {
           Seu testemunho será revisado e publicado em breve. Obrigado por edificar a comunidade.
         </p>
         <p className="scripture text-sm mt-4" style={{ color: "rgba(255,255,255,0.4)" }}>
-          "Eles o venceram pela palavra do seu testemunho." — Ap 12:11
+          &quot;Eles o venceram pela palavra do seu testemunho.&quot; — Ap 12:11
         </p>
       </div>
     );
