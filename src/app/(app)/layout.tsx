@@ -4,11 +4,18 @@ import Sidebar from "@/components/ui/Sidebar";
 import MobileNav from "@/components/ui/MobileNav";
 import type { Profile } from "@/types/database";
 
-const ADMIN_EMAIL = "edson.barroso@gmail.com";
+// Email do administrador — sempre lido da variável de ambiente
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "";
 
-export default async function AppLayout({ children }: { children: React.ReactNode }) {
+export default async function AppLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) redirect("/login");
 
@@ -21,9 +28,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const profile = profileData as Profile | null;
 
   if (!profile || profile.status === "pending") redirect("/pending-approval");
-  if (profile.status === "rejected" || profile.status === "banned") redirect("/login");
+  if (profile.status === "rejected" || profile.status === "banned") {
+    redirect("/login");
+  }
 
-  const isAdmin = user.email === ADMIN_EMAIL;
+  const isAdmin = Boolean(ADMIN_EMAIL) && user.email === ADMIN_EMAIL;
 
   return (
     <div className="flex h-screen overflow-hidden">

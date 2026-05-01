@@ -1,12 +1,22 @@
 const WHATSAPP_API_URL = "https://graph.facebook.com/v21.0";
 
+function getWhatsAppCredentials() {
+  const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+  const token = process.env.WHATSAPP_TOKEN;
+  if (!phoneNumberId || !token) {
+    throw new Error("[WhatsApp] WHATSAPP_PHONE_NUMBER_ID ou WHATSAPP_TOKEN não configurados");
+  }
+  return { phoneNumberId, token };
+}
+
 export async function sendWhatsAppMessage(to: string, text: string) {
+  const { phoneNumberId, token } = getWhatsAppCredentials();
   const response = await fetch(
-    `${WHATSAPP_API_URL}/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`,
+    `${WHATSAPP_API_URL}/${phoneNumberId}/messages`,
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -32,12 +42,13 @@ export async function sendWhatsAppTemplate(
   templateName: string,
   components: unknown[] = []
 ) {
+  const { phoneNumberId, token } = getWhatsAppCredentials();
   const response = await fetch(
-    `${WHATSAPP_API_URL}/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`,
+    `${WHATSAPP_API_URL}/${phoneNumberId}/messages`,
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -52,6 +63,11 @@ export async function sendWhatsAppTemplate(
       }),
     }
   );
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(`[WhatsApp] Falha ao enviar template "${templateName}": ${JSON.stringify(error)}`);
+  }
 
   return response.json();
 }

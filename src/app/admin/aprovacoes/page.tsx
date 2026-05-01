@@ -14,11 +14,21 @@ async function approveUser(userId: string) {
     .eq("id", userId)
     .single();
 
-  await supabase.from("profiles").update({
-    status: "approved",
-    approved_by: "edson.barroso@gmail.com",
-    approved_at: new Date().toISOString(),
-  }).eq("id", userId);
+  const adminEmail = process.env.ADMIN_EMAIL ?? "admin";
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      status: "approved",
+      approved_by: adminEmail,
+      approved_at: new Date().toISOString(),
+    })
+    .eq("id", userId);
+
+  if (error) {
+    console.error("[approveUser] Erro ao aprovar usuário:", error);
+    return;
+  }
 
   // Envia email de aprovação ao usuário
   if (profile) {
@@ -41,7 +51,15 @@ async function rejectUser(userId: string) {
     .eq("id", userId)
     .single();
 
-  await supabase.from("profiles").update({ status: "rejected" }).eq("id", userId);
+  const { error } = await supabase
+    .from("profiles")
+    .update({ status: "rejected" })
+    .eq("id", userId);
+
+  if (error) {
+    console.error("[rejectUser] Erro ao rejeitar usuário:", error);
+    return;
+  }
 
   // Envia email de rejeição ao usuário
   if (profile) {
@@ -65,9 +83,9 @@ export default async function AprovacoesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl mb-1">Aprovacoes Pendentes</h1>
+        <h1 className="text-2xl mb-1">Aprovações Pendentes</h1>
         <p className="text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
-          {pending?.length ?? 0} usuario(s) aguardando aprovacao
+          {pending?.length ?? 0} usuário(s) aguardando aprovação
         </p>
       </div>
 
@@ -84,22 +102,49 @@ export default async function AprovacoesPage() {
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="space-y-1.5 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <p className="font-semibold" style={{ color: "#fff", fontFamily: "var(--font-cinzel)" }}>
+                    <p
+                      className="font-semibold"
+                      style={{
+                        color: "#fff",
+                        fontFamily: "var(--font-cinzel)",
+                      }}
+                    >
                       {user.full_name}
                     </p>
-                    {user.is_legendario && <span className="badge badge-gold">Legendario</span>}
-                    {user.is_legendario_spouse && <span className="badge badge-gold">Esposa Legendario</span>}
+                    {user.is_legendario && (
+                      <span className="badge badge-gold">Legendário</span>
+                    )}
+                    {user.is_legendario_spouse && (
+                      <span className="badge badge-gold">
+                        Esposa Legendário
+                      </span>
+                    )}
                   </div>
-                  <p className="text-sm" style={{ color: "rgba(255,255,255,0.55)" }}>{user.email}</p>
+                  <p
+                    className="text-sm"
+                    style={{ color: "rgba(255,255,255,0.55)" }}
+                  >
+                    {user.email}
+                  </p>
                   {user.whatsapp && (
-                    <p className="text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>{user.whatsapp}</p>
+                    <p
+                      className="text-sm"
+                      style={{ color: "rgba(255,255,255,0.45)" }}
+                    >
+                      {user.whatsapp}
+                    </p>
                   )}
-                  <div className="flex flex-wrap gap-3 text-xs mt-2" style={{ color: "rgba(255,255,255,0.4)" }}>
+                  <div
+                    className="flex flex-wrap gap-3 text-xs mt-2"
+                    style={{ color: "rgba(255,255,255,0.4)" }}
+                  >
                     <span>{user.gender === "male" ? "Homem" : "Mulher"}</span>
                     <span>·</span>
                     <span>{user.church_name}</span>
                     <span>·</span>
-                    <span>{user.city} / {user.state}</span>
+                    <span>
+                      {user.city} / {user.state}
+                    </span>
                     <span>·</span>
                     <span>Cadastro: {formatDate(user.created_at)}</span>
                   </div>
@@ -107,13 +152,23 @@ export default async function AprovacoesPage() {
 
                 <div className="flex gap-2 shrink-0">
                   <form action={rejectUser.bind(null, user.id)}>
-                    <button type="submit" className="btn-ghost text-sm px-4 py-2"
-                      style={{ color: "#f87171", borderColor: "rgba(248,113,113,0.3)", border: "1px solid" }}>
+                    <button
+                      type="submit"
+                      className="btn-ghost text-sm px-4 py-2"
+                      style={{
+                        color: "#f87171",
+                        borderColor: "rgba(248,113,113,0.3)",
+                        border: "1px solid",
+                      }}
+                    >
                       Rejeitar
                     </button>
                   </form>
                   <form action={approveUser.bind(null, user.id)}>
-                    <button type="submit" className="btn-primary text-sm px-4 py-2">
+                    <button
+                      type="submit"
+                      className="btn-primary text-sm px-4 py-2"
+                    >
                       Aprovar
                     </button>
                   </form>

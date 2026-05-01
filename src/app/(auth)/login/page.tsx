@@ -1,16 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-export default function LoginPage() {
+// Componente interno que usa useSearchParams — deve estar dentro de <Suspense>
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Faz signOut quando redirecionado por conta banida/rejeitada
+  useEffect(() => {
+    const errorParam = searchParams.get("error");
+    const signout = searchParams.get("signout");
+
+    if (signout === "1") {
+      const supabase = createClient();
+      supabase.auth.signOut().catch(console.error);
+    }
+
+    if (errorParam === "rejected") {
+      setError("Seu cadastro não foi aprovado. Entre em contato com o administrador.");
+    } else if (errorParam === "banned") {
+      setError("Sua conta foi suspensa. Entre em contato com o administrador.");
+    } else if (errorParam === "auth") {
+      setError("Erro de autenticação. Tente novamente.");
+    }
+  }, [searchParams]);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -49,7 +70,10 @@ export default function LoginPage() {
         <p className="selah-wordmark mb-1">SELAH</p>
         <p
           className="text-xs tracking-widest uppercase"
-          style={{ color: "rgba(201,162,39,0.6)", fontFamily: "var(--font-cinzel)" }}
+          style={{
+            color: "rgba(201,162,39,0.6)",
+            fontFamily: "var(--font-cinzel)",
+          }}
         >
           Pause · Ore · Cresça
         </p>
@@ -80,7 +104,11 @@ export default function LoginPage() {
             <Link
               href="/forgot-password"
               className="text-xs"
-              style={{ color: "rgba(201,162,39,0.7)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.05em" }}
+              style={{
+                color: "rgba(201,162,39,0.7)",
+                fontFamily: "var(--font-cinzel)",
+                letterSpacing: "0.05em",
+              }}
             >
               Esqueceu?
             </Link>
@@ -99,14 +127,24 @@ export default function LoginPage() {
 
         {error && <p className="error-text text-center">{error}</p>}
 
-        <button type="submit" className="btn-primary w-full" disabled={loading}>
+        <button
+          type="submit"
+          className="btn-primary w-full"
+          disabled={loading}
+        >
           {loading ? "Entrando..." : "Entrar"}
         </button>
       </form>
 
       <div className="my-6 flex items-center gap-3">
         <hr className="divider flex-1" />
-        <span className="text-xs" style={{ color: "rgba(255,255,255,0.3)", fontFamily: "var(--font-cinzel)" }}>
+        <span
+          className="text-xs"
+          style={{
+            color: "rgba(255,255,255,0.3)",
+            fontFamily: "var(--font-cinzel)",
+          }}
+        >
           ou
         </span>
         <hr className="divider flex-1" />
@@ -121,17 +159,58 @@ export default function LoginPage() {
         Continuar com Google
       </button>
 
-      <p className="mt-6 text-center text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>
+      <p
+        className="mt-6 text-center text-sm"
+        style={{ color: "rgba(255,255,255,0.4)" }}
+      >
         Ainda não tem acesso?{" "}
         <Link
           href="/register"
           className="font-semibold transition-colors"
-          style={{ color: "rgba(201,162,39,0.85)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.05em" }}
+          style={{
+            color: "rgba(201,162,39,0.85)",
+            fontFamily: "var(--font-cinzel)",
+            letterSpacing: "0.05em",
+          }}
         >
           Solicitar cadastro
         </Link>
       </p>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="card p-8 glow-gold">
+          <div className="text-center mb-8">
+            <p className="selah-wordmark mb-1">SELAH</p>
+            <p
+              className="text-xs tracking-widest uppercase"
+              style={{
+                color: "rgba(201,162,39,0.6)",
+                fontFamily: "var(--font-cinzel)",
+              }}
+            >
+              Pause · Ore · Cresça
+            </p>
+          </div>
+          <div className="flex justify-center py-8">
+            <div
+              className="w-6 h-6 rounded-full border-2 animate-spin"
+              style={{
+                borderColor: "rgba(201,162,39,0.3)",
+                borderTopColor: "#c9a227",
+              }}
+            />
+          </div>
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }
 

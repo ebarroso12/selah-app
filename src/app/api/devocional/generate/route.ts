@@ -3,7 +3,12 @@ import Anthropic from "@anthropic-ai/sdk";
 import { createServiceClient } from "@/lib/supabase/server";
 import { buildDevotionalPrompt } from "@/lib/ai/devotional-prompt";
 
-const BIBLE_PLAN: { book: string; chapter: number; verseStart: number; verseEnd?: number }[] = [
+const BIBLE_PLAN: {
+  book: string;
+  chapter: number;
+  verseStart: number;
+  verseEnd?: number;
+}[] = [
   { book: "Salmos", chapter: 1, verseStart: 1, verseEnd: 6 },
   { book: "Provérbios", chapter: 3, verseStart: 5, verseEnd: 6 },
   { book: "Filipenses", chapter: 4, verseStart: 6, verseEnd: 7 },
@@ -13,36 +18,61 @@ const BIBLE_PLAN: { book: string; chapter: number; verseStart: number; verseEnd?
   { book: "Salmos", chapter: 23, verseStart: 1, verseEnd: 6 },
 ];
 
-export async function POST(request: Request) {
-  const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+/**
+ * Verifica se a requisição está autorizada via CRON_SECRET.
+ * O Vercel envia o header `authorization: Bearer <CRON_SECRET>` automaticamente.
+ */
+function isAuthorized(request: Request): boolean {
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret) {
+    // Se CRON_SECRET não está configurado, bloqueia por segurança
+    console.error("[devocional/generate] CRON_SECRET não configurado");
+    return false;
   }
+  const authHeader = request.headers.get("authorization");
+  return authHeader === `Bearer ${cronSecret}`;
+}
 
+async function generateDevotional(): Promise<NextResponse> {
   const today = new Date().toISOString().split("T")[0];
 
   try {
     const supabase = await createServiceClient();
 
+    // Verifica se já existe devocional para hoje
     const { data: existing } = await supabase
       .from("devotionals")
       .select("id")
       .eq("date", today)
-      .single();
+      .maybeSingle();
 
     if (existing) {
-      return NextResponse.json({ message: "Devotional already exists for today" });
+      return NextResponse.json({
+        message: "Devocional já existe para hoje",
+        date: today,
+      });
+    }
+
+    const anthropicKey = process.env.ANTHROPIC_API_KEY;
+    if (!anthropicKey) {
+      console.error("[devocional/generate] ANTHROPIC_API_KEY não configurada");
+      return NextResponse.json(
+        { error: "Serviço de IA não configurado" },
+        { status: 503 }
+      );
     }
 
     const dayIndex = new Date().getDay();
     const passage = BIBLE_PLAN[dayIndex % BIBLE_PLAN.length];
 
-    const biblePassage = `[Passagem de ${passage.book} ${passage.chapter}:${passage.verseStart}${passage.verseEnd ? `–${passage.verseEnd}` : ""}]`;
+    const biblePassage = `[Passagem de ${passage.book} ${passage.chapter}:${passage.verseStart}${
+      passage.verseEnd ? `–${passage.verseEnd}` : ""
+    }]`;
 
-    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+    const anthropic = new Anthropic({ apiKey: anthropicKey });
 
     const message = await anthropic.messages.create({
-      model: "claude-sonnet-4-6",
+      model: "claude-sonnet-4-5",
       max_tokens: 1024,
       messages: [
         {
@@ -60,9 +90,16 @@ export async function POST(request: Request) {
     });
 
     const content = message.content[0];
-    if (content.type !== "text") throw new Error("Unexpected response type");
+    if (content.type !== "text") {
+      throw new Error("Tipo de resposta inesperado da IA");
+    }
 
-    const parsed = JSON.parse(content.text);
+    let parsed: { title: string; reflection: string; prayer?: string };
+    try {
+      parsed = JSON.parse(content.text);
+    } catch {
+      throw new Error("Resposta da IA não é JSON válido");
+    }
 
     const { error } = await supabase.from("devotionals").insert({
       date: today,
@@ -73,7 +110,7 @@ export async function POST(request: Request) {
       bible_passage: biblePassage,
       title: parsed.title,
       reflection_text: parsed.reflection,
-      prayer_text: parsed.prayer,
+      prayer_text: parsed.prayer ?? null,
       generated_by_ai: true,
     });
 
@@ -81,7 +118,26 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, date: today });
   } catch (error) {
-    console.error("Error generating devotional:", error);
-    return NextResponse.json({ error: "Failed to generate devotional" }, { status: 500 });
+    console.error("[devocional/generate] Erro:", error);
+    return NextResponse.json(
+      { error: "Falha ao gerar devocional" },
+      { status: 500 }
+    );
   }
+}
+
+// GET — usado pelo cron job do Vercel (vercel.json)
+export async function GET(request: Request) {
+  if (!isAuthorized(request)) {
+    return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+  }
+  return generateDevotional();
+}
+
+// POST — chamada manual ou via script
+export async function POST(request: Request) {
+  if (!isAuthorized(request)) {
+    return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+  }
+  return generateDevotional();
 }
