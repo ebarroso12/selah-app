@@ -1,10 +1,14 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const FROM = process.env.RESEND_FROM_EMAIL ?? "noreply@selah.app";
 const ADMIN_EMAIL = "edson.barroso@gmail.com";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://selah.app";
+
+// Lazy init — evita erro de build quando RESEND_API_KEY não está configurada
+function getResend() {
+  if (!process.env.RESEND_API_KEY) return null;
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 // ─── Email para o Admin: novo cadastro aguardando aprovação ─────────────────
 
@@ -25,6 +29,8 @@ export async function sendNewUserNotificationToAdmin(user: {
     user.is_legendario_spouse ? "Esposa de Legendário" : null,
   ].filter(Boolean).join(", ") || "—";
 
+  const resend = getResend();
+  if (!resend) return;
   await resend.emails.send({
     from: FROM,
     to: ADMIN_EMAIL,
@@ -81,6 +87,8 @@ export async function sendApprovalEmail(user: {
 }) {
   const firstName = user.full_name.split(" ")[0];
 
+  const resend = getResend();
+  if (!resend) return;
   await resend.emails.send({
     from: FROM,
     to: user.email,
@@ -142,6 +150,8 @@ export async function sendRejectionEmail(user: {
 }) {
   const firstName = user.full_name.split(" ")[0];
 
+  const resend = getResend();
+  if (!resend) return;
   await resend.emails.send({
     from: FROM,
     to: user.email,
