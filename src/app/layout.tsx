@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#080d1a",
+  themeColor: "#060A14",
   width: "device-width",
   initialScale: 1,
 };
@@ -43,6 +43,16 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${cinzel.variable} ${inter.variable} ${lora.variable} h-full`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function(){
+            try {
+              var t = localStorage.getItem('selah-theme');
+              if (t === 'light') document.documentElement.classList.add('light');
+            } catch(e) {}
+          })();
+        `}} />
+      </head>
       <body className="h-full antialiased">{children}</body>
     </html>
   );

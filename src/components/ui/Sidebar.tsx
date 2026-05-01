@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { Profile } from "@/types/database";
@@ -159,12 +160,15 @@ export default function Sidebar({ profile, isAdmin }: SidebarProps) {
           </div>
         </Link>
 
-        <button onClick={handleSignOut} className="sidebar-link w-full text-left">
-          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-          </svg>
-          Sair
-        </button>
+        <div className="flex items-center justify-between px-1 pt-1">
+          <button onClick={handleSignOut} className="sidebar-link flex-1 text-left">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+            </svg>
+            Sair
+          </button>
+          <ThemeToggle />
+        </div>
       </div>
     </aside>
   );
