@@ -1,22 +1,56 @@
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
+import { sendApprovalEmail, sendRejectionEmail } from "@/lib/email/client";
 
 async function approveUser(userId: string) {
   "use server";
   const supabase = await createServiceClient();
+
+  // Busca dados do usuário antes de atualizar
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("email, full_name")
+    .eq("id", userId)
+    .single();
+
   await supabase.from("profiles").update({
     status: "approved",
     approved_by: "edson.barroso@gmail.com",
     approved_at: new Date().toISOString(),
   }).eq("id", userId);
+
+  // Envia email de aprovação ao usuário
+  if (profile) {
+    await sendApprovalEmail({
+      email: profile.email,
+      full_name: profile.full_name,
+    }).catch(console.error);
+  }
+
   revalidatePath("/admin/aprovacoes");
 }
 
 async function rejectUser(userId: string) {
   "use server";
   const supabase = await createServiceClient();
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("email, full_name")
+    .eq("id", userId)
+    .single();
+
   await supabase.from("profiles").update({ status: "rejected" }).eq("id", userId);
+
+  // Envia email de rejeição ao usuário
+  if (profile) {
+    await sendRejectionEmail({
+      email: profile.email,
+      full_name: profile.full_name,
+    }).catch(console.error);
+  }
+
   revalidatePath("/admin/aprovacoes");
 }
 

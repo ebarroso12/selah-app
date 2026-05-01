@@ -119,6 +119,13 @@ export default function RegisterPage() {
         setLoading(false);
         return;
       }
+
+      // Notifica o admin por email (fire-and-forget — não bloqueia o usuário)
+      fetch("/api/notify/new-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: authData.user.id }),
+      }).catch(() => {});
     }
 
     router.push("/pending-approval");
