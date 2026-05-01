@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const ADMIN_EMAIL = "edson.barroso@gmail.com";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "edson.barroso@gmail.com";
 
 const PUBLIC_PATHS = ["/login", "/register", "/forgot-password", "/reset-password", "/preview"];
 const ADMIN_PATHS = ["/admin"];

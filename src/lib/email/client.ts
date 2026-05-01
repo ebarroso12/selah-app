@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 
 const FROM = process.env.RESEND_FROM_EMAIL ?? "noreply@selah.app";
-const ADMIN_EMAIL = "edson.barroso@gmail.com";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "edson.barroso@gmail.com";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://selah.app";
 
 // Lazy init — evita erro de build quando RESEND_API_KEY não está configurada

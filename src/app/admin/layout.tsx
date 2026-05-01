@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 
-const ADMIN_EMAIL = "edson.barroso@gmail.com";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "edson.barroso@gmail.com";
 
 const adminNav = [
   { href: "/admin", label: "Dashboard" },

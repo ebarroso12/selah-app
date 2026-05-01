@@ -8,6 +8,11 @@ export async function POST(request: Request) {
     if (!userId) return NextResponse.json({ error: "userId required" }, { status: 400 });
 
     const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user || user.id !== userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { data: profile } = await supabase
       .from("profiles")
       .select("full_name, email, whatsapp, church_name, city, state, gender, is_legendario, is_legendario_spouse")
