@@ -2,9 +2,13 @@ import { createClient } from "@/lib/supabase/server";
 
 export const metadata = { title: "Métricas — Admin" };
 
+function getThirtyDaysAgo() {
+  return new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+}
+
 export default async function MetricasPage() {
   const supabase = await createClient();
-  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+  const thirtyDaysAgo = getThirtyDaysAgo();
 
   const [
     { count: totalApproved },
@@ -27,14 +31,14 @@ export default async function MetricasPage() {
 
   // Agrupa cidades
   const cityMap: Record<string, number> = {};
-  (topCities ?? []).forEach((p: any) => {
+  (topCities ?? []).forEach((p: { city?: string; state?: string }) => {
     const key = `${p.city} / ${p.state}`;
     cityMap[key] = (cityMap[key] ?? 0) + 1;
   });
   const sortedCities = Object.entries(cityMap).sort((a, b) => b[1] - a[1]).slice(0, 10);
 
   const totalSessionMin = Math.round(
-    (recentMetrics ?? []).reduce((s: number, m: any) => s + (m.session_duration_seconds ?? 0), 0) / 60
+    (recentMetrics ?? []).reduce((s: number, m: { session_duration_seconds?: number }) => s + (m.session_duration_seconds ?? 0), 0) / 60
   );
 
   return (
@@ -128,7 +132,7 @@ export default async function MetricasPage() {
                 </tr>
               </thead>
               <tbody>
-                {(recentMetrics as any[]).slice(-10).reverse().map((m, i, arr) => (
+                {(recentMetrics as { date: string; devocionais_read?: number; verses_favorited?: number; session_duration_seconds?: number }[]).slice(-10).reverse().map((m, i, arr) => (
                   <tr key={m.date} style={{ borderBottom: i < arr.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
                     <td className="px-3 py-2" style={{ color: "rgba(255,255,255,0.55)", fontFamily: "var(--font-cinzel)", fontSize: "0.78rem" }}>
                       {new Date(m.date).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })}

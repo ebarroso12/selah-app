@@ -93,7 +93,7 @@ export default async function ComunidadePage({
       ) : (
         <div className="grid gap-5">
           {testimonies.map((t) => {
-            const profile = t.profile as { full_name?: string; church_name?: string } | null;
+            const profile = t.profile as { full_name?: string; church_name?: string; city?: string } | null;
             return (
               <article key={t.id} className="card p-6">
                 <div className="flex items-start justify-between gap-4 mb-4 flex-wrap">

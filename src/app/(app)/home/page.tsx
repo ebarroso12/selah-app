@@ -103,7 +103,7 @@ export default async function HomePage() {
                   O devocional de hoje ainda esta sendo preparado.
                 </p>
                 <p className="scripture text-sm text-center" style={{ color: "rgba(255,255,255,0.5)" }}>
-                  "A sua palavra e lampada que ilumina o meu caminho."
+                  &quot;A sua palavra e lampada que ilumina o meu caminho.&quot;
                 </p>
                 <p className="text-xs" style={{ color: "rgba(201,162,39,0.5)", fontFamily: "var(--font-cinzel)" }}>
                   Salmos 119:105
@@ -164,7 +164,7 @@ export default async function HomePage() {
                       {prayer.text}
                     </p>
                     <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
-                      {(prayer.profile as any)?.full_name} · {(prayer.profile as any)?.church_name}
+                      {(prayer.profile as { full_name?: string; church_name?: string } | null)?.full_name} · {(prayer.profile as { full_name?: string; church_name?: string } | null)?.church_name}
                     </p>
                     {prayers.indexOf(prayer) < prayers.length - 1 && <hr className="divider mt-2" />}
                   </div>

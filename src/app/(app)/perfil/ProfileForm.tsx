@@ -205,7 +205,7 @@ export default function ProfileForm({ profile }: Props) {
 
           <div className="p-4 rounded-lg" style={{ background: "rgba(201,162,39,0.04)", border: "1px solid rgba(201,162,39,0.1)" }}>
             <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.04em" }}>
-              Esqueceu a senha atual? Saia da conta e use "Esqueceu?" na tela de login para recuperar via email.
+              Esqueceu a senha atual? Saia da conta e use &quot;Esqueceu?&quot; na tela de login para recuperar via email.
             </p>
           </div>
         </form>

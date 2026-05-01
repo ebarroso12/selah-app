@@ -28,7 +28,7 @@ export default async function OracaoPage() {
         </p>
         <h1 className="text-2xl">Mural de Oração</h1>
         <p className="text-sm mt-1" style={{ color: "rgba(255,255,255,0.45)" }}>
-          Ore pelos pedidos da comunidade. "A oração eficaz do justo pode muito." — Tiago 5:16
+          Ore pelos pedidos da comunidade. &quot;A oração eficaz do justo pode muito.&quot; — Tiago 5:16
         </p>
       </div>
 
@@ -47,7 +47,7 @@ export default async function OracaoPage() {
               </p>
             </div>
           ) : (
-            prayers.map((p: any) => (
+            prayers.map((p: { id: string; text: string; created_at: string; via_whatsapp?: boolean; profile: { full_name?: string; church_name?: string } | null }) => (
               <div key={p.id} className="card p-5">
                 <p className="text-sm leading-relaxed mb-3" style={{ color: "rgba(255,255,255,0.8)" }}>
                   {p.text}

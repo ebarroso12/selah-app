@@ -64,7 +64,7 @@ export default async function ConteudoPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            {(pendingTestimonies as any[]).map((t) => (
+            {(pendingTestimonies as { id: string; title: string; type: string; content: string; created_at: string; profile?: { full_name?: string; church_name?: string } }[]).map((t) => (
               <div key={t.id} className="card p-5">
                 <div className="flex items-start justify-between gap-4 flex-wrap mb-3">
                   <div>
@@ -117,7 +117,7 @@ export default async function ConteudoPage() {
               </tr>
             </thead>
             <tbody>
-              {(devotionals ?? []).map((d: any, i: number, arr: any[]) => (
+              {(devotionals ?? []).map((d: { id: string; date: string; title: string; bible_book: string; bible_chapter: string; bible_verse_start: string; generated_by_ai: boolean }, i: number, arr: { id: string }[]) => (
                 <tr key={d.id} style={{ borderBottom: i < arr.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
                   <td className="px-4 py-3">
                     <p style={{ color: "rgba(201,162,39,0.7)", fontFamily: "var(--font-cinzel)", fontSize: "0.78rem" }}>

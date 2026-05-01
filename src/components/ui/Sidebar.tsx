@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { Profile } from "@/types/database";
@@ -145,7 +146,7 @@ export default function Sidebar({ profile, isAdmin }: SidebarProps) {
           <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-bold"
             style={{ background: "rgba(201,162,39,0.15)", color: "#c9a227", fontFamily: "var(--font-cinzel)" }}>
             {profile.photo_url
-              ? <img src={profile.photo_url} alt="" className="w-full h-full object-cover rounded-full" />
+              ? <Image src={profile.photo_url} alt="" width={28} height={28} className="w-full h-full object-cover rounded-full" />
               : getInitials(profile.full_name)}
           </div>
           <div className="min-w-0">

@@ -80,7 +80,7 @@ export default async function DevocionalPage() {
       ) : (
         <div className="card p-10 text-center">
           <p className="scripture text-lg mb-2" style={{ color: "rgba(255,255,255,0.5)" }}>
-            "A sua palavra é lâmpada que ilumina o meu caminho."
+            &quot;A sua palavra é lâmpada que ilumina o meu caminho.&quot;
           </p>
           <p className="text-xs" style={{ color: "rgba(201,162,39,0.5)", fontFamily: "var(--font-cinzel)" }}>
             Salmos 119:105

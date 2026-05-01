@@ -31,8 +31,6 @@ export default function BibliaPage() {
   const [chapter, setChapter] = useState("3");
   const [version, setVersion] = useState("NVI");
 
-  const iframeUrl = `https://eden-de-volta-ao-principio.vercel.app/?book=${encodeURIComponent(book)}&chapter=${chapter}&version=${version}`;
-
   return (
     <div className="flex flex-col h-full">
       {/* Toolbar */}

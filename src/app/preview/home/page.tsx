@@ -55,7 +55,7 @@ export default function PreviewHome() {
               <h2 className="text-lg mb-4">O Sopro que Sustenta</h2>
               <blockquote className="scripture text-sm leading-relaxed p-4 rounded-lg mb-4"
                 style={{ background: "rgba(201,162,39,0.05)", borderLeft: "2px solid rgba(201,162,39,0.4)" }}>
-                "Porque nEle vivemos, nos movemos e existimos."
+                &quot;Porque nEle vivemos, nos movemos e existimos.&quot;
                 <footer className="mt-2 text-xs not-italic"
                   style={{ color: "rgba(201,162,39,0.65)", fontFamily: "var(--font-cinzel)" }}>
                   Atos 17:28

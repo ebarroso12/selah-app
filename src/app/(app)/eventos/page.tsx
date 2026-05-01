@@ -60,7 +60,7 @@ export default async function EventosPage() {
   const events = (dbEvents ?? []) as Event[];
 
   // Busca eventos do Google Calendar como complemento
-  const googleEvents = await listUpcomingEvents(5);
+  await listUpcomingEvents(5);
 
   const now = new Date();
   const nextEvent = events[0] ?? null;
@@ -143,7 +143,7 @@ export default async function EventosPage() {
         {events.length === 0 ? (
           <div className="card p-10 text-center">
             <p className="scripture text-base mb-2" style={{ color: "rgba(255,255,255,0.4)" }}>
-              "Para tudo há uma estação certa; há um tempo certo para cada propósito."
+              &quot;Para tudo há uma estação certa; há um tempo certo para cada propósito.&quot;
             </p>
             <p className="text-xs mt-2" style={{ color: "rgba(201,162,39,0.5)", fontFamily: "var(--font-cinzel)" }}>
               Eclesiastes 3:1
@@ -154,7 +154,7 @@ export default async function EventosPage() {
           </div>
         ) : (
           <div className="grid gap-3">
-            {events.map((event, i) => {
+            {events.map((event) => {
               const d = formatEventDate(event.date_start);
               const isPast = new Date(event.date_start) < now;
               return (

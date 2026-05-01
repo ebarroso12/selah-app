@@ -21,8 +21,8 @@ export default async function PerfilPage() {
     .order("date", { ascending: false })
     .limit(30);
 
-  const totalDevocionais = (metrics ?? []).reduce((s: number, m: any) => s + (m.devocionais_read ?? 0), 0);
-  const totalFavoritos = (metrics ?? []).reduce((s: number, m: any) => s + (m.verses_favorited ?? 0), 0);
+  const totalDevocionais = (metrics ?? []).reduce((s: number, m: { devocionais_read?: number }) => s + (m.devocionais_read ?? 0), 0);
+  const totalFavoritos = (metrics ?? []).reduce((s: number, m: { verses_favorited?: number }) => s + (m.verses_favorited ?? 0), 0);
   const diasConsecutivos = metrics?.[0]?.consecutive_days ?? 0;
 
   return (

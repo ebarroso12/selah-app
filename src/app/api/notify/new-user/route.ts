@@ -16,7 +16,17 @@ export async function POST(request: Request) {
 
     if (!profile) return NextResponse.json({ error: "Profile not found" }, { status: 404 });
 
-    await sendNewUserNotificationToAdmin(profile as any);
+    await sendNewUserNotificationToAdmin(profile as {
+      full_name: string;
+      email: string;
+      whatsapp?: string | null;
+      church_name: string;
+      city: string;
+      state: string;
+      gender: string;
+      is_legendario: boolean;
+      is_legendario_spouse: boolean;
+    });
 
     return NextResponse.json({ ok: true });
   } catch (error) {

@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 const navItems = [
   { href: "#", label: "Inicio", active: false },
   { href: "#", label: "Biblia", active: false },
@@ -73,7 +71,7 @@ export default function PreviewPage() {
 
             <blockquote className="scripture text-base leading-relaxed p-5 rounded-xl mb-6"
               style={{ background: "rgba(201,162,39,0.05)", borderLeft: "3px solid rgba(201,162,39,0.5)" }}>
-              "Porque nEle vivemos, nos movemos e existimos."
+              &quot;Porque nEle vivemos, nos movemos e existimos.&quot;
               <footer className="mt-3 text-sm not-italic"
                 style={{ color: "rgba(201,162,39,0.7)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.08em" }}>
                 Atos 17:28

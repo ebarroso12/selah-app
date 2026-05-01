@@ -9,7 +9,7 @@
 
 import { execSync } from "child_process";
 import { createInterface } from "readline";
-import { writeFileSync, existsSync } from "fs";
+import { writeFileSync } from "fs";
 
 const rl = createInterface({ input: process.stdin, output: process.stdout });
 const ask = (q) => new Promise((r) => rl.question(q, r));
@@ -134,7 +134,7 @@ try {
   execSync("vercel --prod --yes", { stdio: "inherit" });
   console.log(`\n${GREEN}${BOLD}Deploy concluído com sucesso!${RESET}`);
   console.log(`\n${GOLD}${BOLD}SELAH está no ar: https://selah-lac.vercel.app${RESET}`);
-} catch (e) {
+} catch {
   console.error("\nErro no deploy. Verifique os logs acima.");
 }
 

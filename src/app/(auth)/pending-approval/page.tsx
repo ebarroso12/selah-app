@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function PendingApprovalPage() {
@@ -44,8 +43,8 @@ export default async function PendingApprovalPage() {
       <div className="p-4 rounded-lg mb-6"
         style={{ background: "rgba(201,162,39,0.06)", border: "1px solid rgba(201,162,39,0.15)" }}>
         <p className="scripture text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.7)" }}>
-          "Aguarda o Senhor; anima-te, e ele fortalecer-te-a o coracao;
-          aguarda, pois, o Senhor."
+          &quot;Aguarda o Senhor; anima-te, e ele fortalecer-te-a o coracao;
+          aguarda, pois, o Senhor.&quot;
         </p>
         <p className="mt-2 text-xs" style={{ color: "rgba(201,162,39,0.6)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.08em" }}>
           Salmos 27:14
