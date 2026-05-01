@@ -17,7 +17,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   {
     href: "/home",
-    label: "Inicio",
+    label: "Início",
     icon: (
       <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
@@ -26,7 +26,7 @@ const navItems: NavItem[] = [
   },
   {
     href: "/biblia",
-    label: "Biblia",
+    label: "Bíblia",
     icon: (
       <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
@@ -44,7 +44,7 @@ const navItems: NavItem[] = [
   },
   {
     href: "/oracao",
-    label: "Oracao",
+    label: "Oração",
     icon: (
       <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
@@ -88,16 +88,17 @@ export default function Sidebar({ profile, isAdmin }: SidebarProps) {
   }
 
   return (
-    <aside
-      className="hidden md:flex flex-col w-56 shrink-0 h-screen sticky top-0"
-      style={{ background: "rgba(8,13,26,0.95)", borderRight: "1px solid rgba(201,162,39,0.12)" }}
-    >
+    <aside className="sidebar hidden md:flex flex-col w-56 shrink-0 h-screen sticky top-0">
       {/* Logo */}
-      <div className="px-5 py-6 border-b" style={{ borderColor: "rgba(201,162,39,0.12)" }}>
+      <div className="px-5 py-6 border-b" style={{ borderColor: "var(--border)" }}>
         <Link href="/home">
-          <span className="selah-wordmark" style={{ fontSize: "1.25rem" }}>SELAH</span>
+          <span className="selah-wordmark" style={{ fontSize: "1.2rem" }}>SELAH</span>
         </Link>
-        <p className="mt-0.5 text-xs" style={{ color: "rgba(201,162,39,0.45)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.12em" }}>
+        <p className="mt-1 text-xs sidebar-text-label" style={{
+          fontFamily: "var(--font-cinzel)",
+          letterSpacing: "0.12em",
+          color: "rgba(201,168,76,0.55)"
+        }}>
           Pause · Ore · Cresça
         </p>
       </div>
@@ -117,16 +118,20 @@ export default function Sidebar({ profile, isAdmin }: SidebarProps) {
         {isAdmin && (
           <>
             <div className="pt-4 pb-1 px-3">
-              <p className="text-xs" style={{ color: "rgba(201,162,39,0.4)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.1em" }}>
+              <p className="text-xs" style={{
+                color: "rgba(201,168,76,0.45)",
+                fontFamily: "var(--font-cinzel)",
+                letterSpacing: "0.12em"
+              }}>
                 Admin
               </p>
             </div>
             {[
               { href: "/admin", label: "Dashboard" },
-              { href: "/admin/aprovacoes", label: "Aprovacoes" },
-              { href: "/admin/usuarios", label: "Usuarios" },
-              { href: "/admin/metricas", label: "Metricas" },
-              { href: "/admin/conteudo", label: "Conteudo" },
+              { href: "/admin/aprovacoes", label: "Aprovações" },
+              { href: "/admin/usuarios", label: "Usuários" },
+              { href: "/admin/metricas", label: "Métricas" },
+              { href: "/admin/conteudo", label: "Conteúdo" },
             ].map((item) => (
               <Link key={item.href} href={item.href}
                 className={`sidebar-link ${pathname === item.href ? "active" : ""}`}
@@ -141,28 +146,28 @@ export default function Sidebar({ profile, isAdmin }: SidebarProps) {
         )}
       </nav>
 
-      {/* Profile + Logout */}
-      <div className="px-3 py-4 border-t space-y-1" style={{ borderColor: "rgba(201,162,39,0.12)" }}>
+      {/* Perfil + Logout */}
+      <div className="px-3 py-4 border-t" style={{ borderColor: "var(--border)" }}>
         <Link href="/perfil" className={`sidebar-link ${pathname === "/perfil" ? "active" : ""}`}>
-          <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-bold"
-            style={{ background: "rgba(201,162,39,0.15)", color: "#c9a227", fontFamily: "var(--font-cinzel)" }}>
+          <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-bold overflow-hidden"
+            style={{ background: "rgba(201,168,76,0.18)", color: "#C9A84C", fontFamily: "var(--font-cinzel)" }}>
             {profile.photo_url
-              ? <Image src={profile.photo_url} alt="" width={28} height={28} className="w-full h-full object-cover rounded-full" />
+              ? <Image src={profile.photo_url} alt="" width={28} height={28} className="w-full h-full object-cover" />
               : getInitials(profile.full_name)}
           </div>
           <div className="min-w-0">
-            <p className="text-xs font-medium truncate" style={{ color: "rgba(255,255,255,0.8)" }}>
+            <p className="text-xs font-semibold truncate" style={{ color: "rgba(245,242,235,0.9)" }}>
               {profile.full_name.split(" ")[0]}
             </p>
-            <p className="text-xs truncate" style={{ color: "rgba(255,255,255,0.35)" }}>
+            <p className="text-xs truncate" style={{ color: "rgba(245,242,235,0.4)" }}>
               {profile.church_name}
             </p>
           </div>
         </Link>
 
-        <div className="flex items-center justify-between px-1 pt-1">
+        <div className="flex items-center gap-2 mt-1 px-1">
           <button onClick={handleSignOut} className="sidebar-link flex-1 text-left">
-            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
             </svg>
             Sair
