@@ -38,50 +38,42 @@ export default function RegisterPage() {
     setError(null);
     setLoading(true);
 
-    const supabase = createClient();
-
-    const { data: authData, error: signUpError } = await supabase.auth.signUp({
-      email: form.email,
-      password: form.password,
-      options: { data: { full_name: form.full_name } },
-    });
-
-    if (signUpError) {
-      setError(signUpError.message === "User already registered"
-        ? "Este email já está cadastrado. Faça login."
-        : "Erro ao criar conta. Tente novamente.");
-      setLoading(false);
-      return;
-    }
-
-    if (authData.user) {
-      // Cria perfil básico — campos opcionais ficam nulos
-      const { error: profileError } = await supabase.from("profiles").insert({
-        id: authData.user.id,
-        email: form.email,
-        full_name: form.full_name,
-        status: "approved",
-      });
-
-      if (profileError) {
-        console.error("[register] profileError:", profileError.message);
-      }
-
-      // Notifica o admin (fire-and-forget)
-      fetch("/api/notify/new-user", {
+    try {
+      // 1. Criar conta via API direta (pula confirmação de email)
+      const res = await fetch("/api/auth/register-direct", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: authData.user.id }),
-      }).catch(() => {});
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+          full_name: form.full_name
+        }),
+      });
 
-      // Se sessão ativa, vai direto para home; senão, vai para login
-      if (authData.session) {
-        router.push("/home");
-      } else {
-        router.push("/login?cadastro=ok");
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Erro ao criar conta");
       }
-    } else {
-      router.push("/login?cadastro=ok");
+
+      // 2. Fazer login automático após criar conta
+      const supabase = createClient();
+      const { error: loginError } = await supabase.auth.signInWithPassword({
+        email: form.email,
+        password: form.password,
+      });
+
+      if (loginError) {
+        console.error("[register] Erro no login automático:", loginError.message);
+        router.push("/login?cadastro=ok");
+        return;
+      }
+
+      // 3. Sucesso -> Home
+      router.push("/home");
+    } catch (err: any) {
+      setError(err.message || "Erro ao criar conta. Tente novamente.");
+      setLoading(false);
     }
   }
 
@@ -91,6 +83,7 @@ export default function RegisterPage() {
       <circle cx="12" cy="12" r="3"/>
     </svg>
   );
+
   const eyeOff = (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
@@ -117,13 +110,11 @@ export default function RegisterPage() {
           <input id="full_name" type="text" className="input-field" placeholder="Seu nome completo"
             value={form.full_name} onChange={(e) => set("full_name", e.target.value)} required />
         </div>
-
         <div>
           <label className="label" htmlFor="email">Email *</label>
           <input id="email" type="email" className="input-field" placeholder="seu@email.com"
             value={form.email} onChange={(e) => set("email", e.target.value)} required />
         </div>
-
         <div>
           <label className="label" htmlFor="password">Senha *</label>
           <div className="relative">
@@ -137,7 +128,6 @@ export default function RegisterPage() {
             </button>
           </div>
         </div>
-
         <div>
           <label className="label" htmlFor="confirm_password">Confirmar senha *</label>
           <div className="relative">
