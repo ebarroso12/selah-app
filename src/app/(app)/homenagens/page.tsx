@@ -9,7 +9,7 @@ const homenagens = [
       nome: "Dr. Edson Barroso",
       instagram: "dredsonbarroso",
       legendario: true,
-      numero: null,
+      numero: 203460,
     },
     homenageada: {
       nome: "Lisley Barroso",
@@ -101,7 +101,7 @@ export default function HomenagensPage() {
             <img
               src={h.fotoCapa}
               alt={h.homenageada.nome}
-              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
+              style={{ width: "100%", height: "100%", objectFit: "contain", objectPosition: "center", background: "#0a0a0a" }}
             />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 40%, rgba(10,10,10,0.92) 100%)" }} />
             {/* Nome da homenageada sobre a foto */}
@@ -137,6 +137,11 @@ export default function HomenagensPage() {
                 >
                   @{h.homenageante.instagram}
                 </a>
+              )}
+              {h.homenageante.legendario && h.homenageante.numero && (
+                <span className="text-xs ml-auto px-2 py-0.5 rounded-full" style={{ background: "rgba(201,162,39,0.15)", color: "#f0c040", border: "1px solid rgba(201,162,39,0.3)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.05em" }}>
+                  Legendário #{h.homenageante.numero}
+                </span>
               )}
             </div>
 
@@ -175,7 +180,7 @@ export default function HomenagensPage() {
                   <img
                     src={h.fotos[1]}
                     alt="Família"
-                    style={{ width: "100%", objectFit: "cover", maxHeight: 280 }}
+                    style={{ width: "100%", height: "auto", display: "block", objectFit: "contain", background: "#0a0a0a" }}
                   />
                 </div>
               </div>
