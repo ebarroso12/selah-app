@@ -1,8 +1,10 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-// Email do administrador — sempre lido da variável de ambiente
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "";
+// Email do administrador master — hardcoded como fallback de segurança
+// Se a variável de ambiente ADMIN_EMAIL não estiver configurada no Vercel,
+// usa o email padrão do Dr. Edson para garantir acesso ao painel admin
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "edson.barroso@gmail.com";
 
 const PUBLIC_PATHS = [
   "/login",
@@ -77,7 +79,7 @@ export async function proxy(request: NextRequest) {
   if (user) {
     // Proteção de rota admin — apenas o email admin tem acesso
     if (isAdminPath) {
-      if (!ADMIN_EMAIL || user.email !== ADMIN_EMAIL) {
+      if (user.email !== ADMIN_EMAIL) {
         const url = request.nextUrl.clone();
         url.pathname = "/home";
         return NextResponse.redirect(url);
