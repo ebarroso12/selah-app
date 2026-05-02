@@ -2,12 +2,7 @@
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { createBrowserClient } from "@supabase/ssr";
-
-const supabase = createBrowserClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { getBrowserClient } from "@/lib/supabase/browser";
 
 const NAV_SECTIONS = [
   {
@@ -54,6 +49,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
 
     async function checkAuth() {
       try {
+        const supabase = getBrowserClient();
         const { data: { user } } = await supabase.auth.getUser();
         const adminEmail = "edson.barroso@gmail.com";
         

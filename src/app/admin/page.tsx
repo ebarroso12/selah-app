@@ -1,12 +1,10 @@
 "use client";
+export const dynamic = "force-dynamic";
 import { useEffect, useState, useCallback } from "react";
-import { createBrowserClient } from "@supabase/ssr";
+import { getBrowserClient } from "@/lib/supabase/browser";
 import Link from "next/link";
 
-const supabase = createBrowserClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+const supabase = getBrowserClient();
 
 interface AdminStats {
   totalUsers: number;
