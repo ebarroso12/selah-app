@@ -80,6 +80,23 @@ export default function AdminDashboard() {
   ];
 
   const onlineUsers = stats?.users.filter(u => u.isOnline) || [];
+  const [iaRunning, setIaRunning] = useState(false);
+  const [iaResult, setIaResult] = useState<{ summary: string; logs: string[] } | null>(null);
+
+  const runIaCheck = async () => {
+    setIaRunning(true);
+    setIaResult(null);
+    try {
+      const res = await fetch("/api/admin/ia-check", { method: "POST" });
+      const data = await res.json();
+      setIaResult(data);
+      fetchStats(); // Atualiza as métricas após a correção
+    } catch (err) {
+      console.error("Erro na IA:", err);
+    } finally {
+      setIaRunning(false);
+    }
+  };
 
   return (
     <div className="space-y-6 p-4 md:p-6">
@@ -92,6 +109,39 @@ export default function AdminDashboard() {
           <p className="text-[10px] uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.3)" }}>Sincronizado</p>
           <p className="text-xs font-mono" style={{ color: "#34d399" }}>{lastUpdate.toLocaleTimeString("pt-BR")}</p>
         </div>
+      </div>
+
+      {/* IA Assistant Section */}
+      <div className="card p-4 border-[#c9a227]/30 bg-[#c9a227]/5">
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-[#c9a227]/20 flex items-center justify-center text-xl">🤖</div>
+            <div>
+              <h3 className="text-sm font-bold" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)" }}>Assistente de Saúde IA</h3>
+              <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.5)" }}>Varredura de banco, correção de perfis e validação de sistema.</p>
+            </div>
+          </div>
+          <button 
+            onClick={runIaCheck}
+            disabled={iaRunning}
+            className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${iaRunning ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'}`}
+            style={{ background: "#c9a227", color: "#000" }}
+          >
+            {iaRunning ? "Executando Varredura..." : "IA: Diagnosticar e Corrigir"}
+          </button>
+        </div>
+
+        {iaResult && (
+          <div className="mt-4 p-3 rounded bg-black/40 border border-white/10 space-y-2">
+            <p className="text-xs font-bold text-[#34d399]">{iaResult.summary}</p>
+            <div className="max-h-32 overflow-y-auto space-y-1">
+              {iaResult.logs.map((log, i) => (
+                <p key={i} className="text-[9px] font-mono text-white/50">{log}</p>
+              ))}
+            </div>
+            <button onClick={() => setIaResult(null)} className="text-[9px] uppercase text-white/30 hover:text-white">Fechar Relatório</button>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
