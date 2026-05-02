@@ -2,9 +2,11 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 // Email do administrador master — hardcoded como fallback de segurança
-// Se a variável de ambiente ADMIN_EMAIL não estiver configurada no Vercel,
-// usa o email padrão do Dr. Edson para garantir acesso ao painel admin
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "edson.barroso@gmail.com";
+
+// Credenciais do Supabase SELAH — hardcoded como fallback quando env vars não estão no Vercel
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://urmhuxluepexyycptflr.supabase.co";
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVybWh1eGx1ZXBleHl5Y3B0ZmxyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2MjY1OTksImV4cCI6MjA5MzIwMjU5OX0.xkJe3vAe8ofuDm5E81ZwksXBqz9N1TLrwf0KkalFYHo";
 
 const PUBLIC_PATHS = [
   "/login",
@@ -20,16 +22,7 @@ const AUTH_CALLBACK = "/auth/callback";
 export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
-  // Garante que as variáveis de ambiente essenciais existem
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    console.error("[middleware] NEXT_PUBLIC_SUPABASE_URL ou NEXT_PUBLIC_SUPABASE_ANON_KEY não configuradas");
-    return supabaseResponse;
-  }
-
-  const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+  const supabase = createServerClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     cookies: {
       getAll() {
         return request.cookies.getAll();
