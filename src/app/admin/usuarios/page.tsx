@@ -1,164 +1,320 @@
-export const dynamic = "force-dynamic";
-import { createClient } from "@/lib/supabase/server";
-import { formatDate } from "@/lib/utils";
-import type { Profile } from "@/types/database";
-import InviteUser from "@/components/admin/InviteUser";
+"use client";
+import { useEffect, useState, useCallback } from "react";
+import { createBrowserClient } from "@supabase/ssr";
 
-export const metadata = { title: "Usuários — Admin" };
+const supabase = createBrowserClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+interface Profile {
+  id: string;
+  email: string;
+  full_name: string;
+  whatsapp: string | null;
+  church_name: string;
+  city: string;
+  state: string;
+  gender: string;
+  is_legendario: boolean;
+  is_legendario_spouse: boolean;
+  status: string;
+  created_at: string;
+  last_seen_at: string | null;
+}
 
 const STATUS_LABEL: Record<string, string> = {
   approved: "Aprovado", pending: "Pendente", rejected: "Rejeitado", banned: "Banido",
 };
-const STATUS_BADGE: Record<string, string> = {
-  approved: "badge-success", pending: "badge-pending", rejected: "badge-danger", banned: "badge-danger",
+const STATUS_COLOR: Record<string, string> = {
+  approved: "#34d399", pending: "#fbbf24", rejected: "#ef4444", banned: "#ef4444",
 };
 
-export default async function UsuariosPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ status?: string; q?: string }>;
-}) {
-  const { status, q } = await searchParams;
-  const supabase = await createClient();
+function timeAgo(iso: string | null) {
+  if (!iso) return "Nunca";
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return "Agora";
+  if (m < 60) return `${m}min atrás`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h atrás`;
+  const d = Math.floor(h / 24);
+  if (d < 30) return `${d}d atrás`;
+  return new Date(iso).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" });
+}
 
-  let query = supabase
-    .from("profiles")
-    .select("*")
-    .order("created_at", { ascending: false });
+type FilterKey = "todos" | "approved" | "pending" | "rejected" | "banned";
 
-  if (status && status !== "todos") query = query.eq("status", status);
-  if (q) query = query.ilike("full_name", `%${q}%`);
+export default function AdminUsuariosPage() {
+  const [users, setUsers] = useState<Profile[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<FilterKey>("todos");
+  const [search, setSearch] = useState("");
+  const [msg, setMsg] = useState("");
+  const [showInvite, setShowInvite] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteName, setInviteName] = useState("");
+  const [inviting, setInviting] = useState(false);
+  const [inviteMsg, setInviteMsg] = useState("");
 
-  const { data } = await query.limit(100);
-  const users = (data ?? []) as Profile[];
+  const load = useCallback(async () => {
+    setLoading(true);
+    let query = supabase.from("profiles").select("*").order("created_at", { ascending: false }).limit(200);
+    if (filter !== "todos") query = query.eq("status", filter);
+    const { data } = await query;
+    setUsers((data ?? []) as Profile[]);
+    setLoading(false);
+  }, [filter]);
 
+  useEffect(() => { load(); }, [load]);
+
+  const filtered = users.filter(u =>
+    !search ||
+    u.full_name?.toLowerCase().includes(search.toLowerCase()) ||
+    u.email?.toLowerCase().includes(search.toLowerCase()) ||
+    u.church_name?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  async function updateStatus(id: string, status: string) {
+    await supabase.from("profiles").update({ status }).eq("id", id);
+    setMsg(`✓ Status atualizado para ${STATUS_LABEL[status]}.`);
+    setTimeout(() => setMsg(""), 3000);
+    load();
+  }
+
+  async function deleteUser(id: string, name: string) {
+    if (!confirm(`Excluir permanentemente "${name}"? Esta ação não pode ser desfeita.`)) return;
+    await supabase.from("user_metrics").delete().eq("user_id", id);
+    await supabase.from("prayer_requests").delete().eq("user_id", id);
+    await supabase.from("testimonies").delete().eq("user_id", id);
+    await supabase.from("profiles").delete().eq("id", id);
+    await fetch("/api/admin/delete-user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: id }),
+    }).catch(() => {});
+    setMsg(`✓ Usuário "${name}" excluído.`);
+    setTimeout(() => setMsg(""), 4000);
+    load();
+  }
+
+  async function invite() {
+    if (!inviteEmail) { setInviteMsg("Informe o email."); return; }
+    setInviting(true);
+    const res = await fetch("/api/admin/invite", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: inviteEmail, fullName: inviteName || inviteEmail.split("@")[0] }),
+    });
+    const data = await res.json();
+    setInviting(false);
+    if (data.error) { setInviteMsg("Erro: " + data.error); return; }
+    setInviteMsg("✓ Usuário convidado com sucesso!");
+    setInviteEmail(""); setInviteName("");
+    setTimeout(() => { setInviteMsg(""); setShowInvite(false); }, 2000);
+    load();
+  }
+
+  const allUsers = users;
   const counts = {
-    todos: users.length,
-    approved: users.filter((u) => u.status === "approved").length,
-    pending: users.filter((u) => u.status === "pending").length,
-    rejected: users.filter((u) => u.status === "rejected").length,
+    todos: allUsers.length,
+    approved: allUsers.filter(u => u.status === "approved").length,
+    pending: allUsers.filter(u => u.status === "pending").length,
+    rejected: allUsers.filter(u => u.status === "rejected").length,
+    banned: allUsers.filter(u => u.status === "banned").length,
   };
 
+  const inp = "w-full px-3 py-2 rounded-lg text-sm outline-none";
+  const inpStyle = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(201,162,39,0.2)", color: "rgba(255,255,255,0.85)" };
+  const labelStyle = { color: "rgba(201,162,39,0.7)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em", textTransform: "uppercase" as const, fontSize: "0.7rem" };
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl mb-1">Usuários</h1>
-        <p className="text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>
-          {users.length} usuário{users.length !== 1 ? "s" : ""} encontrado{users.length !== 1 ? "s" : ""}
-        </p>
+    <div className="p-4 md:p-6 space-y-5">
+      {/* Header */}
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Usuários</h1>
+          <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.4)" }}>
+            {counts.todos} cadastrados · {counts.approved} aprovados · {counts.pending} pendentes
+          </p>
+        </div>
+        <button onClick={() => setShowInvite(v => !v)}
+          className="px-4 py-2 rounded-lg text-xs font-semibold tracking-widest uppercase"
+          style={{ background: "rgba(201,162,39,0.15)", border: "1px solid rgba(201,162,39,0.4)", color: "#c9a227" }}>
+          + Convidar
+        </button>
       </div>
 
-      {/* Convidar usuário */}
-      <InviteUser />
+      {/* Formulário de convite */}
+      {showInvite && (
+        <div className="card p-4 space-y-3">
+          <p className="text-sm font-semibold" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)" }}>Convidar Usuário</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label className="block mb-1" style={labelStyle}>Email *</label>
+              <input className={inp} style={inpStyle} type="email" value={inviteEmail} placeholder="email@exemplo.com"
+                onChange={e => setInviteEmail(e.target.value)} />
+            </div>
+            <div>
+              <label className="block mb-1" style={labelStyle}>Nome (opcional)</label>
+              <input className={inp} style={inpStyle} value={inviteName} placeholder="Nome completo"
+                onChange={e => setInviteName(e.target.value)} />
+            </div>
+          </div>
+          <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
+            Senha padrão: <strong style={{ color: "#c9a227" }}>Mudar123</strong> — o usuário pode alterar depois.
+          </p>
+          {inviteMsg && <p className="text-xs" style={{ color: inviteMsg.startsWith("✓") ? "#34d399" : "#ef4444" }}>{inviteMsg}</p>}
+          <div className="flex gap-3">
+            <button onClick={invite} disabled={inviting}
+              className="px-4 py-2 rounded-lg text-xs font-semibold"
+              style={{ background: "rgba(201,162,39,0.2)", border: "1px solid rgba(201,162,39,0.5)", color: "#c9a227", opacity: inviting ? 0.6 : 1 }}>
+              {inviting ? "Enviando..." : "Liberar Acesso"}
+            </button>
+            <button onClick={() => setShowInvite(false)} className="px-4 py-2 rounded-lg text-xs"
+              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }}>
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Filtros */}
-      <div className="flex flex-wrap gap-3 items-center">
-        <div className="flex gap-1 p-1 rounded-lg" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,162,39,0.12)" }}>
-          {[
-            { value: "todos", label: `Todos (${counts.todos})` },
-            { value: "approved", label: `Aprovados (${counts.approved})` },
-            { value: "pending", label: `Pendentes (${counts.pending})` },
-            { value: "rejected", label: `Rejeitados (${counts.rejected})` },
-          ].map((f) => {
-            const isActive = (status ?? "todos") === f.value;
+      <div className="flex gap-2 flex-wrap">
+        {([
+          { key: "todos" as FilterKey, label: `Todos (${counts.todos})` },
+          { key: "approved" as FilterKey, label: `Aprovados (${counts.approved})` },
+          { key: "pending" as FilterKey, label: `Pendentes (${counts.pending})` },
+          { key: "rejected" as FilterKey, label: `Rejeitados (${counts.rejected})` },
+          { key: "banned" as FilterKey, label: `Banidos (${counts.banned})` },
+        ]).map(f => (
+          <button key={f.key} onClick={() => setFilter(f.key)}
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold tracking-widest uppercase"
+            style={{
+              background: filter === f.key ? "rgba(201,162,39,0.15)" : "rgba(255,255,255,0.04)",
+              border: `1px solid ${filter === f.key ? "rgba(201,162,39,0.4)" : "rgba(255,255,255,0.1)"}`,
+              color: filter === f.key ? "#c9a227" : "rgba(255,255,255,0.45)",
+            }}>
+            {f.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Busca */}
+      <input className={inp} style={inpStyle} value={search} placeholder="Buscar por nome, email ou igreja..."
+        onChange={e => setSearch(e.target.value)} />
+
+      {msg && (
+        <p className="text-xs text-center py-2 rounded-lg"
+          style={{ background: "rgba(52,211,153,0.1)", color: "#34d399", border: "1px solid rgba(52,211,153,0.2)" }}>
+          {msg}
+        </p>
+      )}
+
+      {/* Lista */}
+      {loading ? (
+        <p className="text-center text-sm py-8" style={{ color: "rgba(255,255,255,0.3)" }}>Carregando...</p>
+      ) : filtered.length === 0 ? (
+        <div className="card p-10 text-center">
+          <p style={{ color: "rgba(255,255,255,0.3)" }}>Nenhum usuário encontrado.</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {filtered.map(u => {
+            const sc = STATUS_COLOR[u.status] ?? "rgba(255,255,255,0.4)";
+            const isOnline = u.last_seen_at && (Date.now() - new Date(u.last_seen_at).getTime()) < 5 * 60 * 1000;
             return (
-              <a key={f.value}
-                href={f.value === "todos" ? "/admin/usuarios" : `/admin/usuarios?status=${f.value}`}
-                className="text-xs px-3 py-1.5 rounded-md transition-all"
-                style={{
-                  fontFamily: "var(--font-cinzel)",
-                  letterSpacing: "0.05em",
-                  textDecoration: "none",
-                  background: isActive ? "#c9a227" : "transparent",
-                  color: isActive ? "#080d1a" : "rgba(255,255,255,0.45)",
-                }}>
-                {f.label}
-              </a>
+              <div key={u.id} className="card p-4 space-y-3">
+                {/* Info do usuário */}
+                <div className="flex items-start justify-between gap-3 flex-wrap">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                      {isOnline && (
+                        <span className="w-2 h-2 rounded-full shrink-0"
+                          style={{ background: "#34d399", boxShadow: "0 0 6px #34d399" }} />
+                      )}
+                      <p className="font-semibold text-sm" style={{ color: "rgba(255,255,255,0.9)", fontFamily: "var(--font-cinzel)" }}>
+                        {u.full_name}
+                      </p>
+                      {u.is_legendario && (
+                        <span className="text-xs px-1.5 py-0.5 rounded-full"
+                          style={{ background: "rgba(232,93,4,0.15)", color: "#E85D04", border: "1px solid rgba(232,93,4,0.3)", fontSize: "0.6rem" }}>
+                          Legendário
+                        </span>
+                      )}
+                      {u.is_legendario_spouse && (
+                        <span className="text-xs px-1.5 py-0.5 rounded-full"
+                          style={{ background: "rgba(244,114,182,0.15)", color: "#f472b6", border: "1px solid rgba(244,114,182,0.3)", fontSize: "0.6rem" }}>
+                          Esposa
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>{u.email}</p>
+                    {u.whatsapp && <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>📱 {u.whatsapp}</p>}
+                    <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
+                      {u.church_name} · {u.city}/{u.state} · {u.gender === "male" ? "Homem" : "Mulher"}
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-end gap-1 shrink-0">
+                    <span className="text-xs px-2 py-0.5 rounded-full"
+                      style={{ background: `${sc}18`, color: sc, border: `1px solid ${sc}40`, fontFamily: "var(--font-cinzel)", fontSize: "0.62rem" }}>
+                      {STATUS_LABEL[u.status] ?? u.status}
+                    </span>
+                    <p className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>
+                      {isOnline ? "🟢 Online agora" : `Visto: ${timeAgo(u.last_seen_at)}`}
+                    </p>
+                    <p className="text-xs" style={{ color: "rgba(255,255,255,0.2)" }}>
+                      Cadastro: {new Date(u.created_at).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Ações */}
+                <div className="flex gap-2 flex-wrap pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                  {u.status !== "approved" && (
+                    <button onClick={() => updateStatus(u.id, "approved")}
+                      className="px-3 py-1.5 rounded-lg text-xs font-semibold"
+                      style={{ background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.3)", color: "#34d399" }}>
+                      ✓ Aprovar
+                    </button>
+                  )}
+                  {u.status !== "pending" && (
+                    <button onClick={() => updateStatus(u.id, "pending")}
+                      className="px-3 py-1.5 rounded-lg text-xs"
+                      style={{ background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.2)", color: "#fbbf24" }}>
+                      Pendente
+                    </button>
+                  )}
+                  {u.status !== "banned" && (
+                    <button onClick={() => updateStatus(u.id, "banned")}
+                      className="px-3 py-1.5 rounded-lg text-xs"
+                      style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", color: "#f87171" }}>
+                      Banir
+                    </button>
+                  )}
+                  {u.status !== "rejected" && (
+                    <button onClick={() => updateStatus(u.id, "rejected")}
+                      className="px-3 py-1.5 rounded-lg text-xs"
+                      style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.15)", color: "rgba(239,68,68,0.7)" }}>
+                      Rejeitar
+                    </button>
+                  )}
+                  <a href={`/admin/usuarios/${u.id}`}
+                    className="px-3 py-1.5 rounded-lg text-xs"
+                    style={{ background: "rgba(96,165,250,0.1)", border: "1px solid rgba(96,165,250,0.2)", color: "#60a5fa", textDecoration: "none" }}>
+                    Ver Detalhes
+                  </a>
+                  <button onClick={() => deleteUser(u.id, u.full_name)}
+                    className="px-3 py-1.5 rounded-lg text-xs ml-auto"
+                    style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.12)", color: "rgba(239,68,68,0.5)" }}>
+                    Excluir
+                  </button>
+                </div>
+              </div>
             );
           })}
         </div>
-
-        <form method="get" action="/admin/usuarios" className="flex gap-2">
-          {status && <input type="hidden" name="status" value={status} />}
-          <input type="text" name="q" defaultValue={q} className="input-field py-1.5 text-sm w-52"
-            placeholder="Buscar por nome..." />
-          <button type="submit" className="btn-outline text-xs py-1.5 px-4">Buscar</button>
-        </form>
-      </div>
-
-      {/* Tabela */}
-      <div className="card overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr style={{ borderBottom: "1px solid rgba(201,162,39,0.12)" }}>
-                {["Nome", "Email", "Igreja / Cidade", "Perfil", "Status", "Cadastro", "Ações"].map((h) => (
-                  <th key={h} className="text-left px-4 py-3"
-                    style={{ color: "rgba(201,162,39,0.65)", fontFamily: "var(--font-cinzel)", fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((u, i) => (
-                <tr key={u.id}
-                  style={{ borderBottom: i < users.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
-                  <td className="px-4 py-3">
-                    <div>
-                      <a href={`/admin/usuarios/${u.id}`}
-                        className="font-medium hover:underline"
-                        style={{ color: "rgba(255,255,255,0.85)", fontFamily: "var(--font-cinzel)", fontSize: "0.8rem", textDecoration: "none" }}>
-                        {u.full_name}
-                      </a>
-                      {u.is_legendario && <span className="badge badge-gold" style={{ fontSize: "0.55rem" }}>Legendário</span>}
-                      {u.is_legendario_spouse && <span className="badge badge-gold" style={{ fontSize: "0.55rem" }}>Esposa Leg.</span>}
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.8rem" }}>{u.email}</p>
-                    {u.whatsapp && <p style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.75rem" }}>{u.whatsapp}</p>}
-                  </td>
-                  <td className="px-4 py-3">
-                    <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.8rem" }}>{u.church_name}</p>
-                    <p style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.75rem" }}>{u.city} / {u.state}</p>
-                  </td>
-                  <td className="px-4 py-3">
-                    <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.8rem" }}>{u.gender === "male" ? "Homem" : "Mulher"}</p>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`badge ${STATUS_BADGE[u.status] ?? "badge-gold"}`}>
-                      {STATUS_LABEL[u.status] ?? u.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.75rem", fontFamily: "var(--font-cinzel)" }}>
-                      {formatDate(u.created_at, { day: "2-digit", month: "short", year: "numeric" })}
-                    </p>
-                    {u.last_seen_at && (
-                      <p style={{ color: "rgba(255,255,255,0.25)", fontSize: "0.7rem" }}>
-                        Visto: {formatDate(u.last_seen_at, { day: "2-digit", month: "short" })}
-                      </p>
-                    )}
-                  </td>
-                  <td className="px-4 py-3">
-                    <a href={`/admin/usuarios/${u.id}`}
-                      className="text-xs px-3 py-1.5 rounded-md"
-                      style={{ background: "rgba(201,162,39,0.1)", color: "#c9a227", fontFamily: "var(--font-cinzel)", textDecoration: "none", border: "1px solid rgba(201,162,39,0.25)" }}>
-                      Ver Detalhes
-                    </a>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {users.length === 0 && (
-            <div className="py-12 text-center">
-              <p className="text-sm" style={{ color: "rgba(255,255,255,0.35)" }}>Nenhum usuário encontrado.</p>
-            </div>
-          )}
-        </div>
-      </div>
+      )}
     </div>
   );
 }

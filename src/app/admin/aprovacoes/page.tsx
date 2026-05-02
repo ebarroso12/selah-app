@@ -1,179 +1,180 @@
-export const dynamic = "force-dynamic";
-import { createClient, createServiceClient } from "@/lib/supabase/server";
-import { formatDate } from "@/lib/utils";
-import { revalidatePath } from "next/cache";
-import { sendApprovalEmail, sendRejectionEmail } from "@/lib/email/client";
+"use client";
+import { useEffect, useState } from "react";
+import { createBrowserClient } from "@supabase/ssr";
 
-async function approveUser(userId: string) {
-  "use server";
-  const supabase = await createServiceClient();
+const supabase = createBrowserClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
-  // Busca dados do usuário antes de atualizar
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("email, full_name")
-    .eq("id", userId)
-    .single();
-
-  const adminEmail = process.env.ADMIN_EMAIL ?? "admin";
-
-  const { error } = await supabase
-    .from("profiles")
-    .update({
-      status: "approved",
-      approved_by: adminEmail,
-      approved_at: new Date().toISOString(),
-    })
-    .eq("id", userId);
-
-  if (error) {
-    console.error("[approveUser] Erro ao aprovar usuário:", error);
-    return;
-  }
-
-  // Envia email de aprovação ao usuário
-  if (profile) {
-    await sendApprovalEmail({
-      email: profile.email,
-      full_name: profile.full_name,
-    }).catch(console.error);
-  }
-
-  revalidatePath("/admin/aprovacoes");
+interface Profile {
+  id: string;
+  email: string;
+  full_name: string;
+  whatsapp: string | null;
+  church_name: string;
+  city: string;
+  state: string;
+  gender: string;
+  is_legendario: boolean;
+  is_legendario_spouse: boolean;
+  status: string;
+  created_at: string;
 }
 
-async function rejectUser(userId: string) {
-  "use server";
-  const supabase = await createServiceClient();
+export default function AprovacoesPage() {
+  const [pending, setPending] = useState<Profile[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [msg, setMsg] = useState("");
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("email, full_name")
-    .eq("id", userId)
-    .single();
-
-  const { error } = await supabase
-    .from("profiles")
-    .update({ status: "rejected" })
-    .eq("id", userId);
-
-  if (error) {
-    console.error("[rejectUser] Erro ao rejeitar usuário:", error);
-    return;
+  async function load() {
+    setLoading(true);
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("status", "pending")
+      .order("created_at", { ascending: true })
+      .limit(100);
+    setPending((data ?? []) as Profile[]);
+    setLoading(false);
   }
 
-  // Envia email de rejeição ao usuário
-  if (profile) {
-    await sendRejectionEmail({
-      email: profile.email,
-      full_name: profile.full_name,
-    }).catch(console.error);
+  useEffect(() => { load(); }, []);
+
+  async function approve(id: string, name: string) {
+    await supabase.from("profiles").update({ status: "approved" }).eq("id", id);
+    setMsg(`✓ ${name} aprovado!`);
+    setTimeout(() => setMsg(""), 3000);
+    load();
   }
 
-  revalidatePath("/admin/aprovacoes");
-}
+  async function reject(id: string, name: string) {
+    if (!confirm(`Rejeitar "${name}"?`)) return;
+    await supabase.from("profiles").update({ status: "rejected" }).eq("id", id);
+    setMsg(`${name} rejeitado.`);
+    setTimeout(() => setMsg(""), 3000);
+    load();
+  }
 
-export default async function AprovacoesPage() {
-  const supabase = await createClient();
-  const { data: pending } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("status", "pending")
-    .order("created_at", { ascending: true });
+  async function deleteUser(id: string, name: string) {
+    if (!confirm(`Excluir permanentemente "${name}"?`)) return;
+    await supabase.from("profiles").delete().eq("id", id);
+    await fetch("/api/admin/delete-user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: id }),
+    }).catch(() => {});
+    setMsg(`"${name}" excluído.`);
+    setTimeout(() => setMsg(""), 3000);
+    load();
+  }
+
+  async function approveAll() {
+    if (!confirm(`Aprovar todos os ${pending.length} usuários pendentes?`)) return;
+    await supabase.from("profiles").update({ status: "approved" }).eq("status", "pending");
+    setMsg(`✓ Todos os ${pending.length} usuários aprovados!`);
+    setTimeout(() => setMsg(""), 4000);
+    load();
+  }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl mb-1">Aprovações Pendentes</h1>
-        <p className="text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
-          {pending?.length ?? 0} usuário(s) aguardando aprovação
-        </p>
+    <div className="p-4 md:p-6 space-y-5">
+      {/* Header */}
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Aprovações</h1>
+          <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.4)" }}>
+            {loading ? "Carregando..." : `${pending.length} usuário${pending.length !== 1 ? "s" : ""} aguardando aprovação`}
+          </p>
+        </div>
+        {pending.length > 1 && (
+          <button onClick={approveAll}
+            className="px-4 py-2 rounded-lg text-xs font-semibold tracking-widest uppercase"
+            style={{ background: "rgba(52,211,153,0.15)", border: "1px solid rgba(52,211,153,0.4)", color: "#34d399" }}>
+            ✓ Aprovar Todos ({pending.length})
+          </button>
+        )}
       </div>
 
-      {!pending || pending.length === 0 ? (
-        <div className="card p-12 text-center">
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>
-            Nenhum cadastro pendente.
+      {msg && (
+        <p className="text-xs text-center py-2 rounded-lg"
+          style={{ background: "rgba(52,211,153,0.08)", color: "#34d399", border: "1px solid rgba(52,211,153,0.2)" }}>
+          {msg}
+        </p>
+      )}
+
+      {loading ? (
+        <p className="text-center text-sm py-8" style={{ color: "rgba(255,255,255,0.3)" }}>Carregando...</p>
+      ) : pending.length === 0 ? (
+        <div className="card p-12 text-center space-y-3">
+          <p className="text-3xl">✅</p>
+          <p className="font-semibold" style={{ color: "rgba(255,255,255,0.6)", fontFamily: "var(--font-cinzel)" }}>
+            Nenhuma aprovação pendente
+          </p>
+          <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>
+            Todos os usuários cadastrados já foram processados.
           </p>
         </div>
       ) : (
-        <div className="space-y-4">
-          {pending.map((user) => (
-            <div key={user.id} className="card p-5">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div className="space-y-1.5 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <p
-                      className="font-semibold"
-                      style={{
-                        color: "#fff",
-                        fontFamily: "var(--font-cinzel)",
-                      }}
-                    >
-                      {user.full_name}
+        <div className="space-y-3">
+          {pending.map(u => (
+            <div key={u.id} className="card p-4 space-y-3">
+              {/* Info */}
+              <div className="flex items-start justify-between gap-3 flex-wrap">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                    <p className="font-semibold text-sm" style={{ color: "rgba(255,255,255,0.9)", fontFamily: "var(--font-cinzel)" }}>
+                      {u.full_name}
                     </p>
-                    {user.is_legendario && (
-                      <span className="badge badge-gold">Legendário</span>
+                    {u.is_legendario && (
+                      <span className="text-xs px-1.5 py-0.5 rounded-full"
+                        style={{ background: "rgba(232,93,4,0.15)", color: "#E85D04", border: "1px solid rgba(232,93,4,0.3)", fontSize: "0.6rem" }}>
+                        Legendário
+                      </span>
                     )}
-                    {user.is_legendario_spouse && (
-                      <span className="badge badge-gold">
-                        Esposa Legendário
+                    {u.is_legendario_spouse && (
+                      <span className="text-xs px-1.5 py-0.5 rounded-full"
+                        style={{ background: "rgba(244,114,182,0.15)", color: "#f472b6", border: "1px solid rgba(244,114,182,0.3)", fontSize: "0.6rem" }}>
+                        Esposa
                       </span>
                     )}
                   </div>
-                  <p
-                    className="text-sm"
-                    style={{ color: "rgba(255,255,255,0.55)" }}
-                  >
-                    {user.email}
-                  </p>
-                  {user.whatsapp && (
-                    <p
-                      className="text-sm"
-                      style={{ color: "rgba(255,255,255,0.45)" }}
-                    >
-                      {user.whatsapp}
-                    </p>
+                  <p className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>{u.email}</p>
+                  {u.whatsapp && (
+                    <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>📱 {u.whatsapp}</p>
                   )}
-                  <div
-                    className="flex flex-wrap gap-3 text-xs mt-2"
-                    style={{ color: "rgba(255,255,255,0.4)" }}
-                  >
-                    <span>{user.gender === "male" ? "Homem" : "Mulher"}</span>
-                    <span>·</span>
-                    <span>{user.church_name}</span>
-                    <span>·</span>
-                    <span>
-                      {user.city} / {user.state}
-                    </span>
-                    <span>·</span>
-                    <span>Cadastro: {formatDate(user.created_at)}</span>
-                  </div>
+                  <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
+                    {u.church_name} · {u.city}/{u.state} · {u.gender === "male" ? "Homem" : "Mulher"}
+                  </p>
                 </div>
+                <div className="shrink-0 text-right">
+                  <span className="text-xs px-2 py-0.5 rounded-full"
+                    style={{ background: "rgba(251,191,36,0.1)", color: "#fbbf24", border: "1px solid rgba(251,191,36,0.3)", fontFamily: "var(--font-cinzel)", fontSize: "0.62rem" }}>
+                    Pendente
+                  </span>
+                  <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.25)" }}>
+                    {new Date(u.created_at).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })}
+                  </p>
+                </div>
+              </div>
 
-                <div className="flex gap-2 shrink-0">
-                  <form action={rejectUser.bind(null, user.id)}>
-                    <button
-                      type="submit"
-                      className="btn-ghost text-sm px-4 py-2"
-                      style={{
-                        color: "#f87171",
-                        borderColor: "rgba(248,113,113,0.3)",
-                        border: "1px solid",
-                      }}
-                    >
-                      Rejeitar
-                    </button>
-                  </form>
-                  <form action={approveUser.bind(null, user.id)}>
-                    <button
-                      type="submit"
-                      className="btn-primary text-sm px-4 py-2"
-                    >
-                      Aprovar
-                    </button>
-                  </form>
-                </div>
+              {/* Ações */}
+              <div className="flex gap-2 flex-wrap pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                <button onClick={() => approve(u.id, u.full_name)}
+                  className="flex-1 py-2 rounded-lg text-xs font-semibold"
+                  style={{ background: "rgba(52,211,153,0.12)", border: "1px solid rgba(52,211,153,0.35)", color: "#34d399" }}>
+                  ✓ Aprovar
+                </button>
+                <button onClick={() => reject(u.id, u.full_name)}
+                  className="flex-1 py-2 rounded-lg text-xs font-semibold"
+                  style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", color: "#f87171" }}>
+                  Rejeitar
+                </button>
+                <button onClick={() => deleteUser(u.id, u.full_name)}
+                  className="py-2 px-3 rounded-lg text-xs"
+                  style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.12)", color: "rgba(239,68,68,0.5)" }}>
+                  Excluir
+                </button>
               </div>
             </div>
           ))}
