@@ -121,27 +121,41 @@ export default function HomenagensPage() {
           {/* Corpo */}
           <div className="p-5 space-y-4">
             {/* Quem homenageia */}
-            <div className="flex items-center gap-2 pb-3" style={{ borderBottom: "1px solid rgba(201,162,39,0.15)" }}>
-              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#c9a227" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-              </svg>
-              <span className="text-xs" style={{ color: "rgba(245,242,235,0.5)" }}>Homenagem de</span>
-              <span className="text-xs font-semibold" style={{ color: "#c9a227" }}>{h.homenageante.nome}</span>
-              {h.homenageante.instagram && (
-                <a
-                  href={`https://instagram.com/${h.homenageante.instagram}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs ml-1"
-                  style={{ color: "rgba(201,162,39,0.65)" }}
-                >
-                  @{h.homenageante.instagram}
-                </a>
-              )}
+            <div className="pb-3 space-y-2" style={{ borderBottom: "1px solid rgba(201,162,39,0.15)" }}>
+              <div className="flex items-center gap-2 flex-wrap">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#c9a227" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                </svg>
+                <span className="text-xs" style={{ color: "rgba(245,242,235,0.5)" }}>Homenagem de</span>
+                <span className="text-xs font-semibold" style={{ color: "#c9a227" }}>{h.homenageante.nome}</span>
+                {h.homenageante.instagram && (
+                  <a
+                    href={`https://instagram.com/${h.homenageante.instagram}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs"
+                    style={{ color: "rgba(201,162,39,0.65)" }}
+                  >
+                    @{h.homenageante.instagram}
+                  </a>
+                )}
+              </div>
               {h.homenageante.legendario && h.homenageante.numero && (
-                <span className="text-xs ml-auto px-2 py-0.5 rounded-full" style={{ background: "rgba(201,162,39,0.15)", color: "#f0c040", border: "1px solid rgba(201,162,39,0.3)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.05em" }}>
-                  Legendário #{h.homenageante.numero}
-                </span>
+                <div className="flex justify-center">
+                  <span
+                    className="text-xs px-4 py-1 rounded-full"
+                    style={{
+                      background: "rgba(201,162,39,0.15)",
+                      color: "#f0c040",
+                      border: "1px solid rgba(201,162,39,0.3)",
+                      fontFamily: "var(--font-cinzel)",
+                      letterSpacing: "0.08em",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    Legendário #{h.homenageante.numero}
+                  </span>
+                </div>
               )}
             </div>
 
