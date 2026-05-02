@@ -8,8 +8,14 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const filter = searchParams.get("filter") || "todos";
     
+    console.log(`[API_ADMIN_USERS] Iniciando busca. Filtro: ${filter}`);
+    
     const supabase = await createServiceClient();
     
+    // Log para verificar se as variáveis de ambiente estão presentes (sem mostrar o valor da chave)
+    console.log(`[API_ADMIN_USERS] Supabase URL: ${process.env.NEXT_PUBLIC_SUPABASE_URL ? "OK" : "MISSING"}`);
+    console.log(`[API_ADMIN_USERS] Service Role Key: ${process.env.SUPABASE_SERVICE_ROLE_KEY ? "OK" : "MISSING"}`);
+
     let query = supabase
       .from("profiles")
       .select("*")
@@ -19,13 +25,26 @@ export async function GET(request: Request) {
       query = query.eq("status", filter);
     }
     
-    const { data, error } = await query;
+    const { data, error, count } = await query;
     
-    if (error) throw error;
+    if (error) {
+      console.error("[API_ADMIN_USERS] Erro na query Supabase:", error);
+      throw error;
+    }
     
-    return NextResponse.json({ users: data });
+    console.log(`[API_ADMIN_USERS] Busca concluída. Usuários encontrados: ${data?.length || 0}`);
+    
+    return NextResponse.json({ 
+      users: data || [],
+      debug: {
+        count: data?.length || 0,
+        filter,
+        env_url: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+        env_key: !!process.env.SUPABASE_SERVICE_ROLE_KEY
+      }
+    });
   } catch (error: any) {
-    console.error("[API_ADMIN_USERS]", error);
+    console.error("[API_ADMIN_USERS] Erro fatal:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
