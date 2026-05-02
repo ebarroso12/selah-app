@@ -54,7 +54,7 @@ export default async function AppLayout({
       </main>
 
       {/* BottomNav flutuante — apenas mobile */}
-      <BottomNav />
+      <BottomNav isAdmin={isAdmin} />
     </div>
   );
 }
