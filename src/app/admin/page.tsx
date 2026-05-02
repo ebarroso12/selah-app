@@ -3,6 +3,7 @@ import Link from "next/link";
 
 async function getAdminStats() {
   const supabase = await createClient();
+  const twoDaysAgo = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
 
   const [
     { count: totalUsers },
@@ -14,6 +15,7 @@ async function getAdminStats() {
     { count: totalTestimonies },
     { data: recentUsers },
     { data: sessionData },
+    { data: newAlerts },
   ] = await Promise.all([
     supabase.from("profiles").select("*", { count: "exact", head: true }).eq("status", "approved"),
     supabase.from("profiles").select("*", { count: "exact", head: true }).eq("status", "pending"),
@@ -29,6 +31,11 @@ async function getAdminStats() {
     supabase.from("user_metrics")
       .select("session_duration_seconds")
       .gte("date", new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]),
+    supabase.from("profiles")
+      .select("id, full_name, email, phone, city, state, is_legendario, wants_to_be_legendario, created_at")
+      .gte("created_at", twoDaysAgo)
+      .order("created_at", { ascending: false })
+      .limit(20),
   ]);
 
   const totalSessionMin = Math.round(
@@ -45,6 +52,7 @@ async function getAdminStats() {
     totalTestimonies: totalTestimonies ?? 0,
     recentUsers: recentUsers ?? [],
     totalSessionMin,
+    newAlerts: newAlerts ?? [],
   };
 }
 
@@ -86,20 +94,49 @@ export default async function AdminDashboard() {
         </div>
       </div>
 
-      {stats.pendingUsers > 0 && (
-        <div className="card p-4 glow-gold flex items-center justify-between"
-          style={{ borderColor: "rgba(251,191,36,0.4)", background: "rgba(251,191,36,0.06)" }}>
-          <div>
-            <p className="font-semibold text-sm" style={{ color: "#fbbf24", fontFamily: "var(--font-cinzel)" }}>
-              {stats.pendingUsers} {stats.pendingUsers === 1 ? "usuario aguarda" : "usuarios aguardam"} aprovacao
-            </p>
-            <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.45)" }}>
-              Revise e libere o acesso ao app
-            </p>
+      {/* Alertas de novos cadastros (últimas 48h) */}
+      {stats.newAlerts.length > 0 && (
+        <div className="card p-5" style={{ borderColor: "rgba(201,162,39,0.35)", background: "rgba(201,162,39,0.04)" }}>
+          <p className="text-xs tracking-widest uppercase mb-4"
+            style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)" }}>
+            🔔 {stats.newAlerts.length} novo{stats.newAlerts.length > 1 ? "s cadastro" : " cadastro"}{stats.newAlerts.length > 1 ? "s" : ""} (últimas 48h)
+          </p>
+          <div className="space-y-3">
+            {(stats.newAlerts as {
+              id: string; full_name: string; email: string; phone?: string;
+              city: string; state: string; is_legendario: boolean;
+              wants_to_be_legendario?: boolean; created_at: string;
+            }[]).map((a) => (
+              <div key={a.id} className="flex items-start justify-between gap-4 pb-3"
+                style={{ borderBottom: "1px solid rgba(201,162,39,0.1)" }}>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-sm" style={{ color: "rgba(255,255,255,0.9)", fontFamily: "var(--font-cinzel)" }}>
+                    {a.full_name}
+                  </p>
+                  <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.5)" }}>
+                    {a.email} · {a.phone ?? "—"} · {a.city}/{a.state}
+                  </p>
+                  <div className="flex gap-2 mt-1.5 flex-wrap">
+                    {a.is_legendario && (
+                      <span className="badge badge-gold" style={{ fontSize: "0.6rem" }}>Legendário</span>
+                    )}
+                    {a.wants_to_be_legendario && (
+                      <span className="badge" style={{ fontSize: "0.6rem", background: "rgba(251,146,60,0.15)", color: "#fb923c", border: "1px solid rgba(251,146,60,0.3)" }}>Pretende ser Legendário</span>
+                    )}
+                  </div>
+                </div>
+                <div className="text-right shrink-0">
+                  <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)", fontFamily: "var(--font-cinzel)" }}>
+                    {new Date(a.created_at).toLocaleString("pt-BR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                  </p>
+                  <Link href={`/admin/usuarios/${a.id}`} className="text-xs mt-1 block"
+                    style={{ color: "rgba(201,162,39,0.7)", fontFamily: "var(--font-cinzel)", textDecoration: "none" }}>
+                    Ver perfil →
+                  </Link>
+                </div>
+              </div>
+            ))}
           </div>
-          <Link href="/admin/aprovacoes" className="btn-primary text-xs px-4 py-2">
-            Revisar Agora
-          </Link>
         </div>
       )}
 

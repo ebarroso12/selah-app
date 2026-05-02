@@ -10,12 +10,17 @@ interface FormData {
   email: string;
   password: string;
   confirm_password: string;
+  phone: string;
   whatsapp: string;
+  linkedin_url: string;
+  instagram_handle: string;
+  birth_date: string;
   church_name: string;
   city: string;
   state: string;
   gender: "male" | "female" | "";
   is_legendario: boolean;
+  wants_to_be_legendario: boolean;
   is_legendario_spouse: boolean;
 }
 
@@ -36,12 +41,17 @@ export default function RegisterPage() {
     email: "",
     password: "",
     confirm_password: "",
+    phone: "",
     whatsapp: "",
+    linkedin_url: "",
+    instagram_handle: "",
+    birth_date: "",
     church_name: "",
     city: "",
     state: "",
     gender: "",
     is_legendario: false,
+    wants_to_be_legendario: false,
     is_legendario_spouse: false,
   });
 
@@ -52,6 +62,8 @@ export default function RegisterPage() {
   function validateStep1() {
     if (!form.full_name.trim()) return "Informe seu nome completo.";
     if (!form.email.trim()) return "Informe seu email.";
+    if (!form.phone.trim()) return "Informe seu telefone.";
+    if (!form.birth_date) return "Informe sua data de nascimento.";
     if (form.password.length < 8) return "A senha deve ter no mínimo 8 caracteres.";
     if (form.password !== form.confirm_password) return "As senhas não coincidem.";
     return null;
@@ -66,7 +78,7 @@ export default function RegisterPage() {
   }
 
   function nextStep() {
-    const err = step === 1 ? validateStep1() : null;
+    const err = validateStep1();
     if (err) { setError(err); return; }
     setError(null);
     setStep(2);
@@ -84,9 +96,7 @@ export default function RegisterPage() {
     const { data: authData, error: signUpError } = await supabase.auth.signUp({
       email: form.email,
       password: form.password,
-      options: {
-        data: { full_name: form.full_name },
-      },
+      options: { data: { full_name: form.full_name } },
     });
 
     if (signUpError) {
@@ -102,12 +112,17 @@ export default function RegisterPage() {
         id: authData.user.id,
         email: form.email,
         full_name: form.full_name,
+        phone: form.phone || null,
         whatsapp: form.whatsapp || null,
+        linkedin_url: form.linkedin_url || null,
+        instagram_handle: form.instagram_handle || null,
+        birth_date: form.birth_date || null,
         church_name: form.church_name,
         city: form.city,
         state: form.state,
         gender: form.gender as "male" | "female",
         is_legendario: form.is_legendario,
+        wants_to_be_legendario: form.wants_to_be_legendario,
         is_legendario_spouse: form.is_legendario_spouse,
         status: "approved",
       });
@@ -131,10 +146,8 @@ export default function RegisterPage() {
     <div className="card p-8 glow-gold">
       <div className="text-center mb-6">
         <p className="selah-wordmark mb-1">SELAH</p>
-        <p
-          className="text-xs tracking-widest uppercase"
-          style={{ color: "rgba(201,162,39,0.6)", fontFamily: "var(--font-cinzel)" }}
-        >
+        <p className="text-xs tracking-widest uppercase"
+          style={{ color: "rgba(201,162,39,0.6)", fontFamily: "var(--font-cinzel)" }}>
           Criar Conta
         </p>
       </div>
@@ -143,21 +156,17 @@ export default function RegisterPage() {
       <div className="flex items-center justify-center gap-2 mb-7">
         {[1, 2].map((s) => (
           <div key={s} className="flex items-center gap-2">
-            <div
-              className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all"
+            <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all"
               style={{
                 background: step >= s ? "#c9a227" : "rgba(255,255,255,0.08)",
                 color: step >= s ? "#080d1a" : "rgba(255,255,255,0.4)",
                 fontFamily: "var(--font-cinzel)",
-              }}
-            >
+              }}>
               {s}
             </div>
             {s < 2 && (
-              <div
-                className="w-8 h-px"
-                style={{ background: step > s ? "#c9a227" : "rgba(255,255,255,0.12)" }}
-              />
+              <div className="w-8 h-px"
+                style={{ background: step > s ? "#c9a227" : "rgba(255,255,255,0.12)" }} />
             )}
           </div>
         ))}
@@ -169,27 +178,47 @@ export default function RegisterPage() {
         {step === 1 && (
           <div className="space-y-4">
             <div>
-              <label className="label" htmlFor="full_name">Nome completo</label>
+              <label className="label" htmlFor="full_name">Nome completo *</label>
               <input id="full_name" type="text" className="input-field" placeholder="Seu nome completo"
                 value={form.full_name} onChange={(e) => set("full_name", e.target.value)} required />
             </div>
             <div>
-              <label className="label" htmlFor="email">Email</label>
+              <label className="label" htmlFor="email">Email *</label>
               <input id="email" type="email" className="input-field" placeholder="seu@email.com"
                 value={form.email} onChange={(e) => set("email", e.target.value)} required />
             </div>
             <div>
-              <label className="label" htmlFor="whatsapp">WhatsApp (opcional)</label>
-              <input id="whatsapp" type="tel" className="input-field" placeholder="(16) 99999-9999"
+              <label className="label" htmlFor="phone">Telefone *</label>
+              <input id="phone" type="tel" className="input-field" placeholder="(16) 99999-9999"
+                value={form.phone} onChange={(e) => set("phone", e.target.value)} required />
+            </div>
+            <div>
+              <label className="label" htmlFor="whatsapp">WhatsApp</label>
+              <input id="whatsapp" type="tel" className="input-field" placeholder="(16) 99999-9999 (se diferente)"
                 value={form.whatsapp} onChange={(e) => set("whatsapp", e.target.value)} />
             </div>
             <div>
-              <label className="label" htmlFor="password">Senha</label>
+              <label className="label" htmlFor="birth_date">Data de nascimento *</label>
+              <input id="birth_date" type="date" className="input-field"
+                value={form.birth_date} onChange={(e) => set("birth_date", e.target.value)} required />
+            </div>
+            <div>
+              <label className="label" htmlFor="linkedin_url">LinkedIn</label>
+              <input id="linkedin_url" type="url" className="input-field" placeholder="https://linkedin.com/in/seuperfil"
+                value={form.linkedin_url} onChange={(e) => set("linkedin_url", e.target.value)} />
+            </div>
+            <div>
+              <label className="label" htmlFor="instagram_handle">Instagram</label>
+              <input id="instagram_handle" type="text" className="input-field" placeholder="@seuperfil"
+                value={form.instagram_handle} onChange={(e) => set("instagram_handle", e.target.value)} />
+            </div>
+            <div>
+              <label className="label" htmlFor="password">Senha *</label>
               <input id="password" type="password" className="input-field" placeholder="Mínimo 8 caracteres"
                 value={form.password} onChange={(e) => set("password", e.target.value)} required minLength={8} />
             </div>
             <div>
-              <label className="label" htmlFor="confirm_password">Confirmar senha</label>
+              <label className="label" htmlFor="confirm_password">Confirmar senha *</label>
               <input id="confirm_password" type="password" className="input-field" placeholder="Repita a senha"
                 value={form.confirm_password} onChange={(e) => set("confirm_password", e.target.value)} required />
             </div>
@@ -200,18 +229,18 @@ export default function RegisterPage() {
         {step === 2 && (
           <div className="space-y-4">
             <div>
-              <label className="label" htmlFor="church_name">Nome da Igreja</label>
+              <label className="label" htmlFor="church_name">Nome da Igreja *</label>
               <input id="church_name" type="text" className="input-field" placeholder="Ex: Casa de Oração Franca"
                 value={form.church_name} onChange={(e) => set("church_name", e.target.value)} required />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="label" htmlFor="city">Cidade</label>
+                <label className="label" htmlFor="city">Cidade *</label>
                 <input id="city" type="text" className="input-field" placeholder="Sua cidade"
                   value={form.city} onChange={(e) => set("city", e.target.value)} required />
               </div>
               <div>
-                <label className="label" htmlFor="state">Estado</label>
+                <label className="label" htmlFor="state">Estado *</label>
                 <select id="state" className="input-field" value={form.state}
                   onChange={(e) => set("state", e.target.value)} required>
                   <option value="">UF</option>
@@ -221,19 +250,18 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="label">Gênero</label>
+              <label className="label">Gênero *</label>
               <div className="grid grid-cols-2 gap-3">
                 {[{ value: "male", label: "Homem" }, { value: "female", label: "Mulher" }].map((g) => (
                   <button key={g.value} type="button"
-                    onClick={() => { set("gender", g.value); set("is_legendario", false); set("is_legendario_spouse", false); }}
+                    onClick={() => { set("gender", g.value); set("is_legendario", false); set("wants_to_be_legendario", false); set("is_legendario_spouse", false); }}
                     className="py-2.5 rounded-lg text-sm font-semibold transition-all"
                     style={{
                       fontFamily: "var(--font-cinzel)",
                       background: form.gender === g.value ? "#c9a227" : "rgba(255,255,255,0.04)",
                       color: form.gender === g.value ? "#080d1a" : "rgba(255,255,255,0.5)",
                       border: `1px solid ${form.gender === g.value ? "#c9a227" : "rgba(255,255,255,0.1)"}`,
-                    }}
-                  >
+                    }}>
                     {g.label}
                   </button>
                 ))}
@@ -241,27 +269,40 @@ export default function RegisterPage() {
             </div>
 
             {form.gender === "male" && (
-              <div>
-                <label className="label">Ministerio Legendarios</label>
+              <div className="space-y-2">
+                <label className="label">Ministério Legendários</label>
                 <button type="button"
-                  onClick={() => set("is_legendario", !form.is_legendario)}
+                  onClick={() => { set("is_legendario", !form.is_legendario); if (!form.is_legendario) set("wants_to_be_legendario", false); }}
                   className="w-full py-2.5 rounded-lg text-sm font-semibold transition-all flex items-center justify-between px-4"
                   style={{
                     fontFamily: "var(--font-cinzel)",
                     background: form.is_legendario ? "rgba(201,162,39,0.1)" : "rgba(255,255,255,0.04)",
                     color: form.is_legendario ? "#c9a227" : "rgba(255,255,255,0.5)",
                     border: `1px solid ${form.is_legendario ? "rgba(201,162,39,0.4)" : "rgba(255,255,255,0.1)"}`,
-                  }}
-                >
-                  <span>Sou Legendario</span>
-                  <span>{form.is_legendario ? "Sim" : "Nao"}</span>
+                  }}>
+                  <span>Já sou Legendário</span>
+                  <span>{form.is_legendario ? "Sim" : "Não"}</span>
                 </button>
+                {!form.is_legendario && (
+                  <button type="button"
+                    onClick={() => set("wants_to_be_legendario", !form.wants_to_be_legendario)}
+                    className="w-full py-2.5 rounded-lg text-sm font-semibold transition-all flex items-center justify-between px-4"
+                    style={{
+                      fontFamily: "var(--font-cinzel)",
+                      background: form.wants_to_be_legendario ? "rgba(201,162,39,0.1)" : "rgba(255,255,255,0.04)",
+                      color: form.wants_to_be_legendario ? "#c9a227" : "rgba(255,255,255,0.5)",
+                      border: `1px solid ${form.wants_to_be_legendario ? "rgba(201,162,39,0.4)" : "rgba(255,255,255,0.1)"}`,
+                    }}>
+                    <span>Pretendo ser Legendário</span>
+                    <span>{form.wants_to_be_legendario ? "Sim" : "Não"}</span>
+                  </button>
+                )}
               </div>
             )}
 
             {form.gender === "female" && (
               <div>
-                <label className="label">Conexao Legendarios</label>
+                <label className="label">Conexão Legendários</label>
                 <button type="button"
                   onClick={() => set("is_legendario_spouse", !form.is_legendario_spouse)}
                   className="w-full py-2.5 rounded-lg text-sm font-semibold transition-all flex items-center justify-between px-4"
@@ -270,10 +311,9 @@ export default function RegisterPage() {
                     background: form.is_legendario_spouse ? "rgba(201,162,39,0.1)" : "rgba(255,255,255,0.04)",
                     color: form.is_legendario_spouse ? "#c9a227" : "rgba(255,255,255,0.5)",
                     border: `1px solid ${form.is_legendario_spouse ? "rgba(201,162,39,0.4)" : "rgba(255,255,255,0.1)"}`,
-                  }}
-                >
-                  <span>Esposa de Legendario</span>
-                  <span>{form.is_legendario_spouse ? "Sim" : "Nao"}</span>
+                  }}>
+                  <span>Esposa de Legendário</span>
+                  <span>{form.is_legendario_spouse ? "Sim" : "Não"}</span>
                 </button>
               </div>
             )}
@@ -291,7 +331,7 @@ export default function RegisterPage() {
       </form>
 
       <p className="mt-5 text-center text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>
-        Ja tem acesso?{" "}
+        Já tem acesso?{" "}
         <Link href="/login" className="font-semibold"
           style={{ color: "rgba(201,162,39,0.85)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.05em" }}>
           Entrar

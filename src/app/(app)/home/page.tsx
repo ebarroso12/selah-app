@@ -97,18 +97,19 @@ export default async function HomePage() {
         {/* Card Legendários */}
         <Link href="/legendarios" style={{ textDecoration: "none" }}>
           <div
-            className="card-heal p-5 h-full transition-all cursor-pointer"
-            style={{ minHeight: 120 }}
+            className="card p-5 h-full transition-all cursor-pointer"
+            style={{ minHeight: 120, border: "1px solid rgba(217,119,6,0.35)", background: "linear-gradient(135deg, rgba(120,53,15,0.2) 0%, rgba(20,12,4,0.7) 100%)" }}
           >
             <div className="flex items-center gap-3 mb-3">
               <div
-                className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+                className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 overflow-hidden"
                 style={{
-                  background: "linear-gradient(135deg, var(--heal) 0%, var(--heal-light) 100%)",
-                  boxShadow: "0 0 14px rgba(42,122,75,0.4)",
+                  background: "linear-gradient(135deg, #d97706 0%, #f59e0b 100%)",
+                  boxShadow: "0 0 14px rgba(217,119,6,0.55)",
+                  border: "2px solid rgba(245,158,11,0.6)",
                 }}
               >
-                <span style={{ fontSize: "1.1rem" }}>⚔️</span>
+                <img src="/legendarios_logo.png" alt="Legendários" style={{ width: "78%", height: "78%", objectFit: "contain" }} />
               </div>
               <div>
                 <p className="text-sm font-bold" style={{ color: "var(--gold)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em" }}>
@@ -118,7 +119,7 @@ export default async function HomePage() {
                   Movimento · +150 mil homens
                 </p>
               </div>
-              <span className="ml-auto badge badge-heal">Novo</span>
+              <span className="ml-auto badge" style={{ background: "rgba(217,119,6,0.2)", color: "#f59e0b", border: "1px solid rgba(245,158,11,0.45)", fontFamily: "var(--font-cinzel)", fontSize: "0.6rem", letterSpacing: "0.08em" }}>NOVO</span>
             </div>
             <p className="text-xs leading-relaxed" style={{ color: "rgba(245,242,235,0.7)" }}>
               "Homens inquebrantáveis com histórias dignas a serem contadas." Conheça o movimento.
