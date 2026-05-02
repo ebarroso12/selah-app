@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/utils";
 import { revalidatePath } from "next/cache";

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { createClient } from "@/lib/supabase/server";
 import { listUpcomingEvents } from "@/lib/calendar/client";
 import type { Event, EventCategory } from "@/types/database";
