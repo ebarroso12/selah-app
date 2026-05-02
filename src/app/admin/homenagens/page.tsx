@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { getBrowserClient } from "@/lib/supabase/browser";
 import Image from "next/image";
 
-const supabase = getBrowserClient();
 
 interface Homenagem {
   id: string;
@@ -24,6 +23,7 @@ interface Homenagem {
 }
 
 export default function AdminHomenagensPage() {
+  const supabase = getBrowserClient();
   const [items, setItems] = useState<Homenagem[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"pending" | "approved" | "rejected" | "all">("pending");

@@ -3,7 +3,6 @@ export const dynamic = "force-dynamic";
 import { useEffect, useState } from "react";
 import { getBrowserClient } from "@/lib/supabase/browser";
 
-const supabase = getBrowserClient();
 
 interface Prayer {
   id: string;
@@ -23,6 +22,7 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 export default function AdminOracoesPage() {
+  const supabase = getBrowserClient();
   const [items, setItems] = useState<Prayer[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "open" | "answered" | "closed">("all");

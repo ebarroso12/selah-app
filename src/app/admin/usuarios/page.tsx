@@ -3,7 +3,6 @@ export const dynamic = "force-dynamic";
 import { useEffect, useState, useCallback } from "react";
 import { getBrowserClient } from "@/lib/supabase/browser";
 
-const supabase = getBrowserClient();
 
 interface Profile {
   id: string;
@@ -44,6 +43,7 @@ function timeAgo(iso: string | null) {
 type FilterKey = "todos" | "approved" | "pending" | "rejected" | "banned";
 
 export default function AdminUsuariosPage() {
+  const supabase = getBrowserClient();
   const [users, setUsers] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<FilterKey>("todos");

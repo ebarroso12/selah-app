@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback } from "react";
 import { getBrowserClient } from "@/lib/supabase/browser";
 import Link from "next/link";
 
-const supabase = getBrowserClient();
 
 interface AdminStats {
   totalUsers: number;
@@ -20,6 +19,7 @@ interface AdminStats {
 }
 
 export default function AdminDashboard() {
+  const supabase = getBrowserClient();
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState(new Date());
@@ -40,22 +40,9 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetchStats();
-
-    // REALTIME: Escutar mudanças em tabelas críticas para atualizar o painel na hora
-    const channel = supabase
-      .channel("admin-realtime")
-      .on("postgres_changes", { event: "*", schema: "public", table: "profiles" }, () => fetchStats())
-      .on("postgres_changes", { event: "*", schema: "public", table: "prayer_requests" }, () => fetchStats())
-      .on("postgres_changes", { event: "*", schema: "public", table: "homenagens" }, () => fetchStats())
-      .subscribe();
-
     // Atualizar a cada 30 segundos como fallback
     const interval = setInterval(fetchStats, 30000);
-
-    return () => {
-      supabase.removeChannel(channel);
-      clearInterval(interval);
-    };
+    return () => clearInterval(interval);
   }, [fetchStats]);
 
   if (loading && !stats) {

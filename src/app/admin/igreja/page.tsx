@@ -3,9 +3,9 @@ export const dynamic = "force-dynamic";
 import { useEffect, useState } from "react";
 import { getBrowserClient } from "@/lib/supabase/browser";
 
-const supabase = getBrowserClient();
 
 export default function AdminIgrejaPage() {
+  const supabase = getBrowserClient();
   const [members, setMembers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState("");

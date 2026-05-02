@@ -3,7 +3,6 @@ export const dynamic = "force-dynamic";
 import { useEffect, useState } from "react";
 import { getBrowserClient } from "@/lib/supabase/browser";
 
-const supabase = getBrowserClient();
 
 interface LegendarioMember {
   id: string;
@@ -29,6 +28,7 @@ interface LegendarioEvent {
 }
 
 export default function AdminLegendariosPage() {
+  const supabase = getBrowserClient();
   const [members, setMembers] = useState<LegendarioMember[]>([]);
   const [events, setEvents] = useState<LegendarioEvent[]>([]);
   const [loading, setLoading] = useState(true);

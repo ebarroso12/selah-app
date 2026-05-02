@@ -3,7 +3,6 @@ export const dynamic = "force-dynamic";
 import { useEffect, useState } from "react";
 import { getBrowserClient } from "@/lib/supabase/browser";
 
-const supabase = getBrowserClient();
 
 interface Devotional {
   id: string;
@@ -51,6 +50,7 @@ const inpStyle = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba
 const labelStyle = { color: "rgba(201,162,39,0.7)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em", textTransform: "uppercase" as const, fontSize: "0.7rem" };
 
 export default function AdminConteudoPage() {
+  const supabase = getBrowserClient();
   const [tab, setTab] = useState<"devotionals" | "testimonies">("devotionals");
   const [devs, setDevs] = useState<Devotional[]>([]);
   const [testimonies, setTestimonies] = useState<Testimony[]>([]);

@@ -3,7 +3,6 @@ export const dynamic = "force-dynamic";
 import { useEffect, useState } from "react";
 import { getBrowserClient } from "@/lib/supabase/browser";
 
-const supabase = getBrowserClient();
 
 type EventCategory = "culto" | "retiro" | "rpm" | "top" | "celula" | "outro";
 
@@ -47,6 +46,7 @@ const inpStyle = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba
 const labelStyle = { color: "rgba(201,162,39,0.7)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em", textTransform: "uppercase" as const, fontSize: "0.7rem" };
 
 export default function AdminEventosPage() {
+  const supabase = getBrowserClient();
   const [items, setItems] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);

@@ -3,7 +3,6 @@ export const dynamic = "force-dynamic";
 import { useEffect, useState } from "react";
 import { getBrowserClient } from "@/lib/supabase/browser";
 
-const supabase = getBrowserClient();
 
 interface Profile {
   id: string;
@@ -21,6 +20,7 @@ interface Profile {
 }
 
 export default function AprovacoesPage() {
+  const supabase = getBrowserClient();
   const [pending, setPending] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState("");

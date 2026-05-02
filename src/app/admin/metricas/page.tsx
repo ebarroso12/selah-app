@@ -3,7 +3,6 @@ export const dynamic = "force-dynamic";
 import { useEffect, useState } from "react";
 import { getBrowserClient } from "@/lib/supabase/browser";
 
-const supabase = getBrowserClient();
 
 function thirtyDaysAgo() {
   return new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
@@ -28,6 +27,7 @@ interface UserStat {
 }
 
 export default function MetricasPage() {
+  const supabase = getBrowserClient();
   const [loading, setLoading] = useState(true);
   const [kpis, setKpis] = useState({
     totalApproved: 0,

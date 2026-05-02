@@ -5,7 +5,6 @@ import { getBrowserClient } from "@/lib/supabase/browser";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const supabase = getBrowserClient();
 
 function fmtMin(sec: number) {
   const m = Math.round(sec / 60);
@@ -25,6 +24,7 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 export default function UserDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const supabase = getBrowserClient();
   const { id } = use(params);
   const router = useRouter();
   const [loading, setLoading] = useState(true);
