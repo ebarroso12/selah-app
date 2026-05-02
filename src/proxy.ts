@@ -85,7 +85,8 @@ export async function proxy(request: NextRequest) {
       return supabaseResponse;
     }
 
-    // Verifica status do perfil para rotas protegidas (não admin, não pending)
+    // Verifica status do perfil — apenas bloqueia rejected e banned
+    // Usuários pending ou sem perfil entram direto (acesso aberto)
     if (!isPendingPath) {
       const { data: profile } = await supabase
         .from("profiles")
@@ -93,15 +94,7 @@ export async function proxy(request: NextRequest) {
         .eq("id", user.id)
         .maybeSingle();
 
-      if (!profile || profile.status === "pending") {
-        const url = request.nextUrl.clone();
-        url.pathname = "/pending-approval";
-        return NextResponse.redirect(url);
-      }
-
-      if (profile.status === "rejected" || profile.status === "banned") {
-        // Não faz signOut no edge — apenas redireciona com parâmetro de erro
-        // O signOut será feito pelo client ao detectar o parâmetro
+      if (profile && (profile.status === "rejected" || profile.status === "banned")) {
         const url = request.nextUrl.clone();
         url.pathname = "/login";
         url.searchParams.set("error", profile.status);
