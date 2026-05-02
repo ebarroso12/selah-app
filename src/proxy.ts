@@ -14,7 +14,6 @@ const PUBLIC_PATHS = [
   "/preview",
 ];
 const ADMIN_PATHS = ["/admin"];
-const PENDING_PATH = "/pending-approval";
 const AUTH_CALLBACK = "/auth/callback";
 
 export async function proxy(request: NextRequest) {
@@ -60,7 +59,6 @@ export async function proxy(request: NextRequest) {
 
   const isPublicPath = PUBLIC_PATHS.some((p) => pathname.startsWith(p));
   const isAdminPath = ADMIN_PATHS.some((p) => pathname.startsWith(p));
-  const isPendingPath = pathname.startsWith(PENDING_PATH);
 
   // Não autenticado → redireciona para login (exceto rotas públicas)
   if (!user && !isPublicPath) {
@@ -76,33 +74,12 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (user) {
-    // Proteção de rota admin — apenas o email admin tem acesso
-    if (isAdminPath) {
-      if (user.email !== ADMIN_EMAIL) {
-        const url = request.nextUrl.clone();
-        url.pathname = "/home";
-        return NextResponse.redirect(url);
-      }
-      return supabaseResponse;
-    }
-
-    // Verifica status do perfil — apenas bloqueia rejected e banned
-    // Usuários pending ou sem perfil entram direto (acesso aberto)
-    if (!isPendingPath) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("status")
-        .eq("id", user.id)
-        .maybeSingle();
-
-      if (profile && (profile.status === "rejected" || profile.status === "banned")) {
-        const url = request.nextUrl.clone();
-        url.pathname = "/login";
-        url.searchParams.set("error", profile.status);
-        url.searchParams.set("signout", "1");
-        return NextResponse.redirect(url);
-      }
+  // Proteção de rota admin — apenas o email admin tem acesso
+  if (user && isAdminPath) {
+    if (user.email !== ADMIN_EMAIL) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/home";
+      return NextResponse.redirect(url);
     }
   }
 

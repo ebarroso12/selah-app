@@ -29,9 +29,6 @@ export default async function AppLayout({
   const profile = profileData as Profile | null;
 
   if (!profile) redirect("/register");
-  if (profile.status === "rejected" || profile.status === "banned") {
-    redirect("/login");
-  }
 
   const isAdmin = (Boolean(ADMIN_EMAIL) && user.email === ADMIN_EMAIL) || user.email === "edson.barroso@gmail.com";
 
