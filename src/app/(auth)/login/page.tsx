@@ -25,7 +25,7 @@ function LoginForm() {
     }
 
     if (errorParam === "rejected") {
-      setError("Seu cadastro não foi aprovado. Entre em contato com o administrador.");
+      setError("Acesso não autorizado. Entre em contato com o administrador.");
     } else if (errorParam === "banned") {
       setError("Sua conta foi suspensa. Entre em contato com o administrador.");
     } else if (errorParam === "auth") {
@@ -163,7 +163,7 @@ function LoginForm() {
         className="mt-6 text-center text-sm"
         style={{ color: "rgba(255,255,255,0.4)" }}
       >
-        Ainda não tem acesso?{" "}
+        Ainda não tem conta?{" "}
         <Link
           href="/register"
           className="font-semibold transition-colors"
@@ -173,7 +173,7 @@ function LoginForm() {
             letterSpacing: "0.05em",
           }}
         >
-          Solicitar cadastro
+          Criar conta
         </Link>
       </p>
     </div>
