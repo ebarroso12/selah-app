@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Sidebar from "@/components/ui/Sidebar";
-import MobileNav from "@/components/ui/MobileNav";
+import BottomNav from "@/components/ui/BottomNav";
 import type { Profile } from "@/types/database";
 
 // Email do administrador — sempre lido da variável de ambiente
@@ -36,14 +36,24 @@ export default async function AppLayout({
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar profile={profile} isAdmin={isAdmin} />
+      {/* Sidebar visível apenas em desktop (md+) */}
+      <div className="hidden md:block">
+        <Sidebar profile={profile} isAdmin={isAdmin} />
+      </div>
+
+      {/* Conteúdo principal */}
       <main
         className="flex-1 overflow-y-auto"
-        style={{ paddingBottom: "5rem" }}
+        style={{
+          // No mobile: padding inferior para não ficar atrás da BottomNav flutuante
+          paddingBottom: "calc(5.5rem + env(safe-area-inset-bottom))",
+        }}
       >
         {children}
       </main>
-      <MobileNav />
+
+      {/* BottomNav flutuante — apenas mobile */}
+      <BottomNav />
     </div>
   );
 }
