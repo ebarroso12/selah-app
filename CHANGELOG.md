@@ -5,6 +5,22 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
 ---
 
+## [1.0.1] — 2026-05-02
+
+### Melhorias de UX — Homenagens em destaque na Home
+
+#### Home
+- Card **Homenagens** adicionado ao grid principal de destaque (ao lado de Kairo, Legendários e Devocional)
+- Grid 2×2 no mobile, 4 colunas no desktop — todos os 4 módulos principais visíveis imediatamente
+- Banner extra de Homenagens abaixo do Devocional para reforço visual no mobile
+- Identidade visual roxa/violeta para Homenagens (diferente dos outros módulos)
+- Badge NOVO no card e banner de Homenagens
+
+#### Banco de Dados
+- Migration `005_homenagens.sql` criada com tabela `homenagens`, RLS e políticas de acesso
+
+---
+
 ## [1.0.0] — 2026-05-02
 
 ### Lançamento público — Versão inicial estável
