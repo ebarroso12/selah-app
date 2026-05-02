@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/utils";
 import type { Profile } from "@/types/database";
+import InviteUser from "@/components/admin/InviteUser";
 
 export const metadata = { title: "Usuários — Admin" };
 
@@ -45,6 +46,9 @@ export default async function UsuariosPage({
           {users.length} usuário{users.length !== 1 ? "s" : ""} encontrado{users.length !== 1 ? "s" : ""}
         </p>
       </div>
+
+      {/* Convidar usuário */}
+      <InviteUser />
 
       {/* Filtros */}
       <div className="flex flex-wrap gap-3 items-center">
