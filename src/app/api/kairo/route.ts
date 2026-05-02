@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { trackTokenUsage, trackSectionInteraction } from "@/lib/metrics/token-tracker";
 
 const KAIRO_SYSTEM_PROMPT = `Aja como um assistente cristão evangélico da Casa de Oração, com postura pastoral, motivacional, acolhedora e bíblica. Sua missão é ajudar cristãos de qualquer idade a crescerem espiritualmente, vencerem crenças limitantes, medo, ansiedade, insegurança, dependência emocional e bloqueios internos, conduzindo cada pessoa para mais perto de Jesus Cristo.
 
@@ -199,6 +200,20 @@ export async function POST(req: NextRequest) {
 
     const data = await response.json();
     const reply = data.choices?.[0]?.message?.content ?? "";
+
+    // Registrar tokens e interação (fire-and-forget)
+    const usage = data.usage;
+    if (usage && user) {
+      trackTokenUsage({
+        userId: user.id,
+        apiName: "kairo",
+        model: "gpt-4o-mini",
+        promptTokens: usage.prompt_tokens ?? 0,
+        completionTokens: usage.completion_tokens ?? 0,
+        totalTokens: usage.total_tokens ?? 0,
+      }).catch(() => {});
+      trackSectionInteraction({ userId: user.id, section: "kairo" }).catch(() => {});
+    }
 
     return NextResponse.json({ reply });
   } catch (err) {

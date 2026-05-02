@@ -109,18 +109,14 @@ export default function RegisterPage() {
         gender: form.gender as "male" | "female",
         is_legendario: form.is_legendario,
         is_legendario_spouse: form.is_legendario_spouse,
-        status: "pending",
-        approved_by: null,
-        approved_at: null,
+        status: "approved",
       });
 
       if (profileError) {
-        setError("Erro ao salvar seu perfil. Entre em contato com o administrador.");
-        setLoading(false);
-        return;
+        console.error("[register] profileError:", profileError.message);
       }
 
-      // Notifica o admin por email (fire-and-forget — não bloqueia o usuário)
+      // Notifica o admin (fire-and-forget)
       fetch("/api/notify/new-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -128,7 +124,7 @@ export default function RegisterPage() {
       }).catch(() => {});
     }
 
-    router.push("/pending-approval");
+    router.push("/home");
   }
 
   return (
@@ -139,7 +135,7 @@ export default function RegisterPage() {
           className="text-xs tracking-widest uppercase"
           style={{ color: "rgba(201,162,39,0.6)", fontFamily: "var(--font-cinzel)" }}
         >
-          Solicitar Acesso
+          Criar Conta
         </p>
       </div>
 
@@ -287,7 +283,7 @@ export default function RegisterPage() {
                 Voltar
               </button>
               <button type="submit" className="btn-primary flex-1" disabled={loading}>
-                {loading ? "Enviando..." : "Solicitar Acesso"}
+                {loading ? "Criando conta..." : "Criar Conta"}
               </button>
             </div>
           </div>

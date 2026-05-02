@@ -27,7 +27,7 @@ export default async function AppLayout({
 
   const profile = profileData as Profile | null;
 
-  if (!profile || profile.status === "pending") redirect("/pending-approval");
+  if (!profile) redirect("/register");
   if (profile.status === "rejected" || profile.status === "banned") {
     redirect("/login");
   }

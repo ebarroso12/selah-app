@@ -20,13 +20,11 @@ export async function GET(request: Request) {
         return NextResponse.redirect(`${origin}/register`);
       }
 
-      if (profile.status === "pending") {
-        return NextResponse.redirect(`${origin}/pending-approval`);
+      if (profile.status === "rejected" || profile.status === "banned") {
+        return NextResponse.redirect(`${origin}/login?error=blocked`);
       }
 
-      if (profile.status === "approved") {
-        return NextResponse.redirect(`${origin}/home`);
-      }
+      return NextResponse.redirect(`${origin}/home`);
     }
   }
 
