@@ -58,9 +58,11 @@ function LoginForm() {
   async function handleGoogleLogin() {
     setError(null);
     const supabase = createClient();
+    // Usa a URL de producao configurada para evitar redirect para localhost
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || (typeof window !== 'undefined' ? window.location.origin : '');
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${location.origin}/auth/callback` },
+      options: { redirectTo: `${appUrl}/auth/callback` },
     });
   }
 
