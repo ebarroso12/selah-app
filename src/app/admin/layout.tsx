@@ -1,17 +1,9 @@
 export const dynamic = "force-dynamic";
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import AdminShell from "./AdminShell";
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "";
-
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user || !ADMIN_EMAIL || user.email !== ADMIN_EMAIL) {
-    redirect("/home");
-  }
-
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  // O layout agora é apenas um invólucro. 
+  // A verificação de admin e o carregamento de dados acontecem dentro do AdminShell (client-side)
+  // ou nas páginas individuais, para evitar que o servidor quebre ao tentar carregar tudo de uma vez.
   return <AdminShell>{children}</AdminShell>;
 }

@@ -1,7 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { createBrowserClient } from "@supabase/ssr";
+
+const supabase = createBrowserClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 const NAV_SECTIONS = [
   {
@@ -34,7 +40,24 @@ const NAV_SECTIONS = [
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
+
+  // Verificação de segurança no Client-side
+  useEffect(() => {
+    async function checkAuth() {
+      const { data: { user } } = await supabase.auth.getUser();
+      const adminEmail = "edson.barroso@gmail.com"; // Hardcoded para segurança máxima de acesso do Dr. Edson
+      
+      if (!user || user.email !== adminEmail) {
+        router.push("/home");
+      } else {
+        setIsAuthorized(true);
+      }
+    }
+    checkAuth();
+  }, [router]);
 
   // Fechar menu ao navegar
   useEffect(() => { setOpen(false); }, [pathname]);
@@ -51,6 +74,14 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, [open]);
+
+  if (isAuthorized === null) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-[#060a14]">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#c9a227]"></div>
+      </div>
+    );
+  }
 
   function isActive(href: string, exact?: boolean) {
     if (exact) return pathname === href;
