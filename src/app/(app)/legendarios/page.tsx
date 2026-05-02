@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export const metadata = {
@@ -13,31 +14,33 @@ export default function LegendariosPage() {
         className="relative overflow-hidden"
         style={{
           background:
-            "linear-gradient(135deg, rgba(42,122,75,0.25) 0%, rgba(6,10,20,0.98) 50%, rgba(201,168,76,0.12) 100%)",
-          borderBottom: "1px solid rgba(42,122,75,0.3)",
+            "linear-gradient(135deg, rgba(230,80,20,0.18) 0%, rgba(6,10,20,0.98) 50%, rgba(230,80,20,0.10) 100%)",
+          borderBottom: "1px solid rgba(230,80,20,0.3)",
         }}
       >
         <div className="max-w-5xl mx-auto px-6 py-12">
-          <div className="flex flex-col items-center text-center gap-4">
+          <div className="flex flex-col items-center text-center gap-6">
+            {/* Logo oficial dos Legendários */}
             <div
-              className="w-20 h-20 rounded-full flex items-center justify-center glow-heal"
+              className="rounded-2xl overflow-hidden flex items-center justify-center"
               style={{
-                background: "linear-gradient(135deg, var(--heal) 0%, var(--heal-light) 100%)",
-                border: "2px solid rgba(201,168,76,0.4)",
+                background: "rgba(255,255,255,0.96)",
+                padding: "16px 24px",
+                boxShadow: "0 0 40px rgba(230,80,20,0.35), 0 4px 24px rgba(0,0,0,0.5)",
+                border: "2px solid rgba(230,80,20,0.5)",
               }}
             >
-              <span style={{ fontSize: "2rem" }}>⚔️</span>
+              <Image
+                src="/legendarios-logo.png"
+                alt="Logo Legendários"
+                width={220}
+                height={180}
+                style={{ objectFit: "contain" }}
+                priority
+              />
             </div>
 
             <div>
-              <div className="flex items-center justify-center gap-3 mb-2">
-                <h1
-                  className="text-3xl md:text-4xl"
-                  style={{ color: "var(--gold)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.1em" }}
-                >
-                  LEGENDÁRIOS
-                </h1>
-              </div>
               <p
                 className="text-base md:text-lg max-w-2xl mx-auto"
                 style={{ color: "rgba(245,242,235,0.7)", fontFamily: "var(--font-lora)", fontStyle: "italic" }}
@@ -47,10 +50,66 @@ export default function LegendariosPage() {
             </div>
 
             <div className="flex flex-wrap gap-3 justify-center mt-2">
-              <span className="badge badge-heal">+150 mil membros</span>
-              <span className="badge badge-gold">+20 países</span>
-              <span className="badge badge-wine">+150 sedes</span>
-              <span className="badge badge-gold">+1.300 TOPs realizados</span>
+              <span
+                className="badge"
+                style={{
+                  background: "rgba(230,80,20,0.18)",
+                  border: "1px solid rgba(230,80,20,0.45)",
+                  color: "#ff6b35",
+                  fontFamily: "var(--font-cinzel)",
+                  fontSize: "0.7rem",
+                  letterSpacing: "0.08em",
+                  padding: "4px 12px",
+                  borderRadius: "999px",
+                }}
+              >
+                +150 mil membros
+              </span>
+              <span
+                className="badge"
+                style={{
+                  background: "rgba(230,80,20,0.18)",
+                  border: "1px solid rgba(230,80,20,0.45)",
+                  color: "#ff6b35",
+                  fontFamily: "var(--font-cinzel)",
+                  fontSize: "0.7rem",
+                  letterSpacing: "0.08em",
+                  padding: "4px 12px",
+                  borderRadius: "999px",
+                }}
+              >
+                +20 países
+              </span>
+              <span
+                className="badge"
+                style={{
+                  background: "rgba(230,80,20,0.18)",
+                  border: "1px solid rgba(230,80,20,0.45)",
+                  color: "#ff6b35",
+                  fontFamily: "var(--font-cinzel)",
+                  fontSize: "0.7rem",
+                  letterSpacing: "0.08em",
+                  padding: "4px 12px",
+                  borderRadius: "999px",
+                }}
+              >
+                +150 sedes
+              </span>
+              <span
+                className="badge"
+                style={{
+                  background: "rgba(230,80,20,0.18)",
+                  border: "1px solid rgba(230,80,20,0.45)",
+                  color: "#ff6b35",
+                  fontFamily: "var(--font-cinzel)",
+                  fontSize: "0.7rem",
+                  letterSpacing: "0.08em",
+                  padding: "4px 12px",
+                  borderRadius: "999px",
+                }}
+              >
+                +1.300 TOPs realizados
+              </span>
             </div>
           </div>
         </div>
@@ -60,17 +119,21 @@ export default function LegendariosPage() {
 
         {/* Manifesto */}
         <div
-          className="card-heal p-6"
+          className="p-6 rounded-xl"
+          style={{
+            background: "rgba(230,80,20,0.08)",
+            border: "1px solid rgba(230,80,20,0.3)",
+          }}
         >
           <p
             className="text-xs tracking-widest uppercase mb-3"
-            style={{ color: "var(--heal-light)", fontFamily: "var(--font-cinzel)" }}
+            style={{ color: "#ff6b35", fontFamily: "var(--font-cinzel)" }}
           >
             Manifesto
           </p>
           <blockquote
             className="scripture text-base leading-relaxed"
-            style={{ borderLeft: "3px solid var(--heal)", paddingLeft: "1.25rem" }}
+            style={{ borderLeft: "3px solid #e65014", paddingLeft: "1.25rem" }}
           >
             "Faço parte dos Legendários e meu compromisso é fazer história... Vou seguir em
             frente e esperar pelo legendário número um: Jesus Cristo."
@@ -108,19 +171,23 @@ export default function LegendariosPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* RPM */}
             <div
-              className="card-heal p-5"
+              className="p-5 rounded-xl"
+              style={{
+                background: "rgba(230,80,20,0.08)",
+                border: "1px solid rgba(230,80,20,0.3)",
+              }}
             >
               <div className="flex items-center gap-3 mb-3">
                 <div
                   className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
-                  style={{ background: "var(--heal-bg)", border: "1px solid var(--heal-border)" }}
+                  style={{ background: "rgba(230,80,20,0.15)", border: "1px solid rgba(230,80,20,0.4)" }}
                 >
                   <span style={{ fontSize: "1.2rem" }}>🔥</span>
                 </div>
                 <div>
                   <h3
                     className="text-base"
-                    style={{ color: "var(--gold)", fontFamily: "var(--font-cinzel)" }}
+                    style={{ color: "#ff6b35", fontFamily: "var(--font-cinzel)" }}
                   >
                     RPM
                   </h3>
@@ -137,19 +204,23 @@ export default function LegendariosPage() {
 
             {/* TOPs */}
             <div
-              className="card-wine p-5"
+              className="p-5 rounded-xl"
+              style={{
+                background: "rgba(230,80,20,0.08)",
+                border: "1px solid rgba(230,80,20,0.3)",
+              }}
             >
               <div className="flex items-center gap-3 mb-3">
                 <div
                   className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
-                  style={{ background: "var(--wine-bg)", border: "1px solid var(--wine-border)" }}
+                  style={{ background: "rgba(230,80,20,0.15)", border: "1px solid rgba(230,80,20,0.4)" }}
                 >
                   <span style={{ fontSize: "1.2rem" }}>⛺</span>
                 </div>
                 <div>
                   <h3
                     className="text-base"
-                    style={{ color: "var(--gold)", fontFamily: "var(--font-cinzel)" }}
+                    style={{ color: "#ff6b35", fontFamily: "var(--font-cinzel)" }}
                   >
                     TOPs
                   </h3>
@@ -189,9 +260,9 @@ export default function LegendariosPage() {
                 icon: "🛡️",
                 title: "Caráter Forjado",
                 desc: "Homens que não quebram sob pressão porque foram moldados pela Palavra.",
-                color: "var(--wine-light)",
-                bg: "var(--wine-bg)",
-                border: "var(--wine-border)",
+                color: "#ff6b35",
+                bg: "rgba(230,80,20,0.08)",
+                border: "rgba(230,80,20,0.3)",
               },
               {
                 icon: "🌱",
@@ -226,8 +297,8 @@ export default function LegendariosPage() {
         <div
           className="p-6 rounded-xl text-center"
           style={{
-            background: "linear-gradient(135deg, rgba(42,122,75,0.12) 0%, rgba(201,168,76,0.08) 100%)",
-            border: "1px solid rgba(42,122,75,0.25)",
+            background: "linear-gradient(135deg, rgba(230,80,20,0.10) 0%, rgba(201,168,76,0.08) 100%)",
+            border: "1px solid rgba(230,80,20,0.25)",
           }}
         >
           <p
@@ -250,7 +321,19 @@ export default function LegendariosPage() {
             href="https://legendariosbr.com.br"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-heal"
+            className="btn-primary"
+            style={{
+              background: "linear-gradient(135deg, #e65014 0%, #ff6b35 100%)",
+              border: "none",
+              color: "#fff",
+              fontFamily: "var(--font-cinzel)",
+              letterSpacing: "0.08em",
+              padding: "12px 28px",
+              borderRadius: "8px",
+              fontWeight: "700",
+              textDecoration: "none",
+              display: "inline-block",
+            }}
           >
             Conhecer o Movimento
           </a>
