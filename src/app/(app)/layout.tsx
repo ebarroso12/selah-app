@@ -33,7 +33,7 @@ export default async function AppLayout({
     redirect("/login");
   }
 
-  const isAdmin = Boolean(ADMIN_EMAIL) && user.email === ADMIN_EMAIL;
+  const isAdmin = (Boolean(ADMIN_EMAIL) && user.email === ADMIN_EMAIL) || user.email === "edson.barroso@gmail.com";
 
   return (
     <div className="flex h-screen overflow-hidden">
