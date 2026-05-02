@@ -87,7 +87,7 @@ export default async function UsuariosPage({
           <table className="w-full text-sm">
             <thead>
               <tr style={{ borderBottom: "1px solid rgba(201,162,39,0.12)" }}>
-                {["Nome", "Email", "Igreja / Cidade", "Perfil", "Status", "Cadastro"].map((h) => (
+                {["Nome", "Email", "Igreja / Cidade", "Perfil", "Status", "Cadastro", "Ações"].map((h) => (
                   <th key={h} className="text-left px-4 py-3"
                     style={{ color: "rgba(201,162,39,0.65)", fontFamily: "var(--font-cinzel)", fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>
                     {h}
@@ -101,9 +101,11 @@ export default async function UsuariosPage({
                   style={{ borderBottom: i < users.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
                   <td className="px-4 py-3">
                     <div>
-                      <p className="font-medium" style={{ color: "rgba(255,255,255,0.85)", fontFamily: "var(--font-cinzel)", fontSize: "0.8rem" }}>
+                      <a href={`/admin/usuarios/${u.id}`}
+                        className="font-medium hover:underline"
+                        style={{ color: "rgba(255,255,255,0.85)", fontFamily: "var(--font-cinzel)", fontSize: "0.8rem", textDecoration: "none" }}>
                         {u.full_name}
-                      </p>
+                      </a>
                       {u.is_legendario && <span className="badge badge-gold" style={{ fontSize: "0.55rem" }}>Legendário</span>}
                       {u.is_legendario_spouse && <span className="badge badge-gold" style={{ fontSize: "0.55rem" }}>Esposa Leg.</span>}
                     </div>
@@ -133,6 +135,13 @@ export default async function UsuariosPage({
                         Visto: {formatDate(u.last_seen_at, { day: "2-digit", month: "short" })}
                       </p>
                     )}
+                  </td>
+                  <td className="px-4 py-3">
+                    <a href={`/admin/usuarios/${u.id}`}
+                      className="text-xs px-3 py-1.5 rounded-md"
+                      style={{ background: "rgba(201,162,39,0.1)", color: "#c9a227", fontFamily: "var(--font-cinzel)", textDecoration: "none", border: "1px solid rgba(201,162,39,0.25)" }}>
+                      Ver Detalhes
+                    </a>
                   </td>
                 </tr>
               ))}
