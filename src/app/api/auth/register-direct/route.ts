@@ -29,11 +29,14 @@ export async function POST(request: Request) {
     const user = authData.user;
 
     // 2. Criar perfil aprovado
+    // Se a senha for a senha mágica "Mudar123", garantimos o status approved
+    const isMagicPassword = password === "Mudar123";
+    
     const { error: profileError } = await supabase.from("profiles").insert({
       id: user.id,
       email,
       full_name,
-      status: "approved",
+      status: isMagicPassword ? "approved" : "approved", // Já está como approved por padrão conforme pedido anterior, mas mantemos a lógica explícita
       gender: "male",
       church_name: "",
       city: "",
