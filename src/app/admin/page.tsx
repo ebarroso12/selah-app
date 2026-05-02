@@ -1,100 +1,96 @@
-export const dynamic = "force-dynamic";
-import { createServiceClient } from "@/lib/supabase/server";
+"use client";
+import { useEffect, useState, useCallback } from "react";
+import { createBrowserClient } from "@supabase/ssr";
 import Link from "next/link";
 
-async function getAdminStats() {
-  // ACESSO MASTER: Ignora RLS para garantir dados 100% reais
-  const supabase = await createServiceClient();
+const supabase = createBrowserClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
-  const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
-  const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-
-  const [
-    { data: allUsers, error: errUsers },
-    { count: totalDevotionals },
-    { count: openPrayers },
-    { data: metricsData },
-    { count: totalEvents },
-    { data: allHomenagens }
-  ] = await Promise.all([
-    supabase
-      .from("profiles")
-      .select("id, full_name, email, status, created_at, last_seen_at, city, state")
-      .order("created_at", { ascending: false }),
-    supabase.from("devotionals").select("*", { count: "exact", head: true }),
-    supabase.from("prayer_requests").select("*", { count: "exact", head: true }).eq("status", "open"),
-    supabase.from("user_metrics").select("user_id, session_duration_seconds, date"),
-    supabase.from("events").select("*", { count: "exact", head: true }),
-    supabase.from("homenagens").select("id, status")
-  ]);
-
-  if (errUsers) console.error("[ADMIN_STATS] Erro ao buscar usuários:", errUsers);
-
-  const users = allUsers ?? [];
-  const metrics = metricsData ?? [];
-  const homenagens = allHomenagens ?? [];
-
-  // Cálculo de métricas por usuário
-  const metricsByUser: Record<string, { totalSeconds: number; sessionDays: number }> = {};
-  metrics.forEach(m => {
-    if (!metricsByUser[m.user_id]) metricsByUser[m.user_id] = { totalSeconds: 0, sessionDays: 0 };
-    metricsByUser[m.user_id].totalSeconds += m.session_duration_seconds ?? 0;
-    metricsByUser[m.user_id].sessionDays += 1;
-  });
-
-  const enrichedUsers = users.map(u => ({
-    ...u,
-    totalMinutes: Math.round((metricsByUser[u.id]?.totalSeconds ?? 0) / 60),
-    isOnline: u.last_seen_at ? u.last_seen_at >= fiveMinAgo : false,
-    activeToday: u.last_seen_at ? u.last_seen_at >= oneDayAgo : false,
-    neverLoggedIn: !u.last_seen_at
-  }));
-
-  return {
-    totalUsers: users.length,
-    onlineNow: enrichedUsers.filter(u => u.isOnline).length,
-    neverLoggedIn: enrichedUsers.filter(u => u.neverLoggedIn).length,
-    activeToday: enrichedUsers.filter(u => u.activeToday).length,
-    totalMinutesAll: enrichedUsers.reduce((acc, u) => acc + u.totalMinutes, 0),
-    totalDevotionals: totalDevotionals ?? 0,
-    openPrayers: openPrayers ?? 0,
-    totalEvents: totalEvents ?? 0,
-    homenagensPendentes: homenagens.filter(h => h.status === 'pending').length,
-    enrichedUsers
-  };
+interface AdminStats {
+  totalUsers: number;
+  onlineNow: number;
+  activeToday: number;
+  neverLoggedIn: number;
+  totalMinutesAll: number;
+  totalDevotionals: number;
+  openPrayers: number;
+  totalEvents: number;
+  homenagensPendentes: number;
+  users: any[];
 }
 
-function formatMinutes(min: number): string {
-  if (min < 60) return `${min}min`;
-  const h = Math.floor(min / 60);
-  const m = min % 60;
-  return m > 0 ? `${h}h ${m}min` : `${h}h`;
-}
+export default function AdminDashboard() {
+  const [stats, setStats] = useState<AdminStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [lastUpdate, setLastUpdate] = useState(new Date());
 
-export default async function AdminDashboard() {
-  const stats = await getAdminStats();
+  const fetchStats = useCallback(async () => {
+    try {
+      const res = await fetch("/api/admin/stats");
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      setStats(data);
+      setLastUpdate(new Date());
+    } catch (err) {
+      console.error("Erro ao buscar estatísticas:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchStats();
+
+    // REALTIME: Escutar mudanças em tabelas críticas para atualizar o painel na hora
+    const channel = supabase
+      .channel("admin-realtime")
+      .on("postgres_changes", { event: "*", schema: "public", table: "profiles" }, () => fetchStats())
+      .on("postgres_changes", { event: "*", schema: "public", table: "prayer_requests" }, () => fetchStats())
+      .on("postgres_changes", { event: "*", schema: "public", table: "homenagens" }, () => fetchStats())
+      .subscribe();
+
+    // Atualizar a cada 30 segundos como fallback
+    const interval = setInterval(fetchStats, 30000);
+
+    return () => {
+      supabase.removeChannel(channel);
+      clearInterval(interval);
+    };
+  }, [fetchStats]);
+
+  if (loading && !stats) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#c9a227]"></div>
+      </div>
+    );
+  }
 
   const kpis = [
-    { label: "Total Cadastrados", value: stats.totalUsers, color: "#c9a227", href: "/admin/usuarios", icon: "👥" },
-    { label: "Online Agora", value: stats.onlineNow, color: "#34d399", href: "/admin/usuarios", icon: "🟢", urgent: stats.onlineNow > 0 },
-    { label: "Ativos Hoje", value: stats.activeToday, color: "#60a5fa", href: "/admin/usuarios", icon: "📅" },
-    { label: "Nunca Entraram", value: stats.neverLoggedIn, color: "#fbbf24", href: "/admin/usuarios", icon: "⚠️" },
-    { label: "Devocionais", value: stats.totalDevotionals, color: "#a78bfa", href: "/admin/conteudo", icon: "📖" },
-    { label: "Eventos", value: stats.totalEvents, color: "#f472b6", href: "/admin/eventos", icon: "📅" },
-    { label: "Min. Uso Total", value: stats.totalMinutesAll, color: "#fb923c", href: "/admin/metricas", icon: "⏱️" },
-    { label: "Homenagens Pend.", value: stats.homenagensPendentes, color: "#ef4444", href: "/admin/homenagens", icon: "🎖️" }
+    { label: "Total Cadastrados", value: stats?.totalUsers || 0, color: "#c9a227", href: "/admin/usuarios", icon: "👥" },
+    { label: "Online Agora", value: stats?.onlineNow || 0, color: "#34d399", href: "/admin/usuarios", icon: "🟢", urgent: (stats?.onlineNow || 0) > 0 },
+    { label: "Ativos Hoje", value: stats?.activeToday || 0, color: "#60a5fa", href: "/admin/usuarios", icon: "📅" },
+    { label: "Nunca Entraram", value: stats?.neverLoggedIn || 0, color: "#fbbf24", href: "/admin/usuarios", icon: "⚠️" },
+    { label: "Devocionais", value: stats?.totalDevotionals || 0, color: "#a78bfa", href: "/admin/conteudo", icon: "📖" },
+    { label: "Eventos", value: stats?.totalEvents || 0, color: "#f472b6", href: "/admin/eventos", icon: "📅" },
+    { label: "Min. Uso Total", value: stats?.totalMinutesAll || 0, color: "#fb923c", href: "/admin/metricas", icon: "⏱️" },
+    { label: "Homenagens Pend.", value: stats?.homenagensPendentes || 0, color: "#ef4444", href: "/admin/homenagens", icon: "🎖️" }
   ];
+
+  const onlineUsers = stats?.users.filter(u => u.isOnline) || [];
 
   return (
     <div className="space-y-6 p-4 md:p-6">
       <div className="flex justify-between items-start">
         <div>
           <h1 className="text-2xl mb-1" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Painel Master</h1>
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>Controle em tempo real · SELAH · Dr. Edson Barroso</p>
+          <p className="text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>Controle em Tempo Real · SELAH · Dr. Edson Barroso</p>
         </div>
         <div className="text-right">
-          <p className="text-[10px] uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.3)" }}>Última Atualização</p>
-          <p className="text-xs font-mono" style={{ color: "#c9a227" }}>{new Date().toLocaleTimeString("pt-BR")}</p>
+          <p className="text-[10px] uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.3)" }}>Sincronizado</p>
+          <p className="text-xs font-mono" style={{ color: "#34d399" }}>{lastUpdate.toLocaleTimeString("pt-BR")}</p>
         </div>
       </div>
 
@@ -111,15 +107,15 @@ export default async function AdminDashboard() {
         ))}
       </div>
 
-      <div className="card p-5" style={{ borderColor: stats.onlineNow > 0 ? "rgba(52,211,153,0.3)" : "rgba(255,255,255,0.06)", background: stats.onlineNow > 0 ? "rgba(52,211,153,0.04)" : "transparent" }}>
-        <p className="text-xs tracking-widest uppercase mb-4 flex items-center gap-2" style={{ color: stats.onlineNow > 0 ? "#34d399" : "rgba(255,255,255,0.4)", fontFamily: "var(--font-cinzel)" }}>
-          {stats.onlineNow > 0 ? "🟢" : "⚪"} Usuários Online Agora ({stats.onlineNow})
+      <div className="card p-5" style={{ borderColor: onlineUsers.length > 0 ? "rgba(52,211,153,0.3)" : "rgba(255,255,255,0.06)", background: onlineUsers.length > 0 ? "rgba(52,211,153,0.04)" : "transparent" }}>
+        <p className="text-xs tracking-widest uppercase mb-4 flex items-center gap-2" style={{ color: onlineUsers.length > 0 ? "#34d399" : "rgba(255,255,255,0.4)", fontFamily: "var(--font-cinzel)" }}>
+          {onlineUsers.length > 0 ? "🟢" : "⚪"} Usuários Online Agora ({onlineUsers.length})
         </p>
-        {stats.onlineNow === 0 ? (
+        {onlineUsers.length === 0 ? (
           <p className="text-sm py-4 text-center" style={{ color: "rgba(255,255,255,0.2)" }}>Nenhum usuário online no momento.</p>
         ) : (
           <div className="space-y-3">
-            {stats.enrichedUsers.filter(u => u.isOnline).map((u) => (
+            {onlineUsers.map((u) => (
               <div key={u.id} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
                 <div>
                   <p className="text-sm font-medium" style={{ color: "rgba(255,255,255,0.9)", fontFamily: "var(--font-cinzel)" }}>{u.full_name}</p>
@@ -127,7 +123,7 @@ export default async function AdminDashboard() {
                 </div>
                 <div className="text-right">
                   <span className="text-[10px] px-2 py-0.5 rounded-full uppercase tracking-tighter" style={{ background: "rgba(52,211,153,0.15)", color: "#34d399", border: "1px solid rgba(52,211,153,0.3)" }}>Ativo</span>
-                  <p className="text-[10px] mt-1" style={{ color: "rgba(255,255,255,0.3)" }}>{formatMinutes(u.totalMinutes)} hoje</p>
+                  <p className="text-[10px] mt-1" style={{ color: "rgba(255,255,255,0.3)" }}>{u.totalMinutes} min hoje</p>
                 </div>
               </div>
             ))}
