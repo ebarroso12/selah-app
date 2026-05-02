@@ -12,6 +12,7 @@ const PUBLIC_PATHS = [
   "/forgot-password",
   "/reset-password",
   "/preview",
+  "/api/admin/setup-users",
 ];
 const ADMIN_PATHS = ["/admin"];
 const AUTH_CALLBACK = "/auth/callback";
