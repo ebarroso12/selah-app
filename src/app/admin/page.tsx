@@ -7,7 +7,6 @@ async function getAdminStats() {
 
   // Considera "online agora" quem teve last_seen_at nos últimos 5 minutos
   const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
-  // Considera "nunca entrou" quem não tem last_seen_at
   // Considera "ativo hoje" quem teve last_seen_at nas últimas 24h
   const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
@@ -16,6 +15,7 @@ async function getAdminStats() {
     { count: totalDevotionals },
     { count: openPrayers },
     { data: metricsData },
+    { count: totalEvents },
   ] = await Promise.all([
     supabase
       .from("profiles")
@@ -26,6 +26,7 @@ async function getAdminStats() {
     supabase
       .from("user_metrics")
       .select("user_id, session_duration_seconds, date"),
+    supabase.from("events").select("*", { count: "exact", head: true }),
   ]);
 
   const users = allUsers ?? [];
@@ -65,6 +66,7 @@ async function getAdminStats() {
     totalMinutesAll,
     totalDevotionals: totalDevotionals ?? 0,
     openPrayers: openPrayers ?? 0,
+    totalEvents: totalEvents ?? 0,
     enrichedUsers,
   };
 }
@@ -74,19 +76,6 @@ function formatMinutes(min: number): string {
   const h = Math.floor(min / 60);
   const m = min % 60;
   return m > 0 ? `${h}h ${m}min` : `${h}h`;
-}
-
-function timeAgo(iso: string | null): string {
-  if (!iso) return "Nunca";
-  const diff = Date.now() - new Date(iso).getTime();
-  const min = Math.floor(diff / 60000);
-  if (min < 1) return "Agora";
-  if (min < 60) return `${min}min atrás`;
-  const h = Math.floor(min / 60);
-  if (h < 24) return `${h}h atrás`;
-  const d = Math.floor(h / 24);
-  if (d < 7) return `${d}d atrás`;
-  return new Date(iso).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" });
 }
 
 export default async function AdminDashboard() {
@@ -131,11 +120,11 @@ export default async function AdminDashboard() {
       icon: "📖",
     },
     {
-      label: "Orações Abertas",
-      value: stats.openPrayers,
+      label: "Eventos",
+      value: stats.totalEvents,
       color: "#f472b6",
-      href: "/admin/metricas",
-      icon: "🙏",
+      href: "/admin/eventos",
+      icon: "📅",
     },
     {
       label: "Min. Uso Total",
@@ -147,18 +136,23 @@ export default async function AdminDashboard() {
   ];
 
   const onlineUsers = stats.enrichedUsers.filter((u) => u.isOnline);
-  const neverUsers = stats.enrichedUsers.filter((u) => u.neverLoggedIn);
 
   return (
     <div className="space-y-6 p-4 md:p-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl mb-1" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>
-          Painel Master
-        </h1>
-        <p className="text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>
-          Controle total · SELAH · Dr. Edson Barroso
-        </p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-2xl mb-1" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>
+            Painel Master
+          </h1>
+          <p className="text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>
+            Controle em tempo real · SELAH · Dr. Edson Barroso
+          </p>
+        </div>
+        <div className="text-right">
+          <p className="text-[10px] uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.3)" }}>Última Atualização</p>
+          <p className="text-xs font-mono" style={{ color: "#c9a227" }}>{new Date().toLocaleTimeString("pt-BR")}</p>
+        </div>
       </div>
 
       {/* KPIs */}
@@ -173,7 +167,7 @@ export default async function AdminDashboard() {
             <div className="flex items-center gap-2 mb-1">
               <span style={{ fontSize: "1.1rem" }}>{kpi.icon}</span>
               {kpi.urgent && (
-                <span className="w-2 h-2 rounded-full" style={{ background: kpi.color, boxShadow: `0 0 6px ${kpi.color}` }} />
+                <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: kpi.color, boxShadow: `0 0 8px ${kpi.color}` }} />
               )}
             </div>
             <p className="text-2xl font-bold" style={{ color: kpi.color, fontFamily: "var(--font-cinzel)" }}>
@@ -187,191 +181,53 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Online agora */}
-      {onlineUsers.length > 0 && (
-        <div className="card p-5" style={{ borderColor: "rgba(52,211,153,0.3)", background: "rgba(52,211,153,0.04)" }}>
-          <p className="text-xs tracking-widest uppercase mb-4" style={{ color: "#34d399", fontFamily: "var(--font-cinzel)" }}>
-            🟢 Online Agora ({onlineUsers.length})
-          </p>
-          <div className="space-y-2">
+      <div className="card p-5" style={{ borderColor: onlineUsers.length > 0 ? "rgba(52,211,153,0.3)" : "rgba(255,255,255,0.06)", background: onlineUsers.length > 0 ? "rgba(52,211,153,0.04)" : "transparent" }}>
+        <p className="text-xs tracking-widest uppercase mb-4 flex items-center gap-2" style={{ color: onlineUsers.length > 0 ? "#34d399" : "rgba(255,255,255,0.4)", fontFamily: "var(--font-cinzel)" }}>
+          {onlineUsers.length > 0 ? "🟢" : "⚪"} Usuários Online Agora ({onlineUsers.length})
+        </p>
+        {onlineUsers.length === 0 ? (
+          <p className="text-sm py-4 text-center" style={{ color: "rgba(255,255,255,0.2)" }}>Nenhum usuário online no momento.</p>
+        ) : (
+          <div className="space-y-3">
             {onlineUsers.map((u) => (
-              <div key={u.id} className="flex items-center justify-between">
+              <div key={u.id} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
                 <div>
-                  <p className="text-sm font-medium" style={{ color: "rgba(255,255,255,0.9)", fontFamily: "var(--font-cinzel)", fontSize: "0.82rem" }}>
+                  <p className="text-sm font-medium" style={{ color: "rgba(255,255,255,0.9)", fontFamily: "var(--font-cinzel)" }}>
                     {u.full_name}
                   </p>
                   <p className="text-xs" style={{ color: "rgba(255,255,255,0.45)" }}>{u.email}</p>
                 </div>
                 <div className="text-right">
-                  <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "rgba(52,211,153,0.15)", color: "#34d399", border: "1px solid rgba(52,211,153,0.3)" }}>
-                    Online
+                  <span className="text-[10px] px-2 py-0.5 rounded-full uppercase tracking-tighter" style={{ background: "rgba(52,211,153,0.15)", color: "#34d399", border: "1px solid rgba(52,211,153,0.3)" }}>
+                    Ativo
                   </span>
-                  <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.3)" }}>{formatMinutes(u.totalMinutes)} de uso</p>
+                  <p className="text-[10px] mt-1" style={{ color: "rgba(255,255,255,0.3)" }}>{formatMinutes(u.totalMinutes)} hoje</p>
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      )}
-
-      {/* Nunca entraram */}
-      {neverUsers.length > 0 && (
-        <div className="card p-5" style={{ borderColor: "rgba(251,191,36,0.25)", background: "rgba(251,191,36,0.03)" }}>
-          <p className="text-xs tracking-widest uppercase mb-4" style={{ color: "#fbbf24", fontFamily: "var(--font-cinzel)" }}>
-            ⚠️ Cadastrados mas Nunca Entraram ({neverUsers.length})
-          </p>
-          <div className="space-y-2">
-            {neverUsers.map((u) => (
-              <div key={u.id} className="flex items-center justify-between py-1" style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-                <div>
-                  <p className="text-sm font-medium" style={{ color: "rgba(255,255,255,0.85)", fontFamily: "var(--font-cinzel)", fontSize: "0.82rem" }}>
-                    {u.full_name}
-                  </p>
-                  <p className="text-xs" style={{ color: "rgba(255,255,255,0.45)" }}>{u.email}</p>
-                </div>
-                <div className="text-right shrink-0">
-                  <p className="text-xs" style={{ color: "rgba(255,255,255,0.3)", fontFamily: "var(--font-cinzel)" }}>
-                    Cadastro: {new Date(u.created_at).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })}
-                  </p>
-                  <Link href={`/admin/usuarios/${u.id}`} className="text-xs" style={{ color: "rgba(201,162,39,0.7)", textDecoration: "none" }}>
-                    Ver perfil →
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Tabela completa de todos os usuários */}
-      <div className="card overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: "1px solid rgba(201,162,39,0.1)" }}>
-          <p className="text-xs tracking-widest uppercase" style={{ color: "rgba(201,162,39,0.6)", fontFamily: "var(--font-cinzel)" }}>
-            Todos os Usuários ({stats.totalUsers})
-          </p>
-          <Link href="/admin/usuarios" className="text-xs" style={{ color: "rgba(201,162,39,0.7)", fontFamily: "var(--font-cinzel)", textDecoration: "none" }}>
-            Gerenciar →
-          </Link>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr style={{ borderBottom: "1px solid rgba(201,162,39,0.1)" }}>
-                {["", "Nome / Email", "Último Acesso", "Logins", "Tempo de Uso", "Status"].map((h) => (
-                  <th
-                    key={h}
-                    className="text-left px-4 py-3"
-                    style={{ color: "rgba(201,162,39,0.55)", fontFamily: "var(--font-cinzel)", fontSize: "0.62rem", letterSpacing: "0.08em", textTransform: "uppercase" }}
-                  >
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {stats.enrichedUsers.map((u, i, arr) => (
-                <tr
-                  key={u.id}
-                  style={{ borderBottom: i < arr.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none" }}
-                >
-                  {/* Indicador online */}
-                  <td className="px-4 py-3 w-8">
-                    <span
-                      className="w-2 h-2 rounded-full block"
-                      style={{
-                        background: u.isOnline ? "#34d399" : u.activeToday ? "#60a5fa" : "rgba(255,255,255,0.15)",
-                        boxShadow: u.isOnline ? "0 0 6px #34d399" : "none",
-                      }}
-                    />
-                  </td>
-                  {/* Nome / Email */}
-                  <td className="px-4 py-3">
-                    <Link
-                      href={`/admin/usuarios/${u.id}`}
-                      style={{ color: "rgba(255,255,255,0.85)", fontFamily: "var(--font-cinzel)", fontSize: "0.8rem", textDecoration: "none" }}
-                    >
-                      {u.full_name}
-                    </Link>
-                    <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.72rem" }}>{u.email}</p>
-                  </td>
-                  {/* Último acesso */}
-                  <td className="px-4 py-3">
-                    <p
-                      style={{
-                        color: u.isOnline ? "#34d399" : u.neverLoggedIn ? "#fbbf24" : "rgba(255,255,255,0.45)",
-                        fontSize: "0.78rem",
-                        fontFamily: "var(--font-cinzel)",
-                      }}
-                    >
-                      {u.isOnline ? "🟢 Online" : timeAgo(u.last_seen_at)}
-                    </p>
-                  </td>
-                  {/* Logins (dias com sessão) */}
-                  <td className="px-4 py-3">
-                    <p style={{ color: u.loginDays > 0 ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.25)", fontSize: "0.82rem", fontFamily: "var(--font-cinzel)" }}>
-                      {u.loginDays > 0 ? `${u.loginDays}x` : "—"}
-                    </p>
-                  </td>
-                  {/* Tempo de uso */}
-                  <td className="px-4 py-3">
-                    <p style={{ color: u.totalMinutes > 0 ? "rgba(251,146,60,0.9)" : "rgba(255,255,255,0.25)", fontSize: "0.78rem", fontFamily: "var(--font-cinzel)" }}>
-                      {u.totalMinutes > 0 ? formatMinutes(u.totalMinutes) : "—"}
-                    </p>
-                  </td>
-                  {/* Status */}
-                  <td className="px-4 py-3">
-                    <span
-                      className="text-xs px-2 py-0.5 rounded-full"
-                      style={{
-                        background: u.status === "approved"
-                          ? "rgba(52,211,153,0.1)"
-                          : u.status === "banned"
-                          ? "rgba(239,68,68,0.1)"
-                          : "rgba(251,191,36,0.1)",
-                        color: u.status === "approved" ? "#34d399" : u.status === "banned" ? "#ef4444" : "#fbbf24",
-                        border: `1px solid ${u.status === "approved" ? "rgba(52,211,153,0.25)" : u.status === "banned" ? "rgba(239,68,68,0.25)" : "rgba(251,191,36,0.25)"}`,
-                        fontFamily: "var(--font-cinzel)",
-                        fontSize: "0.62rem",
-                        letterSpacing: "0.06em",
-                      }}
-                    >
-                      {u.status === "approved" ? "Ativo" : u.status === "banned" ? "Banido" : u.status === "rejected" ? "Rejeitado" : "Pendente"}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-              {stats.enrichedUsers.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="px-4 py-10 text-center">
-                    <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.85rem" }}>Nenhum usuário cadastrado.</p>
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+        )}
       </div>
 
-      {/* Ações rápidas */}
-      <div className="card p-5">
-        <p className="text-xs tracking-widest uppercase mb-4" style={{ color: "rgba(201,162,39,0.6)", fontFamily: "var(--font-cinzel)" }}>
-          Ações Rápidas
-        </p>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {[
-            { href: "/admin/usuarios", label: "Gerenciar Usuários", color: "#c9a227" },
-            { href: "/admin/metricas", label: "Ver Métricas", color: "#34d399" },
-            { href: "/admin/conteudo", label: "Novo Devocional", color: "#60a5fa" },
-            { href: "/admin/aprovacoes", label: "Aprovações", color: "#fbbf24" },
-          ].map((action) => (
-            <Link
-              key={action.href}
-              href={action.href}
-              className="btn-outline text-center text-xs py-3 block"
-              style={{ textDecoration: "none", borderColor: action.color + "40", color: action.color }}
-            >
-              {action.label}
-            </Link>
-          ))}
+      {/* Ações Rápidas */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="card p-5">
+          <h3 className="text-sm mb-4" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)" }}>Gerenciamento de Conteúdo</h3>
+          <div className="grid grid-cols-2 gap-2">
+            <Link href="/admin/conteudo" className="btn-outline text-xs py-2 text-center">Devocionais</Link>
+            <Link href="/admin/eventos" className="btn-outline text-xs py-2 text-center">Eventos</Link>
+            <Link href="/admin/legendarios" className="btn-outline text-xs py-2 text-center">Legendários</Link>
+            <Link href="/admin/igreja" className="btn-outline text-xs py-2 text-center">Igreja</Link>
+          </div>
+        </div>
+        <div className="card p-5">
+          <h3 className="text-sm mb-4" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)" }}>Moderação e Usuários</h3>
+          <div className="grid grid-cols-2 gap-2">
+            <Link href="/admin/usuarios" className="btn-outline text-xs py-2 text-center">Usuários</Link>
+            <Link href="/admin/oracoes" className="btn-outline text-xs py-2 text-center">Orações</Link>
+            <Link href="/admin/comunidade" className="btn-outline text-xs py-2 text-center">Comunidade</Link>
+            <Link href="/admin/homenagens" className="btn-outline text-xs py-2 text-center">Homenagens</Link>
+          </div>
         </div>
       </div>
     </div>
