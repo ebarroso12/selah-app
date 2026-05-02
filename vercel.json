@@ -16,5 +16,13 @@
         { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
       ]
     }
-  ]
+  ],
+  "env": {
+    "NEXT_PUBLIC_SUPABASE_URL": "https://urmhuxluepexyycptflr.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVybWh1eGx1ZXBleHl5Y3B0ZmxyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2MjY1OTksImV4cCI6MjA5MzIwMjU5OX0.xkJe3vAe8ofuDm5E81ZwksXBqz9N1TLrwf0KkalFYHo",
+    "SUPABASE_SERVICE_ROLE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVybWh1eGx1ZXBleHl5Y3B0ZmxyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzYyNjU5OSwiZXhwIjoyMDkzMjAyNTk5fQ.d_tWHDdQv8vdqQGCAefAnUcmnaYAnAAb0emUXuQ5TkA",
+    "ADMIN_EMAIL": "edson.barroso@gmail.com",
+    "NEXT_PUBLIC_APP_URL": "https://selah-lac.vercel.app",
+    "OPENAI_API_KEY": "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"
+  }
 }
