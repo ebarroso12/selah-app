@@ -16,9 +16,12 @@ export default function ForgotPasswordPage() {
     setLoading(true);
 
     const supabase = createClient();
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://selah-lac.vercel.app";
+    const redirectTo = typeof window !== 'undefined'
+      ? `${window.location.origin}/reset-password`
+      : 'https://selah-lac.vercel.app/reset-password';
+
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${appUrl}/reset-password`,
+      redirectTo,
     });
 
     if (resetError) {
