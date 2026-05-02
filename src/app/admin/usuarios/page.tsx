@@ -59,11 +59,18 @@ export default function AdminUsuariosPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    let query = supabase.from("profiles").select("*").order("created_at", { ascending: false }).limit(200);
-    if (filter !== "todos") query = query.eq("status", filter);
-    const { data } = await query;
-    setUsers((data ?? []) as Profile[]);
-    setLoading(false);
+    try {
+      // Usando a API interna que ignora RLS via Service Role
+      const res = await fetch(`/api/admin/users?filter=${filter}`);
+      const data = await res.json();
+      if (data.users) {
+        setUsers(data.users);
+      }
+    } catch (err) {
+      console.error("Erro ao carregar usuários:", err);
+    } finally {
+      setLoading(false);
+    }
   }, [filter]);
 
   useEffect(() => { load(); }, [load]);
@@ -76,26 +83,33 @@ export default function AdminUsuariosPage() {
   );
 
   async function updateStatus(id: string, status: string) {
-    await supabase.from("profiles").update({ status }).eq("id", id);
-    setMsg(`✓ Status atualizado para ${STATUS_LABEL[status]}.`);
+    // Para ações de escrita, usamos a API de admin que já deve estar configurada ou o próprio supabase client se o usuário for admin
+    const { error } = await supabase.from("profiles").update({ status }).eq("id", id);
+    if (error) {
+      setMsg("Erro ao atualizar status.");
+    } else {
+      setMsg(`✓ Status atualizado para ${STATUS_LABEL[status]}.`);
+      load();
+    }
     setTimeout(() => setMsg(""), 3000);
-    load();
   }
 
   async function deleteUser(id: string, name: string) {
     if (!confirm(`Excluir permanentemente "${name}"? Esta ação não pode ser desfeita.`)) return;
-    await supabase.from("user_metrics").delete().eq("user_id", id);
-    await supabase.from("prayer_requests").delete().eq("user_id", id);
-    await supabase.from("testimonies").delete().eq("user_id", id);
-    await supabase.from("profiles").delete().eq("id", id);
-    await fetch("/api/admin/delete-user", {
+    
+    const res = await fetch("/api/admin/delete-user", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId: id }),
-    }).catch(() => {});
-    setMsg(`✓ Usuário "${name}" excluído.`);
+    });
+    
+    if (res.ok) {
+      setMsg(`✓ Usuário "${name}" excluído.`);
+      load();
+    } else {
+      setMsg("Erro ao excluir usuário.");
+    }
     setTimeout(() => setMsg(""), 4000);
-    load();
   }
 
   async function invite() {
@@ -115,13 +129,12 @@ export default function AdminUsuariosPage() {
     load();
   }
 
-  const allUsers = users;
   const counts = {
-    todos: allUsers.length,
-    approved: allUsers.filter(u => u.status === "approved").length,
-    pending: allUsers.filter(u => u.status === "pending").length,
-    rejected: allUsers.filter(u => u.status === "rejected").length,
-    banned: allUsers.filter(u => u.status === "banned").length,
+    todos: users.length,
+    approved: users.filter(u => u.status === "approved").length,
+    pending: users.filter(u => u.status === "pending").length,
+    rejected: users.filter(u => u.status === "rejected").length,
+    banned: users.filter(u => u.status === "banned").length,
   };
 
   const inp = "w-full px-3 py-2 rounded-lg text-sm outline-none";
@@ -225,7 +238,6 @@ export default function AdminUsuariosPage() {
             const isOnline = u.last_seen_at && (Date.now() - new Date(u.last_seen_at).getTime()) < 5 * 60 * 1000;
             return (
               <div key={u.id} className="card p-4 space-y-3">
-                {/* Info do usuário */}
                 <div className="flex items-start justify-between gap-3 flex-wrap">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-0.5">
@@ -242,71 +254,39 @@ export default function AdminUsuariosPage() {
                           Legendário
                         </span>
                       )}
-                      {u.is_legendario_spouse && (
-                        <span className="text-xs px-1.5 py-0.5 rounded-full"
-                          style={{ background: "rgba(244,114,182,0.15)", color: "#f472b6", border: "1px solid rgba(244,114,182,0.3)", fontSize: "0.6rem" }}>
-                          Esposa
-                        </span>
-                      )}
                     </div>
                     <p className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>{u.email}</p>
-                    {u.whatsapp && <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>📱 {u.whatsapp}</p>}
                     <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
-                      {u.church_name} · {u.city}/{u.state} · {u.gender === "male" ? "Homem" : "Mulher"}
+                      {u.church_name} · {u.city}/{u.state}
                     </p>
                   </div>
                   <div className="flex flex-col items-end gap-1 shrink-0">
-                    <span className="text-xs px-2 py-0.5 rounded-full"
-                      style={{ background: `${sc}18`, color: sc, border: `1px solid ${sc}40`, fontFamily: "var(--font-cinzel)", fontSize: "0.62rem" }}>
-                      {STATUS_LABEL[u.status] ?? u.status}
+                    <span className="text-[10px] px-2 py-0.5 rounded-full uppercase font-bold"
+                      style={{ background: `${sc}15`, color: sc, border: `1px solid ${sc}30` }}>
+                      {STATUS_LABEL[u.status]}
                     </span>
-                    <p className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>
-                      {isOnline ? "🟢 Online agora" : `Visto: ${timeAgo(u.last_seen_at)}`}
-                    </p>
-                    <p className="text-xs" style={{ color: "rgba(255,255,255,0.2)" }}>
-                      Cadastro: {new Date(u.created_at).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })}
+                    <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.3)" }}>
+                      Visto: {timeAgo(u.last_seen_at)}
                     </p>
                   </div>
                 </div>
 
                 {/* Ações */}
-                <div className="flex gap-2 flex-wrap pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                <div className="flex gap-2 flex-wrap pt-2 border-t border-white/5">
                   {u.status !== "approved" && (
                     <button onClick={() => updateStatus(u.id, "approved")}
-                      className="px-3 py-1.5 rounded-lg text-xs font-semibold"
-                      style={{ background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.3)", color: "#34d399" }}>
-                      ✓ Aprovar
-                    </button>
-                  )}
-                  {u.status !== "pending" && (
-                    <button onClick={() => updateStatus(u.id, "pending")}
-                      className="px-3 py-1.5 rounded-lg text-xs"
-                      style={{ background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.2)", color: "#fbbf24" }}>
-                      Pendente
+                      className="px-3 py-1 rounded text-[10px] font-bold uppercase bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                      Aprovar
                     </button>
                   )}
                   {u.status !== "banned" && (
                     <button onClick={() => updateStatus(u.id, "banned")}
-                      className="px-3 py-1.5 rounded-lg text-xs"
-                      style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", color: "#f87171" }}>
+                      className="px-3 py-1 rounded text-[10px] font-bold uppercase bg-red-500/10 text-red-500 border border-red-500/20">
                       Banir
                     </button>
                   )}
-                  {u.status !== "rejected" && (
-                    <button onClick={() => updateStatus(u.id, "rejected")}
-                      className="px-3 py-1.5 rounded-lg text-xs"
-                      style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.15)", color: "rgba(239,68,68,0.7)" }}>
-                      Rejeitar
-                    </button>
-                  )}
-                  <a href={`/admin/usuarios/${u.id}`}
-                    className="px-3 py-1.5 rounded-lg text-xs"
-                    style={{ background: "rgba(96,165,250,0.1)", border: "1px solid rgba(96,165,250,0.2)", color: "#60a5fa", textDecoration: "none" }}>
-                    Ver Detalhes
-                  </a>
                   <button onClick={() => deleteUser(u.id, u.full_name)}
-                    className="px-3 py-1.5 rounded-lg text-xs ml-auto"
-                    style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.12)", color: "rgba(239,68,68,0.5)" }}>
+                    className="px-3 py-1 rounded text-[10px] font-bold uppercase bg-white/5 text-white/40 border border-white/10">
                     Excluir
                   </button>
                 </div>

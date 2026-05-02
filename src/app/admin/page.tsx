@@ -1,17 +1,16 @@
 export const dynamic = "force-dynamic";
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/server";
 import Link from "next/link";
 
 async function getAdminStats() {
-  const supabase = await createClient();
+  // USANDO SERVICE ROLE PARA CONTROLE ABSOLUTO E DADOS REAIS
+  const supabase = await createServiceClient();
 
-  // Considera "online agora" quem teve last_seen_at nos últimos 5 minutos
   const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
-  // Considera "ativo hoje" quem teve last_seen_at nas últimas 24h
   const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
   const [
-    { data: allUsers },
+    { data: allUsers, error: errUsers },
     { count: totalDevotionals },
     { count: openPrayers },
     { data: metricsData },
@@ -19,7 +18,7 @@ async function getAdminStats() {
   ] = await Promise.all([
     supabase
       .from("profiles")
-      .select("id, full_name, email, status, created_at, last_seen_at, city, state, is_legendario, gender")
+      .select("id, full_name, email, status, created_at, last_seen_at, is_legendario")
       .order("created_at", { ascending: false }),
     supabase.from("devotionals").select("*", { count: "exact", head: true }),
     supabase.from("prayer_requests").select("*", { count: "exact", head: true }).eq("status", "open"),
@@ -28,6 +27,10 @@ async function getAdminStats() {
       .select("user_id, session_duration_seconds, date"),
     supabase.from("events").select("*", { count: "exact", head: true }),
   ]);
+
+  if (errUsers) {
+    console.error("Erro ao buscar usuários no Admin:", errUsers);
+  }
 
   const users = allUsers ?? [];
   const metrics = metricsData ?? [];
@@ -42,7 +45,7 @@ async function getAdminStats() {
     metricsByUser[m.user_id].sessionDays += 1;
   }
 
-  // Enriquecer usuários com métricas
+  // Enriquecer usuários com métricas reais
   const enrichedUsers = users.map((u) => ({
     ...u,
     totalMinutes: Math.round((metricsByUser[u.id]?.totalSeconds ?? 0) / 60),
