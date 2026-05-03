@@ -116,7 +116,7 @@ export default function AdminUsuariosPage() {
     const res = await fetch("/api/admin/invite", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: inviteEmail, fullName: inviteName || inviteEmail.split("@")[0] }),
+      body: JSON.stringify({ email: inviteEmail, full_name: inviteName || inviteEmail.split("@")[0] }),
     });
     const data = await res.json();
     setInviting(false);

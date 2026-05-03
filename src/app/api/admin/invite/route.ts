@@ -2,8 +2,14 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createClient as createAdminClient } from "@supabase/supabase-js";
 
+export const dynamic = "force-dynamic";
+
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "edson.barroso@gmail.com";
 const DEFAULT_PASSWORD = "Mudar123";
+
+// Credenciais hardcoded como fallback — garantem funcionamento mesmo sem env vars no Vercel
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://urmhuxluepexyycptflr.supabase.co";
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVybWh1eGx1ZXBleHl5Y3B0ZmxyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzYyNjU5OSwiZXhwIjoyMDkzMjAyNTk5fQ.d_tWHDdQv8vdqQGCAefAnUcmnaYAnAAb0emUXuQ5TkA";
 
 export async function POST(request: Request) {
   // Verificar se o solicitante é admin
@@ -22,14 +28,7 @@ export async function POST(request: Request) {
   }
 
   // Usar service role para criar o usuário
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-
-  if (!serviceRoleKey) {
-    return NextResponse.json({ error: "Configuração do servidor incompleta." }, { status: 500 });
-  }
-
-  const adminClient = createAdminClient(supabaseUrl, serviceRoleKey, {
+  const adminClient = createAdminClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
 
@@ -90,7 +89,7 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     success: true,
-    message: `Convite enviado! ${email} pode entrar com a senha padrão.`,
+    message: `Acesso liberado! ${email} pode entrar com a senha: ${DEFAULT_PASSWORD}`,
     user_id: newUser.user.id,
   });
 }

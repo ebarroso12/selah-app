@@ -1,8 +1,7 @@
 "use client";
 export const dynamic = "force-dynamic";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getBrowserClient } from "@/lib/supabase/browser";
-
 
 type EventCategory = "culto" | "retiro" | "rpm" | "top" | "celula" | "outro";
 
@@ -55,6 +54,8 @@ export default function AdminEventosPage() {
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
   const [filter, setFilter] = useState<"upcoming" | "all">("upcoming");
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   async function load() {
     setLoading(true);
@@ -87,6 +88,30 @@ export default function AdminEventosPage() {
     });
     setShowForm(true);
     setMsg("");
+  }
+
+  async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    setMsg("Enviando imagem...");
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("folder", "eventos");
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const json = await res.json();
+      if (json.url) {
+        setForm(f => ({ ...f, image_url: json.url }));
+        setMsg("✓ Imagem enviada!");
+      } else {
+        setMsg("Erro no upload: " + (json.error || "desconhecido"));
+      }
+    } catch (err: any) {
+      setMsg("Erro no upload: " + err.message);
+    } finally {
+      setUploading(false);
+    }
   }
 
   async function save() {
@@ -193,11 +218,51 @@ export default function AdminEventosPage() {
               placeholder="Descrição do evento..."
               onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
           </div>
+
+          {/* Upload de imagem/panfleto */}
           <div>
-            <label className="block mb-1" style={labelStyle}>URL da imagem (opcional)</label>
-            <input className={inp} style={inpStyle} value={form.image_url} placeholder="https://..."
-              onChange={e => setForm(f => ({ ...f, image_url: e.target.value }))} />
+            <label className="block mb-1" style={labelStyle}>Panfleto / Imagem do Evento</label>
+            <div className="space-y-2">
+              {form.image_url && (
+                <div className="relative inline-block">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={form.image_url} alt="Panfleto" className="h-32 w-auto rounded-lg object-cover border border-white/10" />
+                  <button
+                    type="button"
+                    onClick={() => setForm(f => ({ ...f, image_url: "" }))}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                  >×</button>
+                </div>
+              )}
+              <div className="flex gap-2 items-center">
+                <button
+                  type="button"
+                  onClick={() => fileRef.current?.click()}
+                  disabled={uploading}
+                  className="px-3 py-2 rounded-lg text-xs"
+                  style={{ background: "rgba(201,162,39,0.1)", border: "1px solid rgba(201,162,39,0.3)", color: "#c9a227", opacity: uploading ? 0.5 : 1 }}
+                >
+                  {uploading ? "Enviando..." : "📎 Enviar Imagem"}
+                </button>
+                <span className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>ou</span>
+                <input
+                  className={inp}
+                  style={{ ...inpStyle, flex: 1 }}
+                  value={form.image_url}
+                  placeholder="https://... (URL da imagem)"
+                  onChange={e => setForm(f => ({ ...f, image_url: e.target.value }))}
+                />
+              </div>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleFileUpload}
+              />
+            </div>
           </div>
+
           {msg && <p className="text-xs" style={{ color: msg.startsWith("✓") ? "#34d399" : "#ef4444" }}>{msg}</p>}
           <div className="flex gap-3">
             <button onClick={save} disabled={saving} className="px-5 py-2 rounded-lg text-xs font-semibold tracking-widest uppercase"
@@ -230,6 +295,10 @@ export default function AdminEventosPage() {
             const dt = new Date(item.date_start);
             return (
               <div key={item.id} className="card p-4 flex items-start justify-between gap-4">
+                {item.image_url && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={item.image_url} alt={item.title} className="h-16 w-16 rounded-lg object-cover shrink-0" />
+                )}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1 flex-wrap">
                     <span className="text-xs px-2 py-0.5 rounded-full"
