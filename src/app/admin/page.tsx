@@ -7,27 +7,32 @@ import Link from "next/link";
 const gold = "#c9a227";
 const OPENCLAW_URL = "https://openclaw.n8ndredson.com/chat?session=agent%3Amain%3Amain";
 
-interface Stats {
-  totalUsers: number;
-  activeToday: number;
-  onlineNow: number;
-  totalDevotionals: number;
-  openPrayers: number;
-  totalEvents: number;
-  recentUsers: { id: string; name: string; email: string; created_at: string; status: string }[];
-}
-
-interface User {
+interface UserStat {
   id: string;
   full_name: string;
   email: string;
-  whatsapp: string | null;
   church_name: string;
   city: string;
   state: string;
   status: string;
   created_at: string;
   last_seen_at: string | null;
+  totalMinutes: number;
+  isOnline: boolean;
+  activeToday: boolean;
+}
+
+interface StatsData {
+  totalUsers: number;
+  onlineNow: number;
+  activeToday: number;
+  neverLoggedIn: number;
+  totalMinutesAll: number;
+  totalDevotionals: number;
+  openPrayers: number;
+  totalEvents: number;
+  homenagensPendentes: number;
+  users: UserStat[];
 }
 
 const card: React.CSSProperties = {
@@ -41,12 +46,17 @@ function timeAgo(iso: string | null) {
   if (!iso) return "Nunca";
   const diff = Date.now() - new Date(iso).getTime();
   const m = Math.floor(diff / 60000);
-  if (m < 1) return "Agora";
-  if (m < 60) return `${m}min`;
+  if (m < 1) return "Agora 🟢";
+  if (m < 60) return `${m}min atrás`;
   const h = Math.floor(m / 60);
   if (h < 24) return `${h}h atrás`;
   const d = Math.floor(h / 24);
   return `${d}d atrás`;
+}
+
+function fmtMin(min: number) {
+  if (min < 60) return `${min}min`;
+  return `${Math.floor(min / 60)}h ${min % 60}min`;
 }
 
 const STATUS_COLOR: Record<string, string> = {
@@ -57,13 +67,10 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState<Stats | null>(null);
+  const [stats, setStats] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showUsers, setShowUsers] = useState(false);
-  const [users, setUsers] = useState<User[]>([]);
-  const [usersLoading, setUsersLoading] = useState(false);
   const [search, setSearch] = useState("");
-  const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [showAllUsers, setShowAllUsers] = useState(false);
   const [iaLoading, setIaLoading] = useState(false);
   const [iaReport, setIaReport] = useState<string | null>(null);
   const [iaError, setIaError] = useState<string | null>(null);
@@ -72,38 +79,11 @@ export default function AdminDashboard() {
     setLoading(true);
     fetch("/api/admin/stats")
       .then((r) => r.json())
-      .then((data) => { setStats(data); setLoading(false); })
+      .then((data: StatsData) => { setStats(data); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
 
-  const loadUsers = useCallback(() => {
-    setUsersLoading(true);
-    fetch("/api/admin/users")
-      .then((r) => r.json())
-      .then((data) => { setUsers(data.users || []); setUsersLoading(false); })
-      .catch(() => setUsersLoading(false));
-  }, []);
-
   useEffect(() => { loadStats(); }, [loadStats]);
-
-  const handleShowUsers = () => {
-    setShowUsers(true);
-    if (users.length === 0) loadUsers();
-  };
-
-  const handleUserAction = async (userId: string, action: "approve" | "ban" | "delete") => {
-    setActionLoading(userId + action);
-    try {
-      await fetch("/api/admin/users", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, action }),
-      });
-      loadUsers();
-      loadStats();
-    } catch (e) {}
-    setActionLoading(null);
-  };
 
   const handleIaReport = async () => {
     setIaLoading(true);
@@ -124,13 +104,15 @@ export default function AdminDashboard() {
     setIaLoading(false);
   };
 
-  const filteredUsers = users.filter((u) => {
+  const filteredUsers = (stats?.users ?? []).filter((u) => {
     const q = search.toLowerCase();
-    return !q || u.full_name?.toLowerCase().includes(q) || u.email?.toLowerCase().includes(q) || u.church_name?.toLowerCase().includes(q) || u.city?.toLowerCase().includes(q);
+    return !q || u.full_name?.toLowerCase().includes(q) || u.email?.toLowerCase().includes(q) || u.church_name?.toLowerCase().includes(q);
   });
 
+  const displayedUsers = showAllUsers ? filteredUsers : filteredUsers.slice(0, 10);
+
   return (
-    <div style={{ padding: "1.25rem", maxWidth: 900, margin: "0 auto" }}>
+    <div style={{ padding: "1.25rem", maxWidth: 960, margin: "0 auto" }}>
       {/* Header */}
       <div style={{ marginBottom: "1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
         <div>
@@ -149,107 +131,120 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Métricas */}
+      {/* Métricas principais */}
       {loading ? (
         <div style={{ display: "flex", justifyContent: "center", padding: "2rem" }}>
           <div style={{ width: 32, height: 32, border: `2px solid ${gold}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
         </div>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(130px,1fr))", gap: "0.75rem", marginBottom: "1.5rem" }}>
-          {[
-            { icon: "👥", label: "Usuários", value: stats?.totalUsers ?? 0, clickable: true },
-            { icon: "🟢", label: "Online Hoje", value: stats?.activeToday ?? 0, clickable: false },
-            { icon: "⚡", label: "Online Agora", value: stats?.onlineNow ?? 0, clickable: false },
-            { icon: "📖", label: "Devocionais", value: stats?.totalDevotionals ?? 0, clickable: false },
-            { icon: "🙏", label: "Orações", value: stats?.openPrayers ?? 0, clickable: false },
-            { icon: "📅", label: "Eventos", value: stats?.totalEvents ?? 0, clickable: false },
-          ].map((m) => (
-            <div key={m.label} onClick={m.clickable ? handleShowUsers : undefined}
-              style={{ ...card, cursor: m.clickable ? "pointer" : "default", ...(m.clickable ? { borderColor: "rgba(201,162,39,0.4)" } : {}) }}>
-              <div style={{ fontSize: "1.4rem", marginBottom: 6 }}>{m.icon}</div>
-              <div style={{ color: gold, fontSize: "1.6rem", fontWeight: 700, lineHeight: 1 }}>{m.value}</div>
-              <div style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.7rem", marginTop: 4 }}>{m.label}</div>
-              {m.clickable && <div style={{ color: gold, fontSize: "0.62rem", marginTop: 4, opacity: 0.7 }}>Ver lista ▶</div>}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Lista de Usuários */}
-      {showUsers && (
-        <div style={{ ...card, marginBottom: "1.5rem" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem", flexWrap: "wrap", gap: 8 }}>
-            <h2 style={{ color: gold, fontSize: "0.9rem", letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>
-              Usuários ({filteredUsers.length})
-            </h2>
-            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <input type="text" placeholder="Buscar..." value={search} onChange={(e) => setSearch(e.target.value)}
-                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(201,162,39,0.2)", borderRadius: 8, color: "white", padding: "0.35rem 0.7rem", fontSize: "0.8rem", outline: "none", width: 150 }} />
-              <button onClick={() => setShowUsers(false)}
-                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "rgba(255,255,255,0.5)", padding: "0.35rem 0.7rem", fontSize: "0.78rem", cursor: "pointer" }}>
-                ✕
-              </button>
-            </div>
+        <>
+          {/* KPIs de usuários */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(140px,1fr))", gap: "0.75rem", marginBottom: "1.5rem" }}>
+            {[
+              { icon: "👥", label: "Cadastrados", value: stats?.totalUsers ?? 0, color: gold },
+              { icon: "🟢", label: "Online Agora", value: stats?.onlineNow ?? 0, color: "#34d399" },
+              { icon: "☀️", label: "Ativos Hoje", value: stats?.activeToday ?? 0, color: "#fb923c" },
+              { icon: "⏱️", label: "Minutos Totais", value: stats?.totalMinutesAll ?? 0, color: "#a78bfa" },
+              { icon: "📖", label: "Devocionais", value: stats?.totalDevotionals ?? 0, color: "#60a5fa" },
+              { icon: "🙏", label: "Orações", value: stats?.openPrayers ?? 0, color: "#f472b6" },
+              { icon: "📅", label: "Eventos", value: stats?.totalEvents ?? 0, color: "#34d399" },
+              { icon: "🕊️", label: "Homenagens", value: stats?.homenagensPendentes ?? 0, color: "#fbbf24" },
+            ].map((m) => (
+              <div key={m.label} style={{ ...card }}>
+                <div style={{ fontSize: "1.3rem", marginBottom: 6 }}>{m.icon}</div>
+                <div style={{ color: m.color, fontSize: "1.7rem", fontWeight: 700, lineHeight: 1, fontFamily: "var(--font-cinzel,serif)" }}>{m.value.toLocaleString("pt-BR")}</div>
+                <div style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.68rem", marginTop: 5, textTransform: "uppercase", letterSpacing: "0.05em" }}>{m.label}</div>
+              </div>
+            ))}
           </div>
-          {usersLoading ? (
-            <div style={{ textAlign: "center", padding: "1.5rem", color: "rgba(255,255,255,0.4)" }}>Carregando...</div>
-          ) : filteredUsers.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "1.5rem", color: "rgba(255,255,255,0.3)" }}>Nenhum usuário</div>
-          ) : (
+
+          {/* Tabela de usuários com tempo de uso */}
+          <div style={{ ...card, marginBottom: "1.5rem", padding: 0, overflow: "hidden" }}>
+            <div style={{ padding: "1rem", borderBottom: "1px solid rgba(201,162,39,0.12)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+              <div>
+                <h2 style={{ color: gold, fontSize: "0.85rem", letterSpacing: "0.1em", textTransform: "uppercase", margin: 0, fontFamily: "var(--font-cinzel,serif)" }}>
+                  Usuários Cadastrados ({stats?.totalUsers ?? 0})
+                </h2>
+                <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.7rem", margin: "3px 0 0" }}>
+                  🟢 {stats?.onlineNow ?? 0} online agora · ☀️ {stats?.activeToday ?? 0} ativos hoje
+                </p>
+              </div>
+              <input
+                type="text"
+                placeholder="Buscar..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(201,162,39,0.2)", borderRadius: 8, color: "white", padding: "0.35rem 0.7rem", fontSize: "0.8rem", outline: "none", width: 160 }}
+              />
+            </div>
+
             <div style={{ overflowX: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.8rem" }}>
                 <thead>
-                  <tr style={{ borderBottom: "1px solid rgba(201,162,39,0.15)" }}>
-                    {["Nome", "Email", "Igreja/Cidade", "Cadastro", "Último Acesso", "Status", "Ações"].map((h) => (
-                      <th key={h} style={{ color: "rgba(255,255,255,0.4)", fontWeight: 500, padding: "0.5rem 0.6rem", textAlign: "left", whiteSpace: "nowrap" }}>{h}</th>
+                  <tr style={{ borderBottom: "1px solid rgba(201,162,39,0.1)" }}>
+                    {["Nome", "Email", "Igreja / Cidade", "Cadastro", "Último Acesso", "Tempo de Uso", "Status"].map((h) => (
+                      <th key={h} style={{ color: "rgba(201,162,39,0.55)", fontWeight: 500, padding: "0.6rem 0.75rem", textAlign: "left", whiteSpace: "nowrap", fontSize: "0.68rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredUsers.map((u, i) => (
-                    <tr key={u.id} style={{ borderBottom: i < filteredUsers.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
-                      <td style={{ padding: "0.55rem 0.6rem", whiteSpace: "nowrap" }}>
-                        <Link href={`/admin/usuarios/${u.id}`} style={{ color: gold, textDecoration: "none" }}>{u.full_name || "Sem nome"}</Link>
+                  {displayedUsers.length === 0 ? (
+                    <tr><td colSpan={7} style={{ textAlign: "center", padding: "2rem", color: "rgba(255,255,255,0.3)" }}>Nenhum usuário encontrado</td></tr>
+                  ) : displayedUsers.map((u, i) => (
+                    <tr key={u.id} style={{ borderBottom: i < displayedUsers.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none", background: u.isOnline ? "rgba(52,211,153,0.03)" : "transparent" }}>
+                      <td style={{ padding: "0.6rem 0.75rem", whiteSpace: "nowrap" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                          {u.isOnline && <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#34d399", display: "inline-block", flexShrink: 0 }} />}
+                          <Link href={`/admin/usuarios/${u.id}`} style={{ color: u.isOnline ? "#34d399" : gold, textDecoration: "none", fontFamily: "var(--font-cinzel,serif)", fontSize: "0.78rem" }}>
+                            {u.full_name || "Sem nome"}
+                          </Link>
+                        </div>
                       </td>
-                      <td style={{ padding: "0.55rem 0.6rem", color: "rgba(255,255,255,0.45)", fontSize: "0.73rem" }}>{u.email}</td>
-                      <td style={{ padding: "0.55rem 0.6rem", color: "rgba(255,255,255,0.45)", fontSize: "0.73rem" }}>{u.church_name || u.city ? `${u.church_name || ""}${u.city ? ` · ${u.city}` : ""}` : "—"}</td>
-                      <td style={{ padding: "0.55rem 0.6rem", color: "rgba(255,255,255,0.35)", fontSize: "0.73rem", whiteSpace: "nowrap" }}>{new Date(u.created_at).toLocaleDateString("pt-BR")}</td>
-                      <td style={{ padding: "0.55rem 0.6rem", color: "rgba(255,255,255,0.35)", fontSize: "0.73rem", whiteSpace: "nowrap" }}>{timeAgo(u.last_seen_at)}</td>
-                      <td style={{ padding: "0.55rem 0.6rem" }}>
-                        <span style={{ background: `${STATUS_COLOR[u.status] || "#888"}22`, color: STATUS_COLOR[u.status] || "#888", border: `1px solid ${STATUS_COLOR[u.status] || "#888"}44`, borderRadius: 6, padding: "0.15rem 0.45rem", fontSize: "0.68rem" }}>
-                          {STATUS_LABEL[u.status] || u.status}
+                      <td style={{ padding: "0.6rem 0.75rem", color: "rgba(255,255,255,0.4)", fontSize: "0.72rem" }}>{u.email}</td>
+                      <td style={{ padding: "0.6rem 0.75rem", color: "rgba(255,255,255,0.4)", fontSize: "0.72rem" }}>
+                        {u.church_name || u.city ? `${u.church_name || ""}${u.city ? ` · ${u.city}` : ""}` : "—"}
+                      </td>
+                      <td style={{ padding: "0.6rem 0.75rem", color: "rgba(255,255,255,0.3)", fontSize: "0.72rem", whiteSpace: "nowrap" }}>
+                        {new Date(u.created_at).toLocaleDateString("pt-BR")}
+                      </td>
+                      <td style={{ padding: "0.6rem 0.75rem", fontSize: "0.72rem", whiteSpace: "nowrap", color: u.isOnline ? "#34d399" : "rgba(255,255,255,0.35)" }}>
+                        {timeAgo(u.last_seen_at)}
+                      </td>
+                      <td style={{ padding: "0.6rem 0.75rem", whiteSpace: "nowrap" }}>
+                        <span style={{ color: u.totalMinutes > 0 ? "#fb923c" : "rgba(255,255,255,0.2)", fontSize: "0.78rem", fontFamily: "var(--font-cinzel,serif)" }}>
+                          {u.totalMinutes > 0 ? fmtMin(u.totalMinutes) : "—"}
                         </span>
                       </td>
-                      <td style={{ padding: "0.55rem 0.6rem" }}>
-                        <div style={{ display: "flex", gap: 4 }}>
-                          {u.status !== "approved" && (
-                            <button onClick={() => handleUserAction(u.id, "approve")} disabled={actionLoading === u.id + "approve"}
-                              style={{ background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.3)", borderRadius: 5, color: "#34d399", padding: "0.15rem 0.4rem", fontSize: "0.68rem", cursor: "pointer" }}>
-                              {actionLoading === u.id + "approve" ? "..." : "✓ Ativar"}
-                            </button>
-                          )}
-                          {u.status !== "banned" && (
-                            <button onClick={() => handleUserAction(u.id, "ban")} disabled={actionLoading === u.id + "ban"}
-                              style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 5, color: "#ef4444", padding: "0.15rem 0.4rem", fontSize: "0.68rem", cursor: "pointer" }}>
-                              {actionLoading === u.id + "ban" ? "..." : "✕ Banir"}
-                            </button>
-                          )}
-                        </div>
+                      <td style={{ padding: "0.6rem 0.75rem" }}>
+                        <span style={{ background: `${STATUS_COLOR[u.status] || "#888"}22`, color: STATUS_COLOR[u.status] || "#888", border: `1px solid ${STATUS_COLOR[u.status] || "#888"}44`, borderRadius: 6, padding: "0.15rem 0.45rem", fontSize: "0.65rem" }}>
+                          {STATUS_LABEL[u.status] || u.status}
+                        </span>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-          )}
-        </div>
+
+            {filteredUsers.length > 10 && (
+              <div style={{ padding: "0.75rem 1rem", borderTop: "1px solid rgba(255,255,255,0.05)", textAlign: "center" }}>
+                <button
+                  onClick={() => setShowAllUsers(!showAllUsers)}
+                  style={{ background: "none", border: "none", color: gold, fontSize: "0.78rem", cursor: "pointer" }}
+                >
+                  {showAllUsers ? `▲ Mostrar menos` : `▼ Ver todos os ${filteredUsers.length} usuários`}
+                </button>
+              </div>
+            )}
+          </div>
+        </>
       )}
 
       {/* IA Relatório */}
       <div style={{ ...card, marginBottom: "1.5rem" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
           <div>
-            <h2 style={{ color: gold, fontSize: "0.9rem", letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>IA — Relatório Automático</h2>
+            <h2 style={{ color: gold, fontSize: "0.9rem", letterSpacing: "0.1em", textTransform: "uppercase", margin: 0, fontFamily: "var(--font-cinzel,serif)" }}>IA — Relatório Automático</h2>
             <p style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.73rem", margin: "4px 0 0" }}>Análise inteligente da plataforma</p>
           </div>
           <button onClick={handleIaReport} disabled={iaLoading}
@@ -281,30 +276,6 @@ export default function AdminDashboard() {
           ))}
         </div>
       </div>
-
-      {/* Últimos Cadastros */}
-      {!showUsers && stats?.recentUsers && stats.recentUsers.length > 0 && (
-        <div>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.75rem" }}>
-            <h2 style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.72rem", letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>Últimos Cadastros</h2>
-            <button onClick={handleShowUsers} style={{ background: "none", border: "none", color: gold, fontSize: "0.75rem", cursor: "pointer" }}>Ver todos →</button>
-          </div>
-          <div style={{ ...card, padding: 0, overflow: "hidden" }}>
-            {stats.recentUsers.slice(0, 8).map((u, i) => (
-              <Link key={u.id} href={`/admin/usuarios/${u.id}`} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.75rem 1rem", borderBottom: i < Math.min(7, stats.recentUsers.length - 1) ? "1px solid rgba(255,255,255,0.05)" : "none", textDecoration: "none" }}>
-                <div>
-                  <div style={{ color: "rgba(255,255,255,0.85)", fontSize: "0.85rem" }}>{u.name || "Sem nome"}</div>
-                  <div style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.72rem" }}>{u.email}</div>
-                </div>
-                <div style={{ textAlign: "right" }}>
-                  <div style={{ color: STATUS_COLOR[u.status] || "#888", fontSize: "0.7rem" }}>{STATUS_LABEL[u.status] || u.status}</div>
-                  <div style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.7rem" }}>{new Date(u.created_at).toLocaleDateString("pt-BR")}</div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
 
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>

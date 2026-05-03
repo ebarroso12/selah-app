@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Sidebar from "@/components/ui/Sidebar";
 import BottomNav from "@/components/ui/BottomNav";
+import SessionTracker from "@/components/ui/SessionTracker";
 import type { Profile } from "@/types/database";
 
 // Email do administrador — sempre lido da variável de ambiente
@@ -52,6 +53,9 @@ export default async function AppLayout({
 
       {/* BottomNav flutuante — apenas mobile */}
       <BottomNav isAdmin={isAdmin} />
+
+      {/* Rastreamento de sessão — atualiza last_seen_at e user_metrics a cada 2 min */}
+      <SessionTracker />
     </div>
   );
 }

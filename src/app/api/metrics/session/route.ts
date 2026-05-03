@@ -64,6 +64,12 @@ export async function POST(request: Request) {
       });
     }
 
+    // Atualizar last_seen_at no perfil — essencial para "Online Agora" e "Ativo Hoje"
+    await serviceClient
+      .from("profiles")
+      .update({ last_seen_at: new Date().toISOString() })
+      .eq("id", user.id);
+
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("[metrics/session] Erro:", err);
