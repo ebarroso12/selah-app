@@ -11,6 +11,7 @@ const NAV_SECTIONS = [
       { href: "/admin", label: "Dashboard", icon: "📊", exact: true },
       { href: "/admin/usuarios", label: "Usuários", icon: "👥" },
       { href: "/admin/metricas", label: "Métricas", icon: "📈" },
+      { href: "/admin/healthcheck", label: "Auto-Reparo IA", icon: "🤖" },
     ],
   },
   {

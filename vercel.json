@@ -3,6 +3,10 @@
     {
       "path": "/api/devocional/generate",
       "schedule": "0 5 * * *"
+    },
+    {
+      "path": "/api/admin/healthcheck",
+      "schedule": "0 */6 * * *"
     }
   ],
   "headers": [
