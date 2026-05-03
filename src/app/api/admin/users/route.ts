@@ -54,3 +54,25 @@ export async function GET(request: Request) {
     });
   }
 }
+
+export async function PATCH(request: Request) {
+  try {
+    const { userId, action } = await request.json();
+    const supabase = await createServiceClient();
+    
+    let newStatus = "approved";
+    if (action === "ban") newStatus = "banned";
+    else if (action === "approve") newStatus = "approved";
+    else if (action === "delete") {
+      const { error } = await supabase.from("profiles").delete().eq("id", userId);
+      if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+      return NextResponse.json({ success: true });
+    }
+    
+    const { error } = await supabase.from("profiles").update({ status: newStatus }).eq("id", userId);
+    if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+    return NextResponse.json({ success: true, status: newStatus });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}

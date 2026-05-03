@@ -3,10 +3,12 @@ import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-export async function POST() {
+export async function POST(request: Request) {
   const logs: string[] = [];
   let fixedCount = 0;
   let issuesFound = 0;
+  const body = await request.json().catch(() => ({}));
+  const { stats } = body;
 
   try {
     const supabase = await createServiceClient();
@@ -85,11 +87,53 @@ export async function POST() {
 
     logs.push("🏁 Varredura concluída.");
     
+    // Gerar relatório analítico
+    const { data: profiles2 } = await supabase.from("profiles").select("id, status, created_at, last_seen_at");
+    const now = Date.now();
+    const oneDayMs = 24 * 60 * 60 * 1000;
+    const sevenDaysMs = 7 * oneDayMs;
+    const activeToday = profiles2?.filter(p => p.last_seen_at && (now - new Date(p.last_seen_at).getTime()) < oneDayMs).length || 0;
+    const activeWeek = profiles2?.filter(p => p.last_seen_at && (now - new Date(p.last_seen_at).getTime()) < sevenDaysMs).length || 0;
+    const newThisWeek = profiles2?.filter(p => (now - new Date(p.created_at).getTime()) < sevenDaysMs).length || 0;
+    const totalP = profiles2?.length || 0;
+    const engagementRate = totalP > 0 ? Math.round((activeWeek / totalP) * 100) : 0;
+    const date = new Date().toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
+    let report = `📊 RELATÓRIO SELAH — ${date}\n\n`;
+    report += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    report += `👥 USUÁRIOS\n`;
+    report += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    report += `• Total cadastrado: ${totalP}\n`;
+    report += `• Novos esta semana: ${newThisWeek}\n`;
+    report += `• Ativos hoje: ${activeToday}\n`;
+    report += `• Ativos (7 dias): ${activeWeek}\n`;
+    report += `• Taxa de engajamento: ${engagementRate}%\n\n`;
+    if (stats) {
+      report += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+      report += `📖 CONTEÚDO\n`;
+      report += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+      report += `• Devocionais: ${stats.totalDevotionals || 0}\n`;
+      report += `• Orações abertas: ${stats.openPrayers || 0}\n`;
+      report += `• Eventos: ${stats.totalEvents || 0}\n\n`;
+    }
+    if (fixedCount > 0) {
+      report += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+      report += `🔧 AUTO-CORREÇÕES: ${fixedCount} aplicadas\n\n`;
+    }
+    report += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    report += `✦ ANÁLISE\n`;
+    report += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    if (engagementRate >= 50) report += `✅ Engajamento EXCELENTE (${engagementRate}%)!\n`;
+    else if (engagementRate >= 25) report += `🟡 Engajamento MODERADO (${engagementRate}%). Envie notificações.\n`;
+    else report += `⚠️ Engajamento BAIXO (${engagementRate}%). Crie novo conteúdo.\n`;
+    if (newThisWeek > 0) report += `📈 ${newThisWeek} novo(s) usuário(s) esta semana!\n`;
+    if (fixedCount === 0) report += `✅ Sistema sem problemas detectados.\n`;
+
     return NextResponse.json({
       success: true,
       issuesFound,
       fixedCount,
       logs,
+      report,
       summary: issuesFound > 0 
         ? `IA corrigiu ${fixedCount} problemas encontrados. Sistema estabilizado.` 
         : "Nenhum problema encontrado. O sistema está operando perfeitamente."
