@@ -8,6 +8,45 @@
   --radius-card: 0.75rem;
 }
 
+/* ─── shadcn/ui — mapeamento de tokens para Tailwind v4 ──────────────────── */
+/* Expõe as CSS vars como classes Tailwind (bg-background, text-foreground, etc.) */
+@theme inline {
+  --color-background:         var(--background);
+  --color-foreground:         var(--foreground);
+  --color-card:               var(--card);
+  --color-card-foreground:    var(--card-foreground);
+  --color-popover:            var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary:            var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary:          var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted:              var(--muted);
+  --color-muted-foreground:   var(--muted-foreground);
+  --color-accent:             var(--accent);
+  --color-accent-foreground:  var(--accent-foreground);
+  --color-destructive:        var(--destructive);
+  --color-border:             var(--border);
+  --color-input:              var(--input);
+  --color-ring:               var(--ring);
+  /* Tokens SELAH expostos como cores Tailwind */
+  --color-gold:               var(--gold);
+  --color-gold-light:         var(--gold-light);
+  --color-gold-dark:          var(--gold-dark);
+  --color-wine:               var(--wine);
+  --color-wine-light:         var(--wine-light);
+  --color-wine-dark:          var(--wine-dark);
+  --color-heal:               var(--heal);
+  --color-heal-light:         var(--heal-light);
+  --color-heal-dark:          var(--heal-dark);
+  --color-danger:             var(--danger);
+  --color-success:            var(--success);
+  --radius-sm:                calc(var(--radius) - 4px);
+  --radius-md:                calc(var(--radius) - 2px);
+  --radius-lg:                var(--radius);
+  --radius-xl:                calc(var(--radius) + 4px);
+}
+
 /* ─── MODO ESCURO (padrão) ────────────────────────────────────────────────── */
 :root {
   --bg:          #060A14;
@@ -25,6 +64,7 @@
   --gold:        #C9A84C;
   --gold-light:  #E2C464;
   --gold-dark:   #A07830;
+  --gold-label:  rgba(201,162,39,0.72); /* labels/dates — adapts in .light */
   --gold-bg:     rgba(201,168,76,0.12);
   --gold-glow:   rgba(201,168,76,0.3);
 
@@ -44,8 +84,36 @@
   --heal-glow:   rgba(42,122,75,0.3);
   --heal-border: rgba(42,122,75,0.4);
 
+  /* Violeta — Homenagens */
+  --violet:        #8B5CF6;
+  --violet-light:  #A78BFA;
+  --violet-dark:   #6D28D9;
+  --violet-bg:     rgba(139,92,246,0.15);
+  --violet-glow:   rgba(139,92,246,0.3);
+  --violet-border: rgba(139,92,246,0.4);
+
   --danger:      #F87171;
   --success:     #34D399;
+
+  /* ── shadcn-compatible aliases (mapeados nos tokens SELAH) ─────────────── */
+  --background:          var(--bg);
+  --foreground:          var(--text);
+  --card:                var(--bg-card);
+  --card-foreground:     var(--text);
+  --popover:             var(--bg-card);
+  --popover-foreground:  var(--text);
+  --primary:             var(--gold);
+  --primary-foreground:  #060A14;
+  --secondary:           var(--wine);
+  --secondary-foreground:#F5F2EB;
+  --muted:               var(--bg-2);
+  --muted-foreground:    var(--text-muted);
+  --accent:              var(--heal);
+  --accent-foreground:   #F5F2EB;
+  --destructive:         var(--danger);
+  --input:               var(--bg-input);
+  --ring:                var(--gold);
+  --radius:              0.5rem;
 }
 
 /* ─── MODO CLARO ──────────────────────────────────────────────────────────── */
@@ -64,6 +132,7 @@
   --gold:        #8C6A10;
   --gold-light:  #B08820;
   --gold-dark:   #6A5010;
+  --gold-label:  #7A5C0E; /* labels/dates — solid dark gold, great contrast on white */
   --gold-bg:     rgba(140,106,16,0.1);
   --gold-glow:   rgba(140,106,16,0.25);
 
@@ -80,6 +149,36 @@
   --heal-bg:     rgba(30,107,58,0.1);
   --heal-glow:   rgba(30,107,58,0.25);
   --heal-border: rgba(30,107,58,0.3);
+
+  /* Violeta — Homenagens */
+  --violet:        #5B21B6;
+  --violet-light:  #6D28D9;
+  --violet-dark:   #4C1D95;
+  --violet-bg:     rgba(109,40,217,0.1);
+  --violet-glow:   rgba(109,40,217,0.2);
+  --violet-border: rgba(109,40,217,0.3);
+
+  --danger:      #EF4444;
+  --success:     #22C55E;
+
+  /* ── shadcn-compatible aliases (modo claro — herdam dos tokens acima) ──── */
+  --background:          var(--bg);
+  --foreground:          var(--text);
+  --card:                var(--bg-card);
+  --card-foreground:     var(--text);
+  --popover:             var(--bg-card);
+  --popover-foreground:  var(--text);
+  --primary:             var(--gold);
+  --primary-foreground:  #F2EDE0;
+  --secondary:           var(--wine);
+  --secondary-foreground:#F2EDE0;
+  --muted:               var(--bg-2);
+  --muted-foreground:    var(--text-muted);
+  --accent:              var(--heal);
+  --accent-foreground:   #F2EDE0;
+  --destructive:         var(--danger);
+  --input:               var(--bg-input);
+  --ring:                var(--gold);
 }
 
 /* ─── Base ────────────────────────────────────────────────────────────────── */
@@ -131,7 +230,7 @@
   }
   .sidebar .sidebar-text-primary { color: rgba(245,242,235,0.92); }
   .sidebar .sidebar-text-muted   { color: rgba(245,242,235,0.45); }
-  .sidebar .sidebar-text-label   { color: rgba(201,168,76,0.55); }
+  .sidebar .sidebar-text-label   { color: var(--gold-label); }
 
   /* ── Nav links ──────────────────────────────────────────────────────────── */
   .sidebar-link {
@@ -164,6 +263,9 @@
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius-card);
+    overflow-wrap: break-word;
+    word-break: break-word;
+    min-width: 0;
   }
   :root .card {
     backdrop-filter: blur(10px);
@@ -172,7 +274,7 @@
 
   /* ── Card Vinho (Dr. Edson / Kairo) ─────────────────────────────────────── */
   .card-wine {
-    background: linear-gradient(135deg, rgba(123,31,58,0.18) 0%, rgba(8,13,26,0.95) 100%);
+    background: linear-gradient(135deg, var(--wine-bg) 0%, var(--bg-card) 100%);
     border: 1px solid var(--wine-border);
     border-radius: var(--radius-card);
     backdrop-filter: blur(10px);
@@ -181,7 +283,7 @@
 
   /* ── Card Verde (Cura / Legendários) ────────────────────────────────────── */
   .card-heal {
-    background: linear-gradient(135deg, rgba(42,122,75,0.15) 0%, rgba(8,13,26,0.95) 100%);
+    background: linear-gradient(135deg, var(--heal-bg) 0%, var(--bg-card) 100%);
     border: 1px solid var(--heal-border);
     border-radius: var(--radius-card);
     backdrop-filter: blur(10px);
@@ -426,6 +528,70 @@
     line-height: 1.6;
   }
 
+  /* ── Select / Dropdown nativo ───────────────────────────────────────────── */
+  select.input-field,
+  .select-field {
+    width: 100%;
+    background-color: var(--bg-input);
+    color: var(--text);
+    border: 1.5px solid var(--border);
+    border-radius: 0.5rem;
+    font-family: var(--font-inter);
+    font-size: 0.9375rem;
+    padding: 0.8rem 2.5rem 0.8rem 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23C9A84C' d='M6 8L0 0h12z'/%3E%3Csvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 10px 6px;
+  }
+  select.input-field:focus,
+  .select-field:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px var(--gold-bg);
+  }
+  select.input-field option,
+  .select-field option,
+  select option {
+    background-color: var(--bg-card);
+    color: var(--text);
+    font-family: var(--font-inter);
+    padding: 0.5rem;
+  }
+  select option:checked,
+  select option:hover {
+    background-color: var(--gold-bg);
+    color: var(--gold-light);
+  }
+
+  /* ── Cursor pointer global em elementos clicáveis ───────────────────────── */
+  button:not(:disabled),
+  a[href],
+  [role="button"]:not([aria-disabled="true"]),
+  [role="tab"],
+  [role="menuitem"],
+  [role="option"],
+  select,
+  summary,
+  label[for],
+  input[type="checkbox"],
+  input[type="radio"],
+  input[type="submit"],
+  input[type="button"],
+  input[type="reset"],
+  input[type="file"] {
+    cursor: pointer;
+  }
+  button:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+
   /* ── Theme Toggle ───────────────────────────────────────────────────────── */
   .theme-toggle {
     display: flex;
@@ -436,7 +602,7 @@
     border-radius: 50%;
     border: 1.5px solid rgba(201,168,76,0.3);
     background: transparent;
-    color: rgba(245,242,235,0.55);
+    color: var(--text-subtle);
     cursor: pointer;
     transition: all 0.2s ease;
     flex-shrink: 0;

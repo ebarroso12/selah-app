@@ -1,7 +1,7 @@
 "use client";
 export const dynamic = "force-dynamic";
 import { useEffect, useState } from "react";
-import { getBrowserClient } from "@/lib/supabase/browser";
+import { getBrowserClient } from "@/shared/services/supabase/supabase.browser";
 
 
 interface Testimony {
@@ -19,8 +19,8 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 const inp = "w-full px-3 py-2 rounded-lg text-sm outline-none";
-const inpStyle = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(201,162,39,0.2)", color: "rgba(255,255,255,0.85)" };
-const labelStyle = { color: "rgba(201,162,39,0.7)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em", textTransform: "uppercase" as const, fontSize: "0.7rem" };
+const inpStyle = { background: "var(--bg-2)", border: "1px solid rgba(201,162,39,0.2)", color: "var(--text)" };
+const labelStyle = { color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em", textTransform: "uppercase" as const, fontSize: "0.7rem" };
 
 export default function AdminComunidadePage() {
   const supabase = getBrowserClient();
@@ -87,7 +87,7 @@ export default function AdminComunidadePage() {
     <div className="p-4 md:p-6 space-y-6">
       <div>
         <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Comunidade</h1>
-        <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.4)" }}>
+        <p className="text-xs mt-1" style={{ color: "var(--text-subtle)" }}>
           Moderação de testemunhos e publicações da comunidade
         </p>
       </div>
@@ -102,9 +102,9 @@ export default function AdminComunidadePage() {
           <button key={f.key} onClick={() => setFilter(f.key as typeof filter)}
             className="px-3 py-1.5 rounded-lg text-xs font-semibold tracking-widest uppercase"
             style={{
-              background: filter === f.key ? "rgba(201,162,39,0.15)" : "rgba(255,255,255,0.04)",
-              border: `1px solid ${filter === f.key ? "rgba(201,162,39,0.4)" : "rgba(255,255,255,0.1)"}`,
-              color: filter === f.key ? "#c9a227" : "rgba(255,255,255,0.45)",
+              background: filter === f.key ? "rgba(201,162,39,0.15)" : "var(--bg-2)",
+              border: `1px solid ${filter === f.key ? "rgba(201,162,39,0.4)" : "var(--bg-2)"}`,
+              color: filter === f.key ? "#c9a227" : "var(--text-subtle)",
             }}>
             {f.label}
           </button>
@@ -141,7 +141,7 @@ export default function AdminComunidadePage() {
               {saving ? "Salvando..." : "Salvar"}
             </button>
             <button onClick={() => setShowForm(false)} className="px-5 py-2 rounded-lg text-xs"
-              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }}>
+              style={{ background: "var(--bg-2)", border: "1px solid var(--bg-2)", color: "var(--text-muted)" }}>
               Cancelar
             </button>
           </div>
@@ -149,10 +149,10 @@ export default function AdminComunidadePage() {
       )}
 
       {loading ? (
-        <p className="text-center text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>Carregando...</p>
+        <p className="text-center text-sm" style={{ color: "var(--text-subtle)" }}>Carregando...</p>
       ) : items.length === 0 ? (
         <div className="card p-10 text-center">
-          <p style={{ color: "rgba(255,255,255,0.3)" }}>
+          <p style={{ color: "var(--text-subtle)" }}>
             {filter === "pending" ? "Nenhum testemunho pendente." : "Nenhum testemunho encontrado."}
           </p>
         </div>
@@ -164,7 +164,7 @@ export default function AdminComunidadePage() {
               <div className="flex items-start justify-between gap-3 flex-wrap">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <p className="font-semibold text-sm" style={{ color: "rgba(255,255,255,0.85)", fontFamily: "var(--font-cinzel)" }}>
+                    <p className="font-semibold text-sm" style={{ color: "var(--text)", fontFamily: "var(--font-cinzel)" }}>
                       {item.title}
                     </p>
                     <span className="text-xs px-2 py-0.5 rounded-full"
@@ -181,20 +181,20 @@ export default function AdminComunidadePage() {
                       {item.approved ? "Publicado" : "Pendente"}
                     </span>
                   </div>
-                  <p className="text-xs" style={{ color: "rgba(201,162,39,0.6)", fontFamily: "var(--font-cinzel)" }}>
+                  <p className="text-xs" style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
                     {item.profile?.full_name}
                     {item.profile?.church_name ? ` · ${item.profile.church_name}` : ""}
                     {item.profile?.city ? ` · ${item.profile.city}` : ""}
                   </p>
                 </div>
-                <p className="text-xs shrink-0" style={{ color: "rgba(255,255,255,0.3)" }}>
+                <p className="text-xs shrink-0" style={{ color: "var(--text-subtle)" }}>
                   {new Date(item.created_at).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })}
                 </p>
               </div>
-              <p className="text-sm line-clamp-3" style={{ color: "rgba(255,255,255,0.65)" }}>
+              <p className="text-sm line-clamp-3" style={{ color: "var(--text-muted)" }}>
                 {item.content}
               </p>
-              <div className="flex gap-2 flex-wrap pt-1" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+              <div className="flex gap-2 flex-wrap pt-1" style={{ borderTop: "1px solid var(--bg-2)" }}>
                 {!item.approved ? (
                   <button onClick={() => approve(item.id)} className="px-3 py-1.5 rounded-lg text-xs"
                     style={{ background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.3)", color: "#34d399" }}>

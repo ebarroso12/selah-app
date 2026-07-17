@@ -20,7 +20,7 @@ export default function LegendariosPage() {
         className="relative overflow-hidden"
         style={{
           background:
-            "linear-gradient(135deg, rgba(232,93,4,0.22) 0%, rgba(6,10,20,0.98) 55%, rgba(232,93,4,0.10) 100%)",
+            "linear-gradient(135deg, rgba(232,93,4,0.18) 0%, var(--bg-card) 55%, rgba(232,93,4,0.08) 100%)",
           borderBottom: `1px solid ${ORANGE_BORDER}`,
         }}
       >
@@ -56,7 +56,7 @@ export default function LegendariosPage() {
 
             <p
               className="text-base md:text-lg max-w-2xl mx-auto"
-              style={{ color: "rgba(245,242,235,0.75)", fontFamily: "var(--font-lora)", fontStyle: "italic" }}
+              style={{ color: "var(--text-muted)", fontFamily: "var(--font-lora)", fontStyle: "italic" }}
             >
               "Homens inquebrantáveis com histórias dignas a serem contadas."
             </p>
@@ -116,13 +116,13 @@ export default function LegendariosPage() {
           >
             O Movimento
           </h2>
-          <p className="text-sm leading-relaxed mb-4" style={{ color: "rgba(245,242,235,0.8)" }}>
+          <p className="text-sm leading-relaxed mb-4" style={{ color: "var(--text)" }}>
             O Movimento Legendários é uma iniciativa global de transformação masculina, com foco
             espiritual cristão. Nascido dentro da Casa de Oração de Franca/SP, o movimento se
             expandiu para mais de 20 países, reunindo homens que desejam viver com propósito,
             coragem e fé inabalável.
           </p>
-          <p className="text-sm leading-relaxed" style={{ color: "rgba(245,242,235,0.8)" }}>
+          <p className="text-sm leading-relaxed" style={{ color: "var(--text)" }}>
             Mais do que um grupo, é um chamado: ser homem de Deus, marido presente, pai comprometido,
             líder íntegro — um homem com uma história digna de ser contada para as próximas gerações.
           </p>
@@ -158,7 +158,7 @@ export default function LegendariosPage() {
                   </p>
                 </div>
               </div>
-              <p className="text-sm leading-relaxed" style={{ color: "rgba(245,242,235,0.75)" }}>
+              <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
                 Reunião mensal de homens para adoração, Palavra e comunhão. Um encontro que
                 fortalece a identidade masculina em Cristo e alimenta a chama do propósito.
               </p>
@@ -185,7 +185,7 @@ export default function LegendariosPage() {
                   </p>
                 </div>
               </div>
-              <p className="text-sm leading-relaxed" style={{ color: "rgba(245,242,235,0.75)" }}>
+              <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
                 Retiros imersivos de 4 dias para homens. Uma experiência transformadora na
                 natureza, onde fé, desafio físico e comunidade se unem para revelar o potencial
                 que Deus colocou em cada homem.
@@ -241,7 +241,7 @@ export default function LegendariosPage() {
                 >
                   {p.title}
                 </h3>
-                <p className="text-xs leading-relaxed" style={{ color: "rgba(245,242,235,0.7)" }}>
+                <p className="text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
                   {p.desc}
                 </p>
               </div>

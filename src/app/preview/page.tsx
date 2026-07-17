@@ -15,7 +15,7 @@ export default function PreviewPage() {
         style={{ background: "rgba(8,13,26,0.98)", borderRight: "1px solid rgba(201,162,39,0.12)" }}>
         <div className="px-5 py-6 border-b" style={{ borderColor: "rgba(201,162,39,0.12)" }}>
           <span className="selah-wordmark" style={{ fontSize: "1.25rem" }}>SELAH</span>
-          <p className="mt-0.5 text-xs" style={{ color: "rgba(201,162,39,0.45)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.12em" }}>
+          <p className="mt-0.5 text-xs" style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.12em" }}>
             Pause · Ore · Cresça
           </p>
         </div>
@@ -24,7 +24,7 @@ export default function PreviewPage() {
             <a key={item.label} href={item.href}
               className={`sidebar-link ${item.active ? "active" : ""}`}>
               <span className="w-4 h-4 rounded-sm inline-block shrink-0"
-                style={{ background: item.active ? "rgba(201,162,39,0.3)" : "rgba(255,255,255,0.1)" }} />
+                style={{ background: item.active ? "rgba(201,162,39,0.3)" : "var(--bg-2)" }} />
               {item.label}
             </a>
           ))}
@@ -36,8 +36,8 @@ export default function PreviewPage() {
               EB
             </div>
             <div className="min-w-0">
-              <p className="text-xs font-medium" style={{ color: "rgba(255,255,255,0.8)" }}>Dr. Edson</p>
-              <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>Casa de Oracao</p>
+              <p className="text-xs font-medium" style={{ color: "var(--text)" }}>Dr. Edson</p>
+              <p className="text-xs" style={{ color: "var(--text-subtle)" }}>Casa de Oracao</p>
             </div>
           </div>
           <a href="#" className="sidebar-link mt-1">
@@ -54,7 +54,7 @@ export default function PreviewPage() {
           {/* Header */}
           <div>
             <p className="text-xs tracking-widest uppercase mb-1"
-              style={{ color: "rgba(201,162,39,0.55)", fontFamily: "var(--font-cinzel)" }}>
+              style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
               Quinta-feira, 1 de maio de 2025
             </p>
             <h1 className="text-2xl">Devocional do Dia</h1>
@@ -73,12 +73,12 @@ export default function PreviewPage() {
               style={{ background: "rgba(201,162,39,0.05)", borderLeft: "3px solid rgba(201,162,39,0.5)" }}>
               &quot;Porque nEle vivemos, nos movemos e existimos.&quot;
               <footer className="mt-3 text-sm not-italic"
-                style={{ color: "rgba(201,162,39,0.7)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.08em" }}>
+                style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.08em" }}>
                 Atos 17:28
               </footer>
             </blockquote>
 
-            <div className="space-y-4 text-base leading-relaxed" style={{ color: "rgba(255,255,255,0.8)" }}>
+            <div className="space-y-4 text-base leading-relaxed" style={{ color: "var(--text)" }}>
               <p>
                 Paulo, diante dos filósofos de Atenas, não recuou diante da complexidade do ambiente.
                 Ele encontrou o ponto de contato entre a busca humana e a revelação divina, e declarou
@@ -98,12 +98,12 @@ export default function PreviewPage() {
             </div>
 
             <div className="mt-8 p-5 rounded-xl"
-              style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(201,162,39,0.15)" }}>
+              style={{ background: "var(--bg-2)", border: "1px solid rgba(201,162,39,0.15)" }}>
               <p className="text-xs mb-3"
-                style={{ color: "rgba(201,162,39,0.65)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.12em", textTransform: "uppercase" }}>
+                style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.12em", textTransform: "uppercase" }}>
                 Oracao
               </p>
-              <p className="scripture text-base leading-relaxed" style={{ color: "rgba(255,255,255,0.7)" }}>
+              <p className="scripture text-base leading-relaxed" style={{ color: "var(--text-muted)" }}>
                 Senhor, reconhecemos que fora de Ti nada somos. Que este dia seja vivido
                 na consciência de que em Ti nos movemos. Que cada escolha reflita essa dependência
                 e que nossas familias experimentem o peso da Tua presença sobre nos.
@@ -114,7 +114,7 @@ export default function PreviewPage() {
           {/* Archive strip */}
           <div>
             <p className="text-xs tracking-widest uppercase mb-4"
-              style={{ color: "rgba(201,162,39,0.55)", fontFamily: "var(--font-cinzel)" }}>
+              style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
               Arquivo
             </p>
             <div className="grid gap-3">
@@ -126,9 +126,9 @@ export default function PreviewPage() {
                 <div key={d.date} className="card p-4 flex items-center justify-between gap-4">
                   <div>
                     <p className="text-xs mb-0.5"
-                      style={{ color: "rgba(201,162,39,0.55)", fontFamily: "var(--font-cinzel)" }}>{d.date}</p>
+                      style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>{d.date}</p>
                     <p className="font-semibold text-sm" style={{ color: "#fff", fontFamily: "var(--font-cinzel)" }}>{d.title}</p>
-                    <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>{d.ref}</p>
+                    <p className="text-xs mt-0.5" style={{ color: "var(--text-subtle)" }}>{d.ref}</p>
                   </div>
                   <svg width="16" height="16" fill="none" viewBox="0 0 24 24"
                     stroke="rgba(201,162,39,0.4)" strokeWidth={1.5} className="shrink-0">

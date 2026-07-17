@@ -1,7 +1,7 @@
 "use client";
 export const dynamic = "force-dynamic";
 import { useEffect, useState } from "react";
-import { getBrowserClient } from "@/lib/supabase/browser";
+import { getBrowserClient } from "@/shared/services/supabase/supabase.browser";
 import Image from "next/image";
 
 
@@ -66,7 +66,7 @@ export default function AdminHomenagensPage() {
     <div className="p-4 md:p-6 space-y-6">
       <div>
         <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Homenagens</h1>
-        <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.4)" }}>
+        <p className="text-xs mt-1" style={{ color: "var(--text-subtle)" }}>
           Aprovação e moderação das homenagens enviadas pelos usuários
         </p>
       </div>
@@ -82,9 +82,9 @@ export default function AdminHomenagensPage() {
           <button key={f.key} onClick={() => setFilter(f.key as typeof filter)}
             className="px-3 py-1.5 rounded-lg text-xs font-semibold tracking-widest uppercase"
             style={{
-              background: filter === f.key ? "rgba(201,162,39,0.15)" : "rgba(255,255,255,0.04)",
-              border: `1px solid ${filter === f.key ? "rgba(201,162,39,0.4)" : "rgba(255,255,255,0.1)"}`,
-              color: filter === f.key ? "#c9a227" : "rgba(255,255,255,0.45)",
+              background: filter === f.key ? "rgba(201,162,39,0.15)" : "var(--bg-2)",
+              border: `1px solid ${filter === f.key ? "rgba(201,162,39,0.4)" : "var(--bg-2)"}`,
+              color: filter === f.key ? "#c9a227" : "var(--text-subtle)",
             }}>
             {f.label}
           </button>
@@ -92,10 +92,10 @@ export default function AdminHomenagensPage() {
       </div>
 
       {loading ? (
-        <p className="text-center text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>Carregando...</p>
+        <p className="text-center text-sm" style={{ color: "var(--text-subtle)" }}>Carregando...</p>
       ) : items.length === 0 ? (
         <div className="card p-10 text-center">
-          <p style={{ color: "rgba(255,255,255,0.3)" }}>
+          <p style={{ color: "var(--text-subtle)" }}>
             {filter === "pending" ? "Nenhuma homenagem pendente." : "Nenhuma homenagem encontrada."}
           </p>
         </div>
@@ -130,22 +130,22 @@ export default function AdminHomenagensPage() {
                         </span>
                       )}
                     </div>
-                    <p className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>
+                    <p className="text-xs" style={{ color: "var(--text-subtle)" }}>
                       {new Date(item.created_at).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })}
                     </p>
                   </div>
 
                   {/* Homenageante → Homenageado */}
                   <div>
-                    <p className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.85)", fontFamily: "var(--font-cinzel)" }}>
+                    <p className="text-sm font-semibold" style={{ color: "var(--text)", fontFamily: "var(--font-cinzel)" }}>
                       {item.nome_homenageante} homenageia {item.nome_homenageado}
                     </p>
-                    <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>
+                    <p className="text-xs mt-0.5" style={{ color: "var(--text-subtle)" }}>
                       Parentesco: {item.parentesco}
                       {item.instagram_homenageante ? ` · @${item.instagram_homenageante}` : ""}
                     </p>
                     {item.profile?.email && (
-                      <p className="text-xs" style={{ color: "rgba(201,162,39,0.5)" }}>
+                      <p className="text-xs" style={{ color: "var(--gold-label)" }}>
                         Enviado por: {item.profile.full_name} ({item.profile.email})
                       </p>
                     )}
@@ -154,12 +154,12 @@ export default function AdminHomenagensPage() {
                   {/* Texto (expandível) */}
                   <div>
                     <p className="text-sm leading-relaxed"
-                      style={{ color: "rgba(255,255,255,0.65)", display: "-webkit-box", WebkitLineClamp: isExpanded ? "unset" : 3, WebkitBoxOrient: "vertical", overflow: isExpanded ? "visible" : "hidden" }}>
+                      style={{ color: "var(--text-muted)", display: "-webkit-box", WebkitLineClamp: isExpanded ? "unset" : 3, WebkitBoxOrient: "vertical", overflow: isExpanded ? "visible" : "hidden" }}>
                       {item.texto}
                     </p>
                     {item.texto.length > 200 && (
                       <button onClick={() => setExpanded(isExpanded ? null : item.id)}
-                        className="text-xs mt-1" style={{ color: "rgba(201,162,39,0.6)" }}>
+                        className="text-xs mt-1" style={{ color: "var(--gold-label)" }}>
                         {isExpanded ? "Ver menos" : "Ver mais"}
                       </button>
                     )}
@@ -177,7 +177,7 @@ export default function AdminHomenagensPage() {
                   )}
 
                   {/* Ações */}
-                  <div className="flex gap-2 flex-wrap pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                  <div className="flex gap-2 flex-wrap pt-2" style={{ borderTop: "1px solid var(--bg-2)" }}>
                     {item.status !== "approved" && (
                       <button onClick={() => updateStatus(item.id, "approved")} className="px-3 py-1.5 rounded-lg text-xs"
                         style={{ background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.3)", color: "#34d399" }}>

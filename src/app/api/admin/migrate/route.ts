@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/shared/services/supabase/supabase.server";
 
 // Rota protegida para executar migrações — apenas admin pode chamar
 export async function POST(request: Request) {
   const authHeader = request.headers.get("Authorization");
-  const secret = process.env.CRON_SECRET ?? process.env.ADMIN_EMAIL ?? "";
+  const secret = process.env.CRON_SECRET;
+  if (!secret) {
+    return NextResponse.json(
+      { error: "CRON_SECRET não configurado" },
+      { status: 500 },
+    );
+  }
   if (!authHeader || authHeader !== `Bearer ${secret}`) {
     return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
   }

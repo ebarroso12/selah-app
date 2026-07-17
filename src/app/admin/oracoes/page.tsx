@@ -1,7 +1,7 @@
 "use client";
 export const dynamic = "force-dynamic";
 import { useEffect, useState } from "react";
-import { getBrowserClient } from "@/lib/supabase/browser";
+import { getBrowserClient } from "@/shared/services/supabase/supabase.browser";
 
 
 interface Prayer {
@@ -18,7 +18,7 @@ const STATUS_LABELS: Record<string, string> = {
   open: "Aberto", answered: "Respondido", closed: "Fechado",
 };
 const STATUS_COLORS: Record<string, string> = {
-  open: "#34d399", answered: "#c9a227", closed: "rgba(255,255,255,0.3)",
+  open: "#34d399", answered: "#c9a227", closed: "var(--text-subtle)",
 };
 
 export default function AdminOracoesPage() {
@@ -69,7 +69,7 @@ export default function AdminOracoesPage() {
     <div className="p-4 md:p-6 space-y-6">
       <div>
         <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Moderação de Orações</h1>
-        <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.4)" }}>
+        <p className="text-xs mt-1" style={{ color: "var(--text-subtle)" }}>
           Controle total sobre os pedidos de oração da comunidade
         </p>
       </div>
@@ -85,9 +85,9 @@ export default function AdminOracoesPage() {
           <button key={f.key} onClick={() => setFilter(f.key as typeof filter)}
             className="px-3 py-1.5 rounded-lg text-xs font-semibold tracking-widest uppercase"
             style={{
-              background: filter === f.key ? "rgba(201,162,39,0.15)" : "rgba(255,255,255,0.04)",
-              border: `1px solid ${filter === f.key ? "rgba(201,162,39,0.4)" : "rgba(255,255,255,0.1)"}`,
-              color: filter === f.key ? "#c9a227" : "rgba(255,255,255,0.45)",
+              background: filter === f.key ? "rgba(201,162,39,0.15)" : "var(--bg-2)",
+              border: `1px solid ${filter === f.key ? "rgba(201,162,39,0.4)" : "var(--bg-2)"}`,
+              color: filter === f.key ? "#c9a227" : "var(--text-subtle)",
             }}>
             {f.label}
           </button>
@@ -95,10 +95,10 @@ export default function AdminOracoesPage() {
       </div>
 
       {loading ? (
-        <p className="text-center text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>Carregando...</p>
+        <p className="text-center text-sm" style={{ color: "var(--text-subtle)" }}>Carregando...</p>
       ) : items.length === 0 ? (
         <div className="card p-10 text-center">
-          <p style={{ color: "rgba(255,255,255,0.3)" }}>Nenhum pedido de oração encontrado.</p>
+          <p style={{ color: "var(--text-subtle)" }}>Nenhum pedido de oração encontrado.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -115,9 +115,9 @@ export default function AdminOracoesPage() {
                     </span>
                     <span className="text-xs px-2 py-0.5 rounded-full"
                       style={{
-                        background: item.is_public ? "rgba(96,165,250,0.1)" : "rgba(255,255,255,0.05)",
-                        color: item.is_public ? "#60a5fa" : "rgba(255,255,255,0.35)",
-                        border: `1px solid ${item.is_public ? "rgba(96,165,250,0.2)" : "rgba(255,255,255,0.1)"}`,
+                        background: item.is_public ? "rgba(96,165,250,0.1)" : "var(--bg-2)",
+                        color: item.is_public ? "#60a5fa" : "var(--text-subtle)",
+                        border: `1px solid ${item.is_public ? "rgba(96,165,250,0.2)" : "var(--bg-2)"}`,
                         fontSize: "0.62rem",
                       }}>
                       {item.is_public ? "Público" : "Privado"}
@@ -129,14 +129,14 @@ export default function AdminOracoesPage() {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs" style={{ color: "rgba(255,255,255,0.3)", fontFamily: "var(--font-cinzel)" }}>
+                  <p className="text-xs" style={{ color: "var(--text-subtle)", fontFamily: "var(--font-cinzel)" }}>
                     {new Date(item.created_at).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })}
                   </p>
                 </div>
 
                 {/* Autor */}
                 {item.profile?.full_name && (
-                  <p className="text-xs" style={{ color: "rgba(201,162,39,0.7)", fontFamily: "var(--font-cinzel)" }}>
+                  <p className="text-xs" style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
                     {item.profile.full_name}
                     {item.profile.church_name ? ` · ${item.profile.church_name}` : ""}
                     {item.profile.city ? ` · ${item.profile.city}` : ""}
@@ -144,12 +144,12 @@ export default function AdminOracoesPage() {
                 )}
 
                 {/* Texto */}
-                <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.75)" }}>
+                <p className="text-sm leading-relaxed" style={{ color: "var(--text)" }}>
                   {item.text}
                 </p>
 
                 {/* Ações */}
-                <div className="flex gap-2 flex-wrap pt-1" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                <div className="flex gap-2 flex-wrap pt-1" style={{ borderTop: "1px solid var(--bg-2)" }}>
                   {item.status !== "open" && (
                     <button onClick={() => updateStatus(item.id, "open")} className="px-3 py-1.5 rounded-lg text-xs"
                       style={{ background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.2)", color: "#34d399" }}>
@@ -164,7 +164,7 @@ export default function AdminOracoesPage() {
                   )}
                   {item.status !== "closed" && (
                     <button onClick={() => updateStatus(item.id, "closed")} className="px-3 py-1.5 rounded-lg text-xs"
-                      style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.4)" }}>
+                      style={{ background: "var(--bg-2)", border: "1px solid var(--bg-2)", color: "var(--text-subtle)" }}>
                       Fechar
                     </button>
                   )}

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/shared/services/supabase/supabase.client";
 import type { Profile } from "@/types/database";
 
 const BRAZIL_STATES = [
@@ -22,9 +22,9 @@ export default function ProfileForm({ profile }: Props) {
   // Dados pessoais
   const [full_name, setFullName] = useState(profile.full_name);
   const [whatsapp, setWhatsapp] = useState(profile.whatsapp ?? "");
-  const [church_name, setChurchName] = useState(profile.church_name);
-  const [city, setCity] = useState(profile.city);
-  const [state, setState] = useState(profile.state);
+  const [church_name, setChurchName] = useState(profile.church_name ?? "");
+  const [city, setCity] = useState(profile.city ?? "");
+  const [state, setState] = useState(profile.state ?? "");
   const [saving, setSaving] = useState(false);
   const [profileMsg, setProfileMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
 
@@ -109,14 +109,14 @@ export default function ProfileForm({ profile }: Props) {
     border: "none",
     transition: "all 0.15s ease",
     background: tab === t ? "#c9a227" : "transparent",
-    color: tab === t ? "#080d1a" : "rgba(255,255,255,0.45)",
+    color: tab === t ? "#080d1a" : "var(--text-subtle)",
   });
 
   return (
     <div className="card p-6">
       {/* Tab bar */}
       <div className="flex gap-1 mb-6 p-1 rounded-lg"
-        style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,162,39,0.12)", width: "fit-content" }}>
+        style={{ background: "var(--bg-2)", border: "1px solid rgba(201,162,39,0.12)", width: "fit-content" }}>
         <button style={tabStyle("dados")} onClick={() => setTab("dados")}>Dados Pessoais</button>
         <button style={tabStyle("senha")} onClick={() => setTab("senha")}>Alterar Senha</button>
       </div>
@@ -167,7 +167,7 @@ export default function ProfileForm({ profile }: Props) {
           </div>
 
           <div className="pt-2 border-t" style={{ borderColor: "rgba(201,162,39,0.1)" }}>
-            <p className="text-xs" style={{ color: "rgba(255,255,255,0.3)", fontFamily: "var(--font-cinzel)" }}>
+            <p className="text-xs" style={{ color: "var(--text-subtle)", fontFamily: "var(--font-cinzel)" }}>
               Email: {profile.email} — para alterar o email entre em contato com o administrador.
             </p>
           </div>
@@ -204,7 +204,7 @@ export default function ProfileForm({ profile }: Props) {
           </div>
 
           <div className="p-4 rounded-lg" style={{ background: "rgba(201,162,39,0.04)", border: "1px solid rgba(201,162,39,0.1)" }}>
-            <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.04em" }}>
+            <p className="text-xs leading-relaxed" style={{ color: "var(--text-subtle)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.04em" }}>
               Esqueceu a senha atual? Saia da conta e use &quot;Esqueceu?&quot; na tela de login para recuperar via email.
             </p>
           </div>

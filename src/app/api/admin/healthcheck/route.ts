@@ -18,8 +18,9 @@
  */
 
 import { NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
-import { createServiceClient } from "@/lib/supabase/server";
+import { getTodayBR } from "@/shared/lib/utils";
+import { createServiceClient } from "@/shared/services/supabase/supabase.server";
+import { generateAI } from "@/shared/services/ai/ai.service";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -119,7 +120,7 @@ async function checkAndFixPendingUsers(supabase: Awaited<ReturnType<typeof creat
 
 async function checkAndGenerateDevotional(supabase: Awaited<ReturnType<typeof createServiceClient>>): Promise<CheckResult> {
   try {
-    const today = new Date().toISOString().split("T")[0];
+    const today = getTodayBR();
     const { data: existing } = await supabase.from("devotionals").select("id").eq("date", today).maybeSingle();
 
     if (existing) return { check: "devotional", status: "ok", message: `Devocional de ${today} já existe` };
@@ -130,7 +131,7 @@ async function checkAndGenerateDevotional(supabase: Awaited<ReturnType<typeof cr
 
     if (!cronSecret) return { check: "devotional", status: "warning", message: "Devocional ausente — CRON_SECRET não configurado para gerar" };
 
-    const res = await fetch(`${appUrl}/api/devocional/generate`, {
+    const res = await fetch(`${appUrl}/api/ai/devocional/generate`, {
       method: "POST",
       headers: { "Authorization": `Bearer ${cronSecret}` },
     });
@@ -208,20 +209,19 @@ async function checkMetrics(supabase: Awaited<ReturnType<typeof createServiceCli
 // ── Análise IA ─────────────────────────────────────────────────────────────
 
 async function analyzeWithAI(checks: CheckResult[]): Promise<{ analysis: string; recommendations: string[] }> {
-  const anthropicKey = process.env.ANTHROPIC_API_KEY;
-  if (!anthropicKey) return { analysis: "IA não disponível (ANTHROPIC_API_KEY ausente)", recommendations: [] };
-
   try {
-    const anthropic = new Anthropic({ apiKey: anthropicKey });
+    const summary = checks
+      .map(c => `[${c.status.toUpperCase()}] ${c.check}: ${c.message}${c.detail ? ` (${c.detail})` : ""}`)
+      .join("\n");
 
-    const summary = checks.map(c => `[${c.status.toUpperCase()}] ${c.check}: ${c.message}${c.detail ? ` (${c.detail})` : ""}`).join("\n");
-
-    const msg = await anthropic.messages.create({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 512,
-      messages: [{
-        role: "user",
-        content: `Você é o sistema de monitoramento do app SELAH (devocional cristão, Casa de Oração, Franca/SP).
+    const { content } = await generateAI({
+      provider: "openai",
+      model: "gpt-4o-mini",
+      feature: "healthcheck",
+      messages: [
+        {
+          role: "user",
+          content: `Você é o sistema de monitoramento do app SELAH (devocional cristão, Casa de Oração, Franca/SP).
 
 Resultado do healthcheck:
 ${summary}
@@ -232,15 +232,18 @@ Responda em JSON:
   "recommendations": ["ação 1", "ação 2", "ação 3"]
 }
 
-Seja direto, técnico e útil.`
-      }]
+Seja direto, técnico e útil.`,
+        },
+      ],
+      maxTokens: 512,
+      // userId omitido — chamada de sistema, tracking não se aplica
     });
 
-    const text = msg.content[0].type === "text" ? msg.content[0].text.trim() : "{}";
-    const parsed = JSON.parse(text);
+    const parsed = JSON.parse(content.trim() || "{}");
     return { analysis: parsed.analysis || "", recommendations: parsed.recommendations || [] };
-  } catch (e: any) {
-    return { analysis: `Análise IA falhou: ${e.message}`, recommendations: [] };
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e);
+    return { analysis: `Análise IA falhou: ${msg}`, recommendations: [] };
   }
 }
 

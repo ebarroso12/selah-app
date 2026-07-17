@@ -1,7 +1,8 @@
 "use client";
 export const dynamic = "force-dynamic";
 import { useEffect, useState, useCallback } from "react";
-import { getBrowserClient } from "@/lib/supabase/browser";
+import Link from "next/link";
+import { getBrowserClient } from "@/shared/services/supabase/supabase.browser";
 
 
 interface Profile {
@@ -21,10 +22,10 @@ interface Profile {
 }
 
 const STATUS_LABEL: Record<string, string> = {
-  approved: "Aprovado", pending: "Pendente", rejected: "Rejeitado", banned: "Banido",
+  approved: "Ativo", rejected: "Rejeitado", banned: "Banido",
 };
 const STATUS_COLOR: Record<string, string> = {
-  approved: "#34d399", pending: "#fbbf24", rejected: "#ef4444", banned: "#ef4444",
+  approved: "#34d399", rejected: "#ef4444", banned: "#ef4444",
 };
 
 function timeAgo(iso: string | null) {
@@ -40,7 +41,7 @@ function timeAgo(iso: string | null) {
   return new Date(iso).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" });
 }
 
-type FilterKey = "todos" | "approved" | "pending" | "rejected" | "banned";
+type FilterKey = "todos" | "approved" | "rejected" | "banned";
 
 export default function AdminUsuariosPage() {
   const supabase = getBrowserClient();
@@ -50,10 +51,10 @@ export default function AdminUsuariosPage() {
   const [search, setSearch] = useState("");
   const [msg, setMsg] = useState("");
   const [showInvite, setShowInvite] = useState(false);
-  const [inviteEmail, setInviteEmail] = useState("");
-  const [inviteName, setInviteName] = useState("");
+  const [inviteUrl, setInviteUrl] = useState("");
   const [inviting, setInviting] = useState(false);
   const [inviteMsg, setInviteMsg] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -110,34 +111,38 @@ export default function AdminUsuariosPage() {
     setTimeout(() => setMsg(""), 4000);
   }
 
-  async function invite() {
-    if (!inviteEmail) { setInviteMsg("Informe o email."); return; }
+  async function generateInvite() {
     setInviting(true);
-    const res = await fetch("/api/admin/invite", {
+    setInviteMsg("");
+    setInviteUrl("");
+    const res = await fetch("/api/admin/invitations", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: inviteEmail, full_name: inviteName || inviteEmail.split("@")[0] }),
+      body: JSON.stringify({}),
     });
     const data = await res.json();
     setInviting(false);
-    if (data.error) { setInviteMsg("Erro: " + data.error); return; }
-    setInviteMsg("✓ Usuário convidado com sucesso!");
-    setInviteEmail(""); setInviteName("");
-    setTimeout(() => { setInviteMsg(""); setShowInvite(false); }, 2000);
-    load();
+    if (!res.ok) { setInviteMsg("Erro: " + (data.error ?? "falha ao gerar")); return; }
+    setInviteUrl(data.url);
+  }
+
+  async function copyInvite() {
+    if (!inviteUrl) return;
+    await navigator.clipboard.writeText(inviteUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   const counts = {
     todos: users.length,
     approved: users.filter(u => u.status === "approved").length,
-    pending: users.filter(u => u.status === "pending").length,
     rejected: users.filter(u => u.status === "rejected").length,
     banned: users.filter(u => u.status === "banned").length,
   };
 
   const inp = "w-full px-3 py-2 rounded-lg text-sm outline-none";
-  const inpStyle = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(201,162,39,0.2)", color: "rgba(255,255,255,0.85)" };
-  const labelStyle = { color: "rgba(201,162,39,0.7)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em", textTransform: "uppercase" as const, fontSize: "0.7rem" };
+  const inpStyle = { background: "var(--bg-2)", border: "1px solid rgba(201,162,39,0.2)", color: "var(--text)" };
+  const labelStyle = { color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em", textTransform: "uppercase" as const, fontSize: "0.7rem" };
 
   return (
     <div className="p-4 md:p-6 space-y-5">
@@ -145,48 +150,57 @@ export default function AdminUsuariosPage() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Usuários</h1>
-          <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.4)" }}>
-            {counts.todos} cadastrados · {counts.approved} aprovados · {counts.pending} pendentes
+          <p className="text-xs mt-1" style={{ color: "var(--text-subtle)" }}>
+            {counts.todos} cadastrados · {counts.approved} ativos · {counts.banned} banidos
           </p>
         </div>
-        <button onClick={() => setShowInvite(v => !v)}
+        <button onClick={() => { setShowInvite(v => !v); setInviteUrl(""); setInviteMsg(""); }}
           className="px-4 py-2 rounded-lg text-xs font-semibold tracking-widest uppercase"
           style={{ background: "rgba(201,162,39,0.15)", border: "1px solid rgba(201,162,39,0.4)", color: "#c9a227" }}>
-          + Convidar
+          + Convidar para o app
         </button>
       </div>
 
-      {/* Formulário de convite */}
+      {/* Gerador de link de convite */}
       {showInvite && (
         <div className="card p-4 space-y-3">
-          <p className="text-sm font-semibold" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)" }}>Convidar Usuário</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div>
-              <label className="block mb-1" style={labelStyle}>Email *</label>
-              <input className={inp} style={inpStyle} type="email" value={inviteEmail} placeholder="email@exemplo.com"
-                onChange={e => setInviteEmail(e.target.value)} />
-            </div>
-            <div>
-              <label className="block mb-1" style={labelStyle}>Nome (opcional)</label>
-              <input className={inp} style={inpStyle} value={inviteName} placeholder="Nome completo"
-                onChange={e => setInviteName(e.target.value)} />
-            </div>
-          </div>
-          <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
-            Senha padrão: <strong style={{ color: "#c9a227" }}>Mudar123</strong> — o usuário pode alterar depois.
+          <p className="text-sm font-semibold" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)" }}>
+            Convidar para o app
           </p>
-          {inviteMsg && <p className="text-xs" style={{ color: inviteMsg.startsWith("✓") ? "#34d399" : "#ef4444" }}>{inviteMsg}</p>}
-          <div className="flex gap-3">
-            <button onClick={invite} disabled={inviting}
+          <p className="text-xs" style={{ color: "var(--text-subtle)" }}>
+            Gere um link único e compartilhe — quem abrir vai direto para o cadastro (ou login com Google) e entra no app sem precisar de aprovação.
+          </p>
+
+          {!inviteUrl ? (
+            <button onClick={generateInvite} disabled={inviting}
               className="px-4 py-2 rounded-lg text-xs font-semibold"
               style={{ background: "rgba(201,162,39,0.2)", border: "1px solid rgba(201,162,39,0.5)", color: "#c9a227", opacity: inviting ? 0.6 : 1 }}>
-              {inviting ? "Enviando..." : "Liberar Acesso"}
+              {inviting ? "Gerando..." : "Gerar link de convite"}
             </button>
-            <button onClick={() => setShowInvite(false)} className="px-4 py-2 rounded-lg text-xs"
-              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }}>
-              Cancelar
-            </button>
-          </div>
+          ) : (
+            <div className="space-y-2">
+              <label className="block" style={labelStyle}>Link gerado (válido por 7 dias, uso único)</label>
+              <div className="flex gap-2">
+                <input readOnly className={inp} style={inpStyle} value={inviteUrl} onFocus={(e) => e.currentTarget.select()} />
+                <button onClick={copyInvite}
+                  className="shrink-0 px-3 py-2 rounded-lg text-xs font-semibold"
+                  style={{ background: copied ? "rgba(52,211,153,0.15)" : "rgba(201,162,39,0.15)", border: `1px solid ${copied ? "rgba(52,211,153,0.4)" : "rgba(201,162,39,0.4)"}`, color: copied ? "#34d399" : "#c9a227" }}>
+                  {copied ? "Copiado!" : "Copiar"}
+                </button>
+              </div>
+              <button onClick={generateInvite} disabled={inviting}
+                className="text-xs underline"
+                style={{ color: "var(--text-subtle)" }}>
+                Gerar outro link
+              </button>
+            </div>
+          )}
+
+          {inviteMsg && <p className="text-xs" style={{ color: inviteMsg.startsWith("✓") ? "#34d399" : "#ef4444" }}>{inviteMsg}</p>}
+          <button onClick={() => setShowInvite(false)} className="px-4 py-2 rounded-lg text-xs"
+            style={{ background: "var(--bg-2)", border: "1px solid var(--bg-2)", color: "var(--text-muted)" }}>
+            Fechar
+          </button>
         </div>
       )}
 
@@ -194,17 +208,16 @@ export default function AdminUsuariosPage() {
       <div className="flex gap-2 flex-wrap">
         {([
           { key: "todos" as FilterKey, label: `Todos (${counts.todos})` },
-          { key: "approved" as FilterKey, label: `Aprovados (${counts.approved})` },
-          { key: "pending" as FilterKey, label: `Pendentes (${counts.pending})` },
+          { key: "approved" as FilterKey, label: `Ativos (${counts.approved})` },
           { key: "rejected" as FilterKey, label: `Rejeitados (${counts.rejected})` },
           { key: "banned" as FilterKey, label: `Banidos (${counts.banned})` },
         ]).map(f => (
           <button key={f.key} onClick={() => setFilter(f.key)}
             className="px-3 py-1.5 rounded-lg text-xs font-semibold tracking-widest uppercase"
             style={{
-              background: filter === f.key ? "rgba(201,162,39,0.15)" : "rgba(255,255,255,0.04)",
-              border: `1px solid ${filter === f.key ? "rgba(201,162,39,0.4)" : "rgba(255,255,255,0.1)"}`,
-              color: filter === f.key ? "#c9a227" : "rgba(255,255,255,0.45)",
+              background: filter === f.key ? "rgba(201,162,39,0.15)" : "var(--bg-2)",
+              border: `1px solid ${filter === f.key ? "rgba(201,162,39,0.4)" : "var(--bg-2)"}`,
+              color: filter === f.key ? "#c9a227" : "var(--text-subtle)",
             }}>
             {f.label}
           </button>
@@ -224,15 +237,15 @@ export default function AdminUsuariosPage() {
 
       {/* Lista */}
       {loading ? (
-        <p className="text-center text-sm py-8" style={{ color: "rgba(255,255,255,0.3)" }}>Carregando...</p>
+        <p className="text-center text-sm py-8" style={{ color: "var(--text-subtle)" }}>Carregando...</p>
       ) : filtered.length === 0 ? (
         <div className="card p-10 text-center">
-          <p style={{ color: "rgba(255,255,255,0.3)" }}>Nenhum usuário encontrado.</p>
+          <p style={{ color: "var(--text-subtle)" }}>Nenhum usuário encontrado.</p>
         </div>
       ) : (
         <div className="space-y-3">
           {filtered.map(u => {
-            const sc = STATUS_COLOR[u.status] ?? "rgba(255,255,255,0.4)";
+            const sc = STATUS_COLOR[u.status] ?? "var(--text-subtle)";
             const isOnline = u.last_seen_at && (Date.now() - new Date(u.last_seen_at).getTime()) < 5 * 60 * 1000;
             return (
               <div key={u.id} className="card p-4 space-y-3">
@@ -243,7 +256,7 @@ export default function AdminUsuariosPage() {
                         <span className="w-2 h-2 rounded-full shrink-0"
                           style={{ background: "#34d399", boxShadow: "0 0 6px #34d399" }} />
                       )}
-                      <p className="font-semibold text-sm" style={{ color: "rgba(255,255,255,0.9)", fontFamily: "var(--font-cinzel)" }}>
+                      <p className="font-semibold text-sm" style={{ color: "var(--text)", fontFamily: "var(--font-cinzel)" }}>
                         {u.full_name}
                       </p>
                       {u.is_legendario && (
@@ -253,8 +266,8 @@ export default function AdminUsuariosPage() {
                         </span>
                       )}
                     </div>
-                    <p className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>{u.email}</p>
-                    <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
+                    <p className="text-xs" style={{ color: "var(--text-muted)" }}>{u.email}</p>
+                    <p className="text-xs mt-0.5" style={{ color: "var(--text-subtle)" }}>
                       {u.church_name} · {u.city}/{u.state}
                     </p>
                   </div>
@@ -263,7 +276,7 @@ export default function AdminUsuariosPage() {
                       style={{ background: `${sc}15`, color: sc, border: `1px solid ${sc}30` }}>
                       {STATUS_LABEL[u.status]}
                     </span>
-                    <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.3)" }}>
+                    <p className="text-[10px]" style={{ color: "var(--text-subtle)" }}>
                       Visto: {timeAgo(u.last_seen_at)}
                     </p>
                   </div>
@@ -271,10 +284,15 @@ export default function AdminUsuariosPage() {
 
                 {/* Ações */}
                 <div className="flex gap-2 flex-wrap pt-2 border-t border-white/5">
+                  <Link href={`/admin/usuarios/${u.id}`}
+                    className="px-3 py-1 rounded text-[10px] font-bold uppercase bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                    style={{ textDecoration: "none" }}>
+                    Detalhes / Permissões
+                  </Link>
                   {u.status !== "approved" && (
                     <button onClick={() => updateStatus(u.id, "approved")}
                       className="px-3 py-1 rounded text-[10px] font-bold uppercase bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
-                      Aprovar
+                      Reativar
                     </button>
                   )}
                   {u.status !== "banned" && (

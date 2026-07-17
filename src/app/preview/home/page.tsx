@@ -5,7 +5,7 @@ export default function PreviewHome() {
         style={{ background: "rgba(8,13,26,0.98)", borderRight: "1px solid rgba(201,162,39,0.12)" }}>
         <div className="px-5 py-6 border-b" style={{ borderColor: "rgba(201,162,39,0.12)" }}>
           <span className="selah-wordmark" style={{ fontSize: "1.25rem" }}>SELAH</span>
-          <p className="mt-0.5 text-xs" style={{ color: "rgba(201,162,39,0.45)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.12em" }}>
+          <p className="mt-0.5 text-xs" style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.12em" }}>
             Pause · Ore · Cresça
           </p>
         </div>
@@ -14,7 +14,7 @@ export default function PreviewHome() {
             <a key={label} href="#"
               className={`sidebar-link ${i === 0 ? "active" : ""}`}>
               <span className="w-4 h-4 rounded-sm inline-block shrink-0"
-                style={{ background: i === 0 ? "rgba(201,162,39,0.3)" : "rgba(255,255,255,0.1)" }} />
+                style={{ background: i === 0 ? "rgba(201,162,39,0.3)" : "var(--bg-2)" }} />
               {label}
             </a>
           ))}
@@ -26,8 +26,8 @@ export default function PreviewHome() {
               EB
             </div>
             <div>
-              <p className="text-xs font-medium" style={{ color: "rgba(255,255,255,0.8)" }}>Dr. Edson</p>
-              <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>Casa de Oracao</p>
+              <p className="text-xs font-medium" style={{ color: "var(--text)" }}>Dr. Edson</p>
+              <p className="text-xs" style={{ color: "var(--text-subtle)" }}>Casa de Oracao</p>
             </div>
           </div>
         </div>
@@ -37,7 +37,7 @@ export default function PreviewHome() {
         <div className="max-w-5xl mx-auto space-y-8">
           <div>
             <p className="text-xs tracking-widest uppercase mb-1"
-              style={{ color: "rgba(201,162,39,0.55)", fontFamily: "var(--font-cinzel)" }}>
+              style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
               Quinta-feira, 1 de maio de 2025
             </p>
             <h1 className="text-2xl">Bem-vindo ao SELAH</h1>
@@ -47,7 +47,7 @@ export default function PreviewHome() {
             <div className="lg:col-span-2 card p-6">
               <div className="flex items-center justify-between mb-4">
                 <p className="text-xs tracking-widest uppercase"
-                  style={{ color: "rgba(201,162,39,0.6)", fontFamily: "var(--font-cinzel)" }}>
+                  style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
                   Devocional do Dia
                 </p>
                 <span className="badge badge-gold">IA</span>
@@ -57,11 +57,11 @@ export default function PreviewHome() {
                 style={{ background: "rgba(201,162,39,0.05)", borderLeft: "2px solid rgba(201,162,39,0.4)" }}>
                 &quot;Porque nEle vivemos, nos movemos e existimos.&quot;
                 <footer className="mt-2 text-xs not-italic"
-                  style={{ color: "rgba(201,162,39,0.65)", fontFamily: "var(--font-cinzel)" }}>
+                  style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
                   Atos 17:28
                 </footer>
               </blockquote>
-              <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.7)" }}>
+              <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
                 Paulo, diante dos filósofos de Atenas, não recuou diante da complexidade do ambiente.
                 Ele encontrou o ponto de contato entre a busca humana e a revelação divina, e declarou
                 uma verdade que ressoa até hoje: nossa existência inteira repousa nEle.
@@ -71,7 +71,7 @@ export default function PreviewHome() {
             <div className="space-y-5">
               <div className="card p-5">
                 <p className="text-xs tracking-widest uppercase mb-4"
-                  style={{ color: "rgba(201,162,39,0.6)", fontFamily: "var(--font-cinzel)" }}>
+                  style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
                   Proximos Eventos
                 </p>
                 {[
@@ -83,11 +83,11 @@ export default function PreviewHome() {
                     <div className="shrink-0 w-10 h-10 rounded-lg flex flex-col items-center justify-center"
                       style={{ background: "rgba(201,162,39,0.08)", border: "1px solid rgba(201,162,39,0.2)" }}>
                       <span className="text-xs font-bold leading-none" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)" }}>{e.day}</span>
-                      <span className="text-xs leading-none mt-0.5" style={{ color: "rgba(201,162,39,0.6)", fontFamily: "var(--font-cinzel)" }}>{e.month}</span>
+                      <span className="text-xs leading-none mt-0.5" style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>{e.month}</span>
                     </div>
                     <div>
-                      <p className="text-sm font-medium" style={{ color: "rgba(255,255,255,0.85)" }}>{e.title}</p>
-                      <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>{e.local}</p>
+                      <p className="text-sm font-medium" style={{ color: "var(--text)" }}>{e.title}</p>
+                      <p className="text-xs mt-0.5" style={{ color: "var(--text-subtle)" }}>{e.local}</p>
                     </div>
                   </div>
                 ))}
@@ -95,7 +95,7 @@ export default function PreviewHome() {
 
               <div className="card p-5">
                 <p className="text-xs tracking-widest uppercase mb-4"
-                  style={{ color: "rgba(201,162,39,0.6)", fontFamily: "var(--font-cinzel)" }}>
+                  style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
                   Pedidos de Oracao
                 </p>
                 {[
@@ -103,8 +103,8 @@ export default function PreviewHome() {
                   { text: "Renovacao do emprego e direcao de Deus.", nome: "Rodrigo S. · Ribeirao" },
                 ].map((p, i) => (
                   <div key={i}>
-                    <p className="text-sm leading-relaxed line-clamp-2" style={{ color: "rgba(255,255,255,0.7)" }}>{p.text}</p>
-                    <p className="text-xs mt-1 mb-3" style={{ color: "rgba(255,255,255,0.35)" }}>{p.nome}</p>
+                    <p className="text-sm leading-relaxed line-clamp-2" style={{ color: "var(--text-muted)" }}>{p.text}</p>
+                    <p className="text-xs mt-1 mb-3" style={{ color: "var(--text-subtle)" }}>{p.nome}</p>
                     {i === 0 && <hr className="divider mb-3" />}
                   </div>
                 ))}

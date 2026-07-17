@@ -1,4 +1,4 @@
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/shared/services/supabase/supabase.server";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -93,7 +93,7 @@ export async function POST(request: Request) {
     const newThisWeek = profiles2?.filter(p => (now - new Date(p.created_at).getTime()) < sevenDaysMs).length || 0;
     const totalP = profiles2?.length || 0;
     const engagementRate = totalP > 0 ? Math.round((activeWeek / totalP) * 100) : 0;
-    const date = new Date().toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
+    const date = new Date().toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric", timeZone: "America/Sao_Paulo" });
     let report = `📊 RELATÓRIO SELAH — ${date}\n\n`;
     report += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
     report += `👥 USUÁRIOS\n`;

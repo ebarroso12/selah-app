@@ -1,9 +1,10 @@
 "use client";
 export const dynamic = "force-dynamic";
 import { useEffect, useState, use } from "react";
-import { getBrowserClient } from "@/lib/supabase/browser";
+import { getBrowserClient } from "@/shared/services/supabase/supabase.browser";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import PermissionsPanel from "./PermissionsPanel";
 
 
 function fmtMin(sec: number) {
@@ -14,13 +15,13 @@ function fmtMin(sec: number) {
 
 const STATUS_COLOR: Record<string, string> = {
   approved: "#34d399",
-  pending: "#fbbf24",
   rejected: "#f87171",
+  banned: "#ef4444",
 };
 const STATUS_LABEL: Record<string, string> = {
-  approved: "Aprovado",
-  pending: "Pendente",
+  approved: "Ativo",
   rejected: "Rejeitado",
+  banned: "Banido",
 };
 
 export default function UserDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -28,7 +29,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
   const { id } = use(params);
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<Record<string, string | boolean | null> | null>(null);
+  const [user, setUser] = useState<Record<string, string | boolean | string[] | null> | null>(null);
   const [metrics, setMetrics] = useState<{ date: string; devocionais_read?: number; verses_favorited?: number; session_duration_seconds?: number }[]>([]);
   const [prayerCount, setPrayerCount] = useState(0);
   const [testimonyCount, setTestimonyCount] = useState(0);
@@ -59,23 +60,19 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
     load();
   }, [id, router]);
 
-  async function handleApprove() {
+  async function handleReactivate() {
     setActionLoading(true);
-    const { error } = await supabase.from("profiles").update({
-      status: "approved",
-      approved_by: "edson.barroso@gmail.com",
-      approved_at: new Date().toISOString(),
-    }).eq("id", id);
-    if (error) { setActionMsg("Erro ao aprovar: " + error.message); }
-    else { setActionMsg("Usuário aprovado com sucesso!"); setUser(u => u ? { ...u, status: "approved" } : u); }
+    const { error } = await supabase.from("profiles").update({ status: "approved" }).eq("id", id);
+    if (error) { setActionMsg("Erro: " + error.message); }
+    else { setActionMsg("Acesso reativado."); setUser(u => u ? { ...u, status: "approved" } : u); }
     setActionLoading(false);
   }
 
   async function handleBan() {
     setActionLoading(true);
-    const { error } = await supabase.from("profiles").update({ status: "rejected" }).eq("id", id);
+    const { error } = await supabase.from("profiles").update({ status: "banned" }).eq("id", id);
     if (error) { setActionMsg("Erro ao banir: " + error.message); }
-    else { setActionMsg("Acesso revogado."); setUser(u => u ? { ...u, status: "rejected" } : u); }
+    else { setActionMsg("Acesso revogado."); setUser(u => u ? { ...u, status: "banned" } : u); }
     setActionLoading(false);
   }
 
@@ -114,7 +111,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
           <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>
             {user.full_name as string}
           </h1>
-          <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>{user.email as string}</p>
+          <p className="text-xs mt-0.5" style={{ color: "var(--text-subtle)" }}>{user.email as string}</p>
         </div>
         <span className="ml-auto text-xs px-3 py-1 rounded-full font-semibold"
           style={{
@@ -140,7 +137,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
             <p className="text-2xl font-bold" style={{ color: kpi.color, fontFamily: "var(--font-cinzel)" }}>
               {kpi.value.toLocaleString("pt-BR")}
             </p>
-            <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.45)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.05em" }}>
+            <p className="text-xs mt-1" style={{ color: "var(--text-subtle)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.05em" }}>
               {kpi.label}
             </p>
           </div>
@@ -149,7 +146,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
 
       <div className="card p-6">
         <p className="text-xs tracking-widest uppercase mb-5"
-          style={{ color: "rgba(201,162,39,0.6)", fontFamily: "var(--font-cinzel)" }}>
+          style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
           Dados do Perfil
         </p>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -166,18 +163,24 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
             { label: "Último acesso", value: user.last_seen_at ? new Date(user.last_seen_at as string).toLocaleDateString("pt-BR") : "—" },
           ].map((item) => (
             <div key={item.label}>
-              <p className="text-xs mb-1" style={{ color: "rgba(201,162,39,0.55)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+              <p className="text-xs mb-1" style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
                 {item.label}
               </p>
-              <p className="text-sm" style={{ color: "rgba(255,255,255,0.75)" }}>{item.value}</p>
+              <p className="text-sm" style={{ color: "var(--text)" }}>{item.value}</p>
             </div>
           ))}
         </div>
       </div>
 
+      <PermissionsPanel
+        userId={id}
+        initialPermissions={Array.isArray(user.permissions) ? (user.permissions as unknown as string[]) : []}
+        isUserAdmin={user.role === "admin"}
+      />
+
       <div className="card p-6">
         <p className="text-xs tracking-widest uppercase mb-5"
-          style={{ color: "rgba(201,162,39,0.6)", fontFamily: "var(--font-cinzel)" }}>
+          style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
           Ações do Administrador
         </p>
         {actionMsg && (
@@ -187,14 +190,14 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
         )}
         <div className="flex flex-wrap gap-3">
           {user.status !== "approved" && (
-            <button onClick={handleApprove} disabled={actionLoading} className="btn-primary text-xs px-5 py-2.5">
-              {actionLoading ? "..." : "Aprovar Acesso"}
+            <button onClick={handleReactivate} disabled={actionLoading} className="btn-primary text-xs px-5 py-2.5">
+              {actionLoading ? "..." : "Reativar Acesso"}
             </button>
           )}
-          {user.status !== "rejected" && (
+          {user.status !== "banned" && (
             <button onClick={handleBan} disabled={actionLoading} className="btn-outline text-xs px-5 py-2.5"
               style={{ borderColor: "#f87171", color: "#f87171" }}>
-              {actionLoading ? "..." : "Revogar / Banir"}
+              {actionLoading ? "..." : "Banir"}
             </button>
           )}
           <button onClick={handleDelete} disabled={actionLoading} className="btn-outline text-xs px-5 py-2.5"
@@ -202,7 +205,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
             {actionLoading ? "..." : "Excluir Permanentemente"}
           </button>
         </div>
-        <p className="text-xs mt-3" style={{ color: "rgba(255,255,255,0.25)" }}>
+        <p className="text-xs mt-3" style={{ color: "var(--text-subtle)" }}>
           A exclusão permanente remove todos os dados do usuário e não pode ser desfeita.
         </p>
       </div>
@@ -210,7 +213,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
       {metrics.length > 0 && (
         <div className="card p-6">
           <p className="text-xs tracking-widest uppercase mb-5"
-            style={{ color: "rgba(201,162,39,0.6)", fontFamily: "var(--font-cinzel)" }}>
+            style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
             Histórico de Atividade (últimos 30 dias)
           </p>
           <div className="overflow-x-auto">
@@ -219,7 +222,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                 <tr style={{ borderBottom: "1px solid rgba(201,162,39,0.12)" }}>
                   {["Data", "Devocionais", "Versículos Fav.", "Tempo de Uso"].map((h) => (
                     <th key={h} className="text-left px-3 py-2"
-                      style={{ color: "rgba(201,162,39,0.55)", fontFamily: "var(--font-cinzel)", fontSize: "0.65rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                      style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", fontSize: "0.65rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>
                       {h}
                     </th>
                   ))}
@@ -227,13 +230,13 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
               </thead>
               <tbody>
                 {metrics.map((m, i, arr) => (
-                  <tr key={m.date} style={{ borderBottom: i < arr.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
-                    <td className="px-3 py-2" style={{ color: "rgba(255,255,255,0.55)", fontFamily: "var(--font-cinzel)", fontSize: "0.78rem" }}>
+                  <tr key={m.date} style={{ borderBottom: i < arr.length - 1 ? "1px solid var(--bg-2)" : "none" }}>
+                    <td className="px-3 py-2" style={{ color: "var(--text-muted)", fontFamily: "var(--font-cinzel)", fontSize: "0.78rem" }}>
                       {new Date(m.date).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })}
                     </td>
                     <td className="px-3 py-2" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)", fontSize: "0.85rem" }}>{m.devocionais_read ?? 0}</td>
                     <td className="px-3 py-2" style={{ color: "#a78bfa", fontSize: "0.85rem" }}>{m.verses_favorited ?? 0}</td>
-                    <td className="px-3 py-2" style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.8rem" }}>{fmtMin(m.session_duration_seconds ?? 0)}</td>
+                    <td className="px-3 py-2" style={{ color: "var(--text-muted)", fontSize: "0.8rem" }}>{fmtMin(m.session_duration_seconds ?? 0)}</td>
                   </tr>
                 ))}
               </tbody>

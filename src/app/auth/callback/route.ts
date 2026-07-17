@@ -1,64 +1,83 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
+import { createClient, createServiceClient } from "@/shared/services/supabase/supabase.server";
+import { emailService } from "@/shared/services/email/email.service";
+import { consumeInvitationToken } from "@/shared/services/auth/invitations.server";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
 
-  if (code) {
-    const supabase = await createClient();
-    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+  if (!code) {
+    return NextResponse.redirect(`${origin}/login?error=auth`);
+  }
 
-    if (!error && data.user) {
-      const user = data.user;
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
-      // Verificar se já existe perfil
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("id, status")
-        .eq("id", user.id)
-        .maybeSingle();
+  if (error || !data.user) {
+    return NextResponse.redirect(`${origin}/login?error=auth`);
+  }
 
-      if (!profile) {
-        // Usuário novo via Google — criar perfil automaticamente com dados do OAuth
-        const fullName =
-          user.user_metadata?.full_name ||
-          user.user_metadata?.name ||
-          (user.email ? user.email.split("@")[0] : "Usuário");
+  const user = data.user;
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("id, status")
+    .eq("id", user.id)
+    .maybeSingle();
 
-        const { error: profileError } = await supabase.from("profiles").insert({
-          id: user.id,
-          email: user.email ?? "",
+  if (!profile) {
+    const fullName =
+      user.user_metadata?.full_name ||
+      user.user_metadata?.name ||
+      (user.email ? user.email.split("@")[0] : "Usuário");
+
+    const cookieStore = await cookies();
+    const inviteToken = cookieStore.get("invite_token")?.value ?? null;
+    const invitePerms = await consumeInvitationToken(inviteToken, user.id);
+
+    const service = await createServiceClient();
+    const { error: profileError } = await service.from("profiles").insert({
+      id: user.id,
+      email: user.email ?? "",
+      full_name: fullName,
+      status: "approved",
+      gender: "male",
+      church_name: "",
+      city: "",
+      state: "",
+      permissions: invitePerms,
+    });
+
+    if (profileError) {
+      console.error("[auth/callback] Erro ao criar perfil:", profileError.message);
+    }
+
+    if (inviteToken) cookieStore.delete("invite_token");
+
+    emailService
+      .send({
+        template: "newUser",
+        to: user.email ?? "",
+        data: {
           full_name: fullName,
-          status: "approved",
-          gender: "male",
+          email: user.email ?? "",
           church_name: "",
           city: "",
           state: "",
-        });
+          gender: "male",
+          is_legendario: false,
+          is_legendario_spouse: false,
+        },
+      })
+      .catch(() => {});
 
-        if (profileError) {
-          console.error("[auth/callback] Erro ao criar perfil:", profileError.message);
-        }
-
-        // Notificar admin sobre novo usuário (fire-and-forget)
-        fetch(`${origin}/api/notify/new-user`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: user.id }),
-        }).catch(() => {});
-
-        return NextResponse.redirect(`${origin}/home`);
-      }
-
-      // Perfil existente — verificar status
-      if (profile.status === "rejected" || profile.status === "banned") {
-        return NextResponse.redirect(`${origin}/login?error=blocked`);
-      }
-
-      return NextResponse.redirect(`${origin}/home`);
-    }
+    return NextResponse.redirect(`${origin}/home`);
   }
 
-  return NextResponse.redirect(`${origin}/login?error=auth`);
+  if (profile.status === "rejected" || profile.status === "banned") {
+    return NextResponse.redirect(`${origin}/login?error=${profile.status}`);
+  }
+
+  return NextResponse.redirect(`${origin}/home`);
 }

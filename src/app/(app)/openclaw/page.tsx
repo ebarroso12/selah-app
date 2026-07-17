@@ -26,7 +26,7 @@ export default function OpenClawPage() {
             <h1 style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227", fontSize: "1rem", letterSpacing: "0.06em" }}>
               OpenClaw
             </h1>
-            <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
+            <p className="text-xs" style={{ color: "var(--text-subtle)" }}>
               Agente IA via WhatsApp
             </p>
           </div>
@@ -48,9 +48,9 @@ export default function OpenClawPage() {
       <div className="flex-1 relative" style={{ minHeight: "500px" }}>
         {!iframeLoaded && !iframeError && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-4"
-            style={{ background: "rgba(10,17,32,0.95)" }}>
+            style={{ background: "var(--bg-card)" }}>
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#c9a227]" />
-            <p className="text-sm" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em" }}>
+            <p className="text-sm" style={{ color: "var(--text-subtle)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em" }}>
               Conectando ao OpenClaw...
             </p>
           </div>
@@ -68,7 +68,7 @@ export default function OpenClawPage() {
               <p style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227", letterSpacing: "0.06em" }}>
                 OpenClaw
               </p>
-              <p className="text-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
+              <p className="text-sm" style={{ color: "var(--text-muted)" }}>
                 O chat não pôde ser carregado diretamente.<br/>
                 Acesse pelo botão abaixo para abrir em nova aba.
               </p>
@@ -86,11 +86,11 @@ export default function OpenClawPage() {
             </a>
             {/* Info sobre o agente */}
             <div className="w-full rounded-xl p-4 space-y-2"
-              style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-              <p className="text-xs" style={{ color: "rgba(201,162,39,0.7)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em" }}>
+              style={{ background: "var(--bg-2)", border: "1px solid var(--bg-2)" }}>
+              <p className="text-xs" style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em" }}>
                 SOBRE O AGENTE
               </p>
-              <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>
+              <p className="text-sm" style={{ color: "var(--text-muted)" }}>
                 O OpenClaw é seu agente de IA conectado ao WhatsApp. Ele pode responder mensagens, 
                 enviar Salmos, gerenciar grupos e automatizar comunicações da comunidade SELAH.
               </p>

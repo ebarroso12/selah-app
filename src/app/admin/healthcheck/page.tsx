@@ -101,11 +101,11 @@ export default function HealthcheckPage() {
         </div>
         <div className="flex items-center gap-3">
           {lastRun && (
-            <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
+            <span className="text-xs" style={{ color: "var(--text-subtle)" }}>
               Última: {lastRun}
             </span>
           )}
-          <label className="flex items-center gap-2 text-xs cursor-pointer" style={{ color: "rgba(255,255,255,0.5)" }}>
+          <label className="flex items-center gap-2 text-xs cursor-pointer" style={{ color: "var(--text-muted)" }}>
             <input
               type="checkbox"
               checked={autoRefresh}
@@ -136,7 +136,7 @@ export default function HealthcheckPage() {
       {error && (
         <div className="card p-4" style={{ border: "1px solid rgba(239,68,68,0.4)", background: "rgba(239,68,68,0.08)" }}>
           <p className="text-sm" style={{ color: "#f87171" }}>❌ {error}</p>
-          <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.4)" }}>
+          <p className="text-xs mt-1" style={{ color: "var(--text-subtle)" }}>
             Verifique se o CRON_SECRET está configurado nas variáveis de ambiente do Vercel.
           </p>
         </div>
@@ -149,7 +149,7 @@ export default function HealthcheckPage() {
           <p style={{ color: "var(--text-muted)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em" }}>
             Sistema pronto para análise
           </p>
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.35)" }}>
+          <p className="text-sm" style={{ color: "var(--text-subtle)" }}>
             Clique em "Executar" para rodar o healthcheck completo com IA.
           </p>
         </div>
@@ -162,7 +162,7 @@ export default function HealthcheckPage() {
           <p style={{ color: "var(--gold)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em" }}>
             IA analisando o sistema...
           </p>
-          <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
+          <p className="text-xs" style={{ color: "var(--text-subtle)" }}>
             Verificando banco, tabelas, usuários, devocional e métricas...
           </p>
         </div>
@@ -185,7 +185,7 @@ export default function HealthcheckPage() {
                 <p style={{ fontFamily: "var(--font-cinzel)", color: overall?.color, letterSpacing: "0.08em", fontSize: "1.1rem" }}>
                   {overall?.label}
                 </p>
-                <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.45)" }}>
+                <p className="text-xs mt-0.5" style={{ color: "var(--text-subtle)" }}>
                   {report.checks.length} checks · {report.duration_ms}ms
                 </p>
               </div>
@@ -193,17 +193,17 @@ export default function HealthcheckPage() {
             <div className="flex gap-4 text-center">
               <div>
                 <p className="text-xl font-bold" style={{ color: "#ef4444" }}>{report.errors_found}</p>
-                <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>Erros</p>
+                <p className="text-xs" style={{ color: "var(--text-subtle)" }}>Erros</p>
               </div>
               <div>
                 <p className="text-xl font-bold" style={{ color: "#a78bfa" }}>{report.fixes_applied}</p>
-                <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>Reparos</p>
+                <p className="text-xs" style={{ color: "var(--text-subtle)" }}>Reparos</p>
               </div>
               <div>
                 <p className="text-xl font-bold" style={{ color: "#22c55e" }}>
                   {report.checks.filter(c => c.status === "ok").length}
                 </p>
-                <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>OK</p>
+                <p className="text-xs" style={{ color: "var(--text-subtle)" }}>OK</p>
               </div>
             </div>
           </div>
@@ -215,7 +215,7 @@ export default function HealthcheckPage() {
               <p className="text-xs" style={{ color: "#a78bfa", fontFamily: "var(--font-cinzel)", letterSpacing: "0.08em" }}>
                 🧠 ANÁLISE DA IA
               </p>
-              <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.75)" }}>
+              <p className="text-sm leading-relaxed" style={{ color: "var(--text)" }}>
                 {report.ai_analysis}
               </p>
               {report.ai_recommendations && report.ai_recommendations.length > 0 && (
@@ -224,7 +224,7 @@ export default function HealthcheckPage() {
                     RECOMENDAÇÕES
                   </p>
                   {report.ai_recommendations.map((rec, i) => (
-                    <p key={i} className="text-xs flex gap-2" style={{ color: "rgba(255,255,255,0.55)" }}>
+                    <p key={i} className="text-xs flex gap-2" style={{ color: "var(--text-muted)" }}>
                       <span style={{ color: "#a78bfa" }}>→</span> {rec}
                     </p>
                   ))}
@@ -249,16 +249,16 @@ export default function HealthcheckPage() {
               >
                 <span style={{ fontSize: "1rem", lineHeight: 1.5 }}>{STATUS_ICON[check.status]}</span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm" style={{ color: "rgba(255,255,255,0.85)" }}>
+                  <p className="text-sm" style={{ color: "var(--text)" }}>
                     {check.message}
                   </p>
                   {check.detail && (
-                    <p className="text-xs mt-0.5 font-mono" style={{ color: "rgba(255,255,255,0.35)" }}>
+                    <p className="text-xs mt-0.5 font-mono" style={{ color: "var(--text-subtle)" }}>
                       {check.detail}
                     </p>
                   )}
                 </div>
-                <span className="text-xs shrink-0" style={{ color: "rgba(255,255,255,0.25)", fontFamily: "var(--font-cinzel)" }}>
+                <span className="text-xs shrink-0" style={{ color: "var(--text-subtle)", fontFamily: "var(--font-cinzel)" }}>
                   {check.check.replace(/_/g, " ")}
                 </span>
               </div>
@@ -266,7 +266,7 @@ export default function HealthcheckPage() {
           </div>
 
           {/* Footer */}
-          <p className="text-xs text-center" style={{ color: "rgba(255,255,255,0.2)" }}>
+          <p className="text-xs text-center" style={{ color: "var(--text-subtle)" }}>
             Executado em {new Date(report.timestamp).toLocaleString("pt-BR")} · {report.duration_ms}ms
           </p>
         </>

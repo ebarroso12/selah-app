@@ -1,7 +1,7 @@
 "use client";
 export const dynamic = "force-dynamic";
 import { useEffect, useState } from "react";
-import { getBrowserClient } from "@/lib/supabase/browser";
+import { getBrowserClient } from "@/shared/services/supabase/supabase.browser";
 
 
 function thirtyDaysAgo() {
@@ -154,7 +154,7 @@ export default function MetricasPage() {
     <div className="p-6 space-y-8">
       <div>
         <h1 className="text-2xl mb-1" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Métricas</h1>
-        <p className="text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>Últimos 30 dias · Visível apenas para o Admin Master</p>
+        <p className="text-sm" style={{ color: "var(--text-subtle)" }}>Últimos 30 dias · Visível apenas para o Admin Master</p>
       </div>
 
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
@@ -171,7 +171,7 @@ export default function MetricasPage() {
             <p className="text-3xl font-bold" style={{ color: kpi.color, fontFamily: "var(--font-cinzel)" }}>
               {kpi.raw ? kpi.value : (kpi.value as number).toLocaleString("pt-BR")}
             </p>
-            <p className="text-xs mt-2" style={{ color: "rgba(255,255,255,0.45)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em" }}>
+            <p className="text-xs mt-2" style={{ color: "var(--text-subtle)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em" }}>
               {kpi.label}
             </p>
           </div>
@@ -180,11 +180,11 @@ export default function MetricasPage() {
 
       <div className="card p-6">
         <p className="text-xs tracking-widest uppercase mb-5"
-          style={{ color: "rgba(201,162,39,0.6)", fontFamily: "var(--font-cinzel)" }}>
+          style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
           Uso por Usuário (30 dias)
         </p>
         {userStats.length === 0 ? (
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.35)" }}>Nenhuma atividade registrada ainda.</p>
+          <p className="text-sm" style={{ color: "var(--text-subtle)" }}>Nenhuma atividade registrada ainda.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -192,7 +192,7 @@ export default function MetricasPage() {
                 <tr style={{ borderBottom: "1px solid rgba(201,162,39,0.12)" }}>
                   {["Usuário", "Tempo Total", "Kairo (IA)", "Devocional", "Bíblia", "Oração", "Tokens"].map((h) => (
                     <th key={h} className="text-left px-3 py-2"
-                      style={{ color: "rgba(201,162,39,0.55)", fontFamily: "var(--font-cinzel)", fontSize: "0.65rem", letterSpacing: "0.08em", textTransform: "uppercase", whiteSpace: "nowrap" }}>
+                      style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", fontSize: "0.65rem", letterSpacing: "0.08em", textTransform: "uppercase", whiteSpace: "nowrap" }}>
                       {h}
                     </th>
                   ))}
@@ -200,9 +200,9 @@ export default function MetricasPage() {
               </thead>
               <tbody>
                 {userStats.map((u, i, arr) => (
-                  <tr key={u.userId} style={{ borderBottom: i < arr.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
+                  <tr key={u.userId} style={{ borderBottom: i < arr.length - 1 ? "1px solid var(--bg-2)" : "none" }}>
                     <td className="px-3 py-2.5">
-                      <p className="text-sm font-medium" style={{ color: "rgba(255,255,255,0.85)", fontFamily: "var(--font-cinzel)", fontSize: "0.8rem" }}>{u.name}</p>
+                      <p className="text-sm font-medium" style={{ color: "var(--text)", fontFamily: "var(--font-cinzel)", fontSize: "0.8rem" }}>{u.name}</p>
                     </td>
                     <td className="px-3 py-2.5"><p style={{ color: "#fb923c", fontFamily: "var(--font-cinzel)", fontSize: "0.8rem" }}>{fmtMin(u.totalSec)}</p></td>
                     <td className="px-3 py-2.5"><p style={{ color: "#a78bfa", fontFamily: "var(--font-cinzel)", fontSize: "0.8rem" }}>{u.kairo}</p></td>
@@ -220,24 +220,24 @@ export default function MetricasPage() {
 
       <div className="card p-6">
         <p className="text-xs tracking-widest uppercase mb-5"
-          style={{ color: "rgba(201,162,39,0.6)", fontFamily: "var(--font-cinzel)" }}>
+          style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
           Usuários por Cidade
         </p>
         {sortedCities.length === 0 ? (
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.35)" }}>Dados insuficientes.</p>
+          <p className="text-sm" style={{ color: "var(--text-subtle)" }}>Dados insuficientes.</p>
         ) : (
           <div className="space-y-3">
             {sortedCities.map(([city, count], i) => {
               const pct = Math.round((count / sortedCities[0][1]) * 100);
               return (
                 <div key={city} className="flex items-center gap-3">
-                  <span className="text-xs w-4 text-right shrink-0" style={{ color: "rgba(201,162,39,0.5)", fontFamily: "var(--font-cinzel)" }}>{i + 1}</span>
+                  <span className="text-xs w-4 text-right shrink-0" style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>{i + 1}</span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
-                      <p className="text-sm truncate" style={{ color: "rgba(255,255,255,0.8)" }}>{city}</p>
-                      <p className="text-xs ml-2 shrink-0" style={{ color: "rgba(201,162,39,0.7)", fontFamily: "var(--font-cinzel)" }}>{count}</p>
+                      <p className="text-sm truncate" style={{ color: "var(--text)" }}>{city}</p>
+                      <p className="text-xs ml-2 shrink-0" style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>{count}</p>
                     </div>
-                    <div className="h-1 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+                    <div className="h-1 rounded-full overflow-hidden" style={{ background: "var(--bg-2)" }}>
                       <div className="h-full rounded-full" style={{ width: `${pct}%`, background: "rgba(201,162,39,0.6)" }} />
                     </div>
                   </div>
@@ -250,11 +250,11 @@ export default function MetricasPage() {
 
       <div className="card p-6">
         <p className="text-xs tracking-widest uppercase mb-5"
-          style={{ color: "rgba(201,162,39,0.6)", fontFamily: "var(--font-cinzel)" }}>
+          style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
           Atividade Diária (últimos 10 dias)
         </p>
         {dailyActivity.length === 0 ? (
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.35)" }}>Nenhuma atividade registrada ainda.</p>
+          <p className="text-sm" style={{ color: "var(--text-subtle)" }}>Nenhuma atividade registrada ainda.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -262,7 +262,7 @@ export default function MetricasPage() {
                 <tr style={{ borderBottom: "1px solid rgba(201,162,39,0.1)" }}>
                   {["Data", "Devocionais", "Versículos Fav.", "Tempo de Uso"].map((h) => (
                     <th key={h} className="text-left px-3 py-2"
-                      style={{ color: "rgba(201,162,39,0.55)", fontFamily: "var(--font-cinzel)", fontSize: "0.65rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                      style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", fontSize: "0.65rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>
                       {h}
                     </th>
                   ))}
@@ -270,13 +270,13 @@ export default function MetricasPage() {
               </thead>
               <tbody>
                 {dailyActivity.slice(-10).reverse().map((m, i, arr) => (
-                  <tr key={m.date} style={{ borderBottom: i < arr.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
-                    <td className="px-3 py-2" style={{ color: "rgba(255,255,255,0.55)", fontFamily: "var(--font-cinzel)", fontSize: "0.78rem" }}>
+                  <tr key={m.date} style={{ borderBottom: i < arr.length - 1 ? "1px solid var(--bg-2)" : "none" }}>
+                    <td className="px-3 py-2" style={{ color: "var(--text-muted)", fontFamily: "var(--font-cinzel)", fontSize: "0.78rem" }}>
                       {new Date(m.date).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })}
                     </td>
                     <td className="px-3 py-2" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)", fontSize: "0.85rem" }}>{m.devocionais_read ?? 0}</td>
                     <td className="px-3 py-2" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)", fontSize: "0.85rem" }}>{m.verses_favorited ?? 0}</td>
-                    <td className="px-3 py-2" style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.8rem" }}>{fmtMin(m.session_duration_seconds ?? 0)}</td>
+                    <td className="px-3 py-2" style={{ color: "var(--text-muted)", fontSize: "0.8rem" }}>{fmtMin(m.session_duration_seconds ?? 0)}</td>
                   </tr>
                 ))}
               </tbody>

@@ -1,0 +1,5 @@
+-- Migration 003: todas as tabelas de domínio
+-- devotionals, prayer_requests, testimonies, events, calendar_events,
+-- favorites, notifications, push_subscriptions, user_metrics,
+-- ai_usage, admin_alerts, homenagens, healthcheck_logs
+-- RLS habilitado em todas conforme PRD §7.6

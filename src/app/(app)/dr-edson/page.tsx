@@ -1,81 +1,15 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
-
-interface Message {
-  role: "user" | "assistant";
-  content: string;
-}
-
-const WELCOME_MESSAGE: Message = {
-  role: "assistant",
-  content:
-    "Olá, que bom ter você aqui. Eu sou KAIRO — o assistente que enfrenta tudo, criado para te acolher, orar com você e caminhar com você à luz da Palavra de Deus. Me conte: o que você está sentindo hoje ou em qual área da sua vida você precisa de direção de Deus?",
-};
+/**
+ * Página Dr. Edson Barroso — refatorada na Task 5.3
+ * Chat Kairo via <KairoChat />, tab "Sobre & Contato" mantida.
+ */
+import { useState } from "react";
+import Image from "next/image";
+import { KairoChat } from "@/features/kairo";
 
 export default function DrEdsonPage() {
-  const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
   const [tab, setTab] = useState<"kairo" | "sobre">("kairo");
-  const bottomRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  async function sendMessage() {
-    const text = input.trim();
-    if (!text || loading) return;
-
-    const newMessages: Message[] = [...messages, { role: "user", content: text }];
-    setMessages(newMessages);
-    setInput("");
-    setLoading(true);
-
-    try {
-      const res = await fetch("/api/kairo", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages }),
-      });
-
-      const data = await res.json();
-      if (data.reply) {
-        setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
-      } else {
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content:
-              "Desculpe, não consegui responder agora. Por favor, tente novamente em instantes.",
-          },
-        ]);
-      }
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content:
-            "Houve um problema de conexão. Verifique sua internet e tente novamente.",
-        },
-      ]);
-    } finally {
-      setLoading(false);
-      inputRef.current?.focus();
-    }
-  }
-
-  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
-  }
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg)" }}>
@@ -84,32 +18,25 @@ export default function DrEdsonPage() {
         className="relative overflow-hidden"
         style={{
           background:
-            "linear-gradient(135deg, rgba(123,31,58,0.35) 0%, rgba(6,10,20,0.98) 60%, rgba(42,122,75,0.15) 100%)",
-          borderBottom: "1px solid rgba(123,31,58,0.3)",
+            "linear-gradient(135deg, var(--wine-bg) 0%, var(--bg-card) 60%, var(--heal-bg) 100%)",
+          borderBottom: "1px solid var(--wine-border)",
         }}
       >
         <div className="max-w-5xl mx-auto px-6 py-10">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
             {/* Avatar */}
             <div
-              className="w-20 h-20 rounded-full flex items-center justify-center shrink-0 glow-wine"
-              style={{
-                background:
-                  "linear-gradient(135deg, var(--wine) 0%, var(--wine-light) 100%)",
-                border: "2px solid rgba(201,168,76,0.4)",
-              }}
+              className="w-20 h-20 rounded-full shrink-0 overflow-hidden glow-wine"
+              style={{ border: "2px solid rgba(201,168,76,0.4)" }}
             >
-              <span
-                style={{
-                  fontFamily: "var(--font-cinzel)",
-                  fontSize: "1.75rem",
-                  fontWeight: 700,
-                  color: "#F5F2EB",
-                  letterSpacing: "0.05em",
-                }}
-              >
-                EB
-              </span>
+              <Image
+                src="/minhaimgredonda.png"
+                alt="Dr. Edson Barroso"
+                width={80}
+                height={80}
+                className="w-full h-full object-cover"
+                priority
+              />
             </div>
 
             <div className="flex-1">
@@ -125,13 +52,17 @@ export default function DrEdsonPage() {
               </div>
               <p
                 className="text-sm mb-3"
-                style={{ color: "var(--text-muted)", fontFamily: "var(--font-lora)", fontStyle: "italic" }}
+                style={{
+                  color: "var(--text-muted)",
+                  fontFamily: "var(--font-lora)",
+                  fontStyle: "italic",
+                }}
               >
                 Médico especialista em saúde mental · Membro da Casa de Oração · Franca/SP
               </p>
               <p
                 className="text-sm leading-relaxed max-w-2xl"
-                style={{ color: "rgba(245,242,235,0.75)" }}
+                style={{ color: "var(--text)" }}
               >
                 Com fé e ciência caminhando juntas, o Dr. Edson Barroso dedica sua vida a
                 ajudar pessoas a vencerem o medo, a ansiedade e os bloqueios emocionais —
@@ -157,7 +88,12 @@ export default function DrEdsonPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-outline"
-                  style={{ padding: "0.45rem 1rem", fontSize: "0.75rem", color: "var(--heal)", borderColor: "var(--heal)" }}
+                  style={{
+                    padding: "0.45rem 1rem",
+                    fontSize: "0.75rem",
+                    color: "var(--heal)",
+                    borderColor: "var(--heal)",
+                  }}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
@@ -195,7 +131,11 @@ export default function DrEdsonPage() {
       <div className="max-w-5xl mx-auto px-6">
         <div
           className="flex gap-1 mt-6 mb-6 p-1 rounded-lg"
-          style={{ background: "rgba(255,255,255,0.04)", border: "1px solid var(--border)", width: "fit-content" }}
+          style={{
+            background: "var(--bg-2)",
+            border: "1px solid var(--border)",
+            width: "fit-content",
+          }}
         >
           <button
             onClick={() => setTab("kairo")}
@@ -204,11 +144,11 @@ export default function DrEdsonPage() {
               fontFamily: "var(--font-cinzel)",
               letterSpacing: "0.08em",
               background: tab === "kairo" ? "var(--wine-bg)" : "transparent",
-              color: tab === "kairo" ? "#E8A0B0" : "var(--text-muted)",
+              color: tab === "kairo" ? "var(--wine-light)" : "var(--text-muted)",
               border: tab === "kairo" ? "1px solid var(--wine-border)" : "1px solid transparent",
             }}
           >
-            ✦ Assistente Kairo
+            ✦ Converse com Kairo
           </button>
           <button
             onClick={() => setTab("sobre")}
@@ -226,137 +166,11 @@ export default function DrEdsonPage() {
         </div>
 
         {/* Tab: Kairo Chat */}
-        {tab === "kairo" && (
-          <div className="pb-8">
-            {/* Kairo Header */}
-            <div
-              className="card-wine p-5 mb-4 flex items-center gap-4"
-            >
-              <div
-                className="w-12 h-12 rounded-full flex items-center justify-center shrink-0"
-                style={{
-                  background: "linear-gradient(135deg, var(--wine) 0%, var(--gold) 100%)",
-                  boxShadow: "0 0 20px rgba(123,31,58,0.5)",
-                }}
-              >
-                <span style={{ fontSize: "1.3rem" }}>✦</span>
-              </div>
-              <div>
-                <h2
-                  className="text-lg"
-                  style={{ color: "var(--gold)", fontFamily: "var(--font-cinzel)", marginBottom: "0.1rem" }}
-                >
-                  KAIRO
-                </h2>
-                <p className="text-xs" style={{ color: "rgba(245,242,235,0.55)", fontFamily: "var(--font-lora)", fontStyle: "italic" }}>
-                  O assistente que enfrenta tudo · Pastoral · Bíblico · Acolhedor
-                </p>
-              </div>
-              <div className="ml-auto">
-                <span className="badge badge-heal">Online</span>
-              </div>
-            </div>
-
-            {/* Chat Messages */}
-            <div
-              className="card p-4 mb-4 overflow-y-auto flex flex-col gap-4"
-              style={{ minHeight: "380px", maxHeight: "480px" }}
-            >
-              {messages.map((msg, i) => (
-                <div
-                  key={i}
-                  className={msg.role === "user" ? "kairo-bubble-user" : "kairo-bubble-ai"}
-                  style={{ whiteSpace: "pre-wrap" }}
-                >
-                  {msg.role === "assistant" && (
-                    <div
-                      className="flex items-center gap-2 mb-2"
-                      style={{ opacity: 0.6 }}
-                    >
-                      <span style={{ fontSize: "0.7rem", fontFamily: "var(--font-cinzel)", letterSpacing: "0.1em", color: "var(--gold)" }}>
-                        ✦ KAIRO
-                      </span>
-                    </div>
-                  )}
-                  {msg.content}
-                </div>
-              ))}
-              {loading && (
-                <div className="kairo-bubble-ai">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="flex gap-1"
-                    >
-                      {[0, 1, 2].map((i) => (
-                        <span
-                          key={i}
-                          style={{
-                            width: 6,
-                            height: 6,
-                            borderRadius: "50%",
-                            background: "var(--gold)",
-                            display: "inline-block",
-                            animation: `pulse 1.2s ease-in-out ${i * 0.2}s infinite`,
-                          }}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-xs" style={{ color: "var(--text-muted)" }}>
-                      Kairo está respondendo...
-                    </span>
-                  </div>
-                </div>
-              )}
-              <div ref={bottomRef} />
-            </div>
-
-            {/* Input */}
-            <div
-              className="card p-3 flex gap-3 items-end"
-              style={{ border: "1px solid rgba(123,31,58,0.3)" }}
-            >
-              <textarea
-                ref={inputRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Compartilhe o que está sentindo... Kairo está aqui para ouvir."
-                rows={2}
-                disabled={loading}
-                style={{
-                  flex: 1,
-                  background: "transparent",
-                  border: "none",
-                  outline: "none",
-                  resize: "none",
-                  color: "var(--text)",
-                  fontFamily: "var(--font-inter)",
-                  fontSize: "0.9rem",
-                  lineHeight: "1.5",
-                }}
-              />
-              <button
-                onClick={sendMessage}
-                disabled={loading || !input.trim()}
-                className="btn-wine shrink-0"
-                style={{ padding: "0.6rem 1.2rem", fontSize: "0.75rem" }}
-              >
-                Enviar
-              </button>
-            </div>
-            <p
-              className="text-xs mt-2 text-center"
-              style={{ color: "var(--text-subtle)" }}
-            >
-              Kairo é um assistente de apoio espiritual. Em crises graves, procure ajuda profissional imediatamente.
-            </p>
-          </div>
-        )}
+        {tab === "kairo" && <KairoChat />}
 
         {/* Tab: Sobre */}
         {tab === "sobre" && (
           <div className="pb-8 space-y-6">
-            {/* Bio */}
             <div className="card-wine p-6">
               <h2
                 className="text-lg mb-4"
@@ -364,7 +178,7 @@ export default function DrEdsonPage() {
               >
                 Sobre o Dr. Edson Barroso
               </h2>
-              <div className="space-y-3 text-sm leading-relaxed" style={{ color: "rgba(245,242,235,0.8)" }}>
+              <div className="space-y-3 text-sm leading-relaxed" style={{ color: "var(--text)" }}>
                 <p>
                   O Dr. Edson Barroso é médico especialista em saúde mental, com uma visão única
                   que integra ciência e fé. Membro ativo da Casa de Oração de Franca/SP, ele
@@ -377,14 +191,14 @@ export default function DrEdsonPage() {
                   crenças limitantes que impedem o pleno florescimento da vida em Cristo.
                 </p>
                 <p>
-                  Autor do livro <strong style={{ color: "var(--gold)" }}>"Dominando o Medo"</strong>,
+                  Autor do livro{" "}
+                  <strong style={{ color: "var(--gold)" }}>"Dominando o Medo"</strong>,
                   o Dr. Edson compartilha ferramentas práticas e bíblicas para transformar a mente
                   e viver com coragem e propósito.
                 </p>
               </div>
             </div>
 
-            {/* Endereço */}
             <div className="card p-6">
               <h3
                 className="text-base mb-4"
@@ -409,11 +223,7 @@ export default function DrEdsonPage() {
                 </div>
                 <div className="flex items-center gap-3">
                   <span style={{ color: "var(--heal-light)", fontSize: "1.1rem" }}>📱</span>
-                  <a
-                    href="tel:+5516993120938"
-                    className="text-sm"
-                    style={{ color: "var(--text)" }}
-                  >
+                  <a href="tel:+5516993120938" className="text-sm" style={{ color: "var(--text)" }}>
                     (16) 99312-0938
                   </a>
                 </div>
@@ -432,7 +242,6 @@ export default function DrEdsonPage() {
               </div>
             </div>
 
-            {/* Redes Sociais */}
             <div className="card p-6">
               <h3
                 className="text-base mb-4"
@@ -471,11 +280,11 @@ export default function DrEdsonPage() {
               </div>
             </div>
 
-            {/* Livro */}
             <div
               className="p-6 rounded-xl"
               style={{
-                background: "linear-gradient(135deg, rgba(201,168,76,0.12) 0%, rgba(123,31,58,0.12) 100%)",
+                background:
+                  "linear-gradient(135deg, rgba(201,168,76,0.12) 0%, rgba(123,31,58,0.12) 100%)",
                 border: "1px solid rgba(201,168,76,0.25)",
               }}
             >
@@ -493,7 +302,7 @@ export default function DrEdsonPage() {
                   </p>
                 </div>
               </div>
-              <p className="text-sm leading-relaxed" style={{ color: "rgba(245,242,235,0.75)" }}>
+              <p className="text-sm leading-relaxed" style={{ color: "var(--text)" }}>
                 Um guia prático e bíblico para identificar, enfrentar e vencer os medos que
                 aprisionam a mente e impedem o pleno florescimento da vida em Cristo.
               </p>
@@ -501,13 +310,6 @@ export default function DrEdsonPage() {
           </div>
         )}
       </div>
-
-      <style jsx>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 0.3; transform: scale(0.8); }
-          50% { opacity: 1; transform: scale(1.2); }
-        }
-      `}</style>
     </div>
   );
 }

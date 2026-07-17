@@ -1,7 +1,8 @@
 "use client";
 export const dynamic = "force-dynamic";
 import { useEffect, useState } from "react";
-import { getBrowserClient } from "@/lib/supabase/browser";
+import { getTodayBR } from "@/shared/lib/utils";
+import { getBrowserClient } from "@/shared/services/supabase/supabase.browser";
 
 
 interface Devotional {
@@ -34,7 +35,7 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 const emptyDev = {
-  date: new Date().toISOString().split("T")[0],
+  date: getTodayBR(),
   title: "",
   bible_book: "",
   bible_chapter: 1,
@@ -46,8 +47,8 @@ const emptyDev = {
 };
 
 const inp = "w-full px-3 py-2 rounded-lg text-sm outline-none";
-const inpStyle = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(201,162,39,0.2)", color: "rgba(255,255,255,0.85)" };
-const labelStyle = { color: "rgba(201,162,39,0.7)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em", textTransform: "uppercase" as const, fontSize: "0.7rem" };
+const inpStyle = { background: "var(--bg-2)", border: "1px solid rgba(201,162,39,0.2)", color: "var(--text)" };
+const labelStyle = { color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em", textTransform: "uppercase" as const, fontSize: "0.7rem" };
 
 export default function AdminConteudoPage() {
   const supabase = getBrowserClient();
@@ -85,7 +86,7 @@ export default function AdminConteudoPage() {
 
   function openNew() {
     setEditing(null);
-    setForm({ ...emptyDev, date: new Date().toISOString().split("T")[0] });
+    setForm({ ...emptyDev, date: getTodayBR() });
     setShowForm(true);
     setMsg("");
   }
@@ -152,7 +153,7 @@ export default function AdminConteudoPage() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Conteúdo</h1>
-          <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.4)" }}>
+          <p className="text-xs mt-1" style={{ color: "var(--text-subtle)" }}>
             Devocionais · Testemunhos da Comunidade
           </p>
         </div>
@@ -173,16 +174,16 @@ export default function AdminConteudoPage() {
           <button key={t.key} onClick={() => setTab(t.key as "devotionals" | "testimonies")}
             className="px-4 py-2 rounded-lg text-xs font-semibold tracking-widest uppercase"
             style={{
-              background: tab === t.key ? "rgba(201,162,39,0.15)" : "rgba(255,255,255,0.04)",
-              border: `1px solid ${tab === t.key ? "rgba(201,162,39,0.4)" : "rgba(255,255,255,0.1)"}`,
-              color: tab === t.key ? "#c9a227" : "rgba(255,255,255,0.45)",
+              background: tab === t.key ? "rgba(201,162,39,0.15)" : "var(--bg-2)",
+              border: `1px solid ${tab === t.key ? "rgba(201,162,39,0.4)" : "var(--bg-2)"}`,
+              color: tab === t.key ? "#c9a227" : "var(--text-subtle)",
             }}>
             {t.label}
           </button>
         ))}
       </div>
 
-      {loading && <p className="text-center text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>Carregando...</p>}
+      {loading && <p className="text-center text-sm" style={{ color: "var(--text-subtle)" }}>Carregando...</p>}
 
       {/* ===== DEVOCIONAIS ===== */}
       {!loading && tab === "devotionals" && (
@@ -252,7 +253,7 @@ export default function AdminConteudoPage() {
                   {saving ? "Salvando..." : editing ? "Salvar Alterações" : "Publicar"}
                 </button>
                 <button onClick={() => setShowForm(false)} className="px-5 py-2 rounded-lg text-xs"
-                  style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }}>
+                  style={{ background: "var(--bg-2)", border: "1px solid var(--bg-2)", color: "var(--text-muted)" }}>
                   Cancelar
                 </button>
               </div>
@@ -261,7 +262,7 @@ export default function AdminConteudoPage() {
 
           {devs.length === 0 ? (
             <div className="card p-10 text-center">
-              <p style={{ color: "rgba(255,255,255,0.3)" }}>Nenhum devocional publicado ainda.</p>
+              <p style={{ color: "var(--text-subtle)" }}>Nenhum devocional publicado ainda.</p>
               <button onClick={openNew} className="mt-4 px-4 py-2 rounded-lg text-xs"
                 style={{ background: "rgba(201,162,39,0.1)", border: "1px solid rgba(201,162,39,0.3)", color: "#c9a227" }}>
                 Criar o primeiro devocional
@@ -284,13 +285,13 @@ export default function AdminConteudoPage() {
                         </span>
                       )}
                     </div>
-                    <p className="font-semibold text-sm" style={{ color: "rgba(255,255,255,0.85)", fontFamily: "var(--font-cinzel)" }}>
+                    <p className="font-semibold text-sm" style={{ color: "var(--text)", fontFamily: "var(--font-cinzel)" }}>
                       {item.title}
                     </p>
-                    <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>
+                    <p className="text-xs mt-0.5" style={{ color: "var(--text-subtle)" }}>
                       {item.bible_book} {item.bible_chapter}:{item.bible_verse_start}{item.bible_verse_end ? `-${item.bible_verse_end}` : ""}
                     </p>
-                    <p className="text-xs mt-1 line-clamp-2" style={{ color: "rgba(255,255,255,0.4)" }}>
+                    <p className="text-xs mt-1 line-clamp-2" style={{ color: "var(--text-subtle)" }}>
                       {item.reflection_text.slice(0, 130)}...
                     </p>
                   </div>
@@ -327,7 +328,7 @@ export default function AdminConteudoPage() {
                     <div className="flex items-start justify-between gap-4 flex-wrap">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1 flex-wrap">
-                          <p className="font-semibold text-sm" style={{ color: "rgba(255,255,255,0.85)", fontFamily: "var(--font-cinzel)" }}>
+                          <p className="font-semibold text-sm" style={{ color: "var(--text)", fontFamily: "var(--font-cinzel)" }}>
                             {t.title}
                           </p>
                           <span className="text-xs px-2 py-0.5 rounded-full"
@@ -335,10 +336,10 @@ export default function AdminConteudoPage() {
                             {TYPE_LABELS[t.type] ?? t.type}
                           </span>
                         </div>
-                        <p className="text-xs mb-2" style={{ color: "rgba(255,255,255,0.4)" }}>
+                        <p className="text-xs mb-2" style={{ color: "var(--text-subtle)" }}>
                           {t.profile?.full_name} · {t.profile?.church_name}
                         </p>
-                        <p className="text-sm line-clamp-3" style={{ color: "rgba(255,255,255,0.6)" }}>
+                        <p className="text-sm line-clamp-3" style={{ color: "var(--text-muted)" }}>
                           {t.content}
                         </p>
                       </div>
@@ -367,17 +368,17 @@ export default function AdminConteudoPage() {
             </p>
             {approved.length === 0 ? (
               <div className="card p-8 text-center">
-                <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.875rem" }}>Nenhum testemunho publicado.</p>
+                <p style={{ color: "var(--text-subtle)", fontSize: "0.875rem" }}>Nenhum testemunho publicado.</p>
               </div>
             ) : (
               <div className="space-y-3">
                 {approved.map(t => (
                   <div key={t.id} className="card p-4 flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-sm" style={{ color: "rgba(255,255,255,0.85)", fontFamily: "var(--font-cinzel)" }}>
+                      <p className="font-semibold text-sm" style={{ color: "var(--text)", fontFamily: "var(--font-cinzel)" }}>
                         {t.title}
                       </p>
-                      <p className="text-xs mt-0.5 line-clamp-2" style={{ color: "rgba(255,255,255,0.4)" }}>
+                      <p className="text-xs mt-0.5 line-clamp-2" style={{ color: "var(--text-subtle)" }}>
                         {t.profile?.full_name} · {t.content.slice(0, 100)}...
                       </p>
                     </div>

@@ -1,7 +1,7 @@
 "use client";
 export const dynamic = "force-dynamic";
 import { useEffect, useRef, useState } from "react";
-import { getBrowserClient } from "@/lib/supabase/browser";
+import { getBrowserClient } from "@/shared/services/supabase/supabase.browser";
 
 
 interface LegendarioMember {
@@ -198,14 +198,14 @@ export default function AdminLegendariosPage() {
   );
 
   const inp = "w-full px-3 py-2 rounded-lg text-sm outline-none";
-  const inpStyle = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(232,93,4,0.2)", color: "rgba(255,255,255,0.85)" };
+  const inpStyle = { background: "var(--bg-2)", border: "1px solid rgba(232,93,4,0.2)", color: "var(--text)" };
 
   return (
     <div className="p-4 md:p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#E85D04" }}>Legendários</h1>
-          <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.4)" }}>Gestão de membros e eventos do ministério</p>
+          <p className="text-xs mt-1" style={{ color: "var(--text-subtle)" }}>Gestão de membros e eventos do ministério</p>
         </div>
       </div>
 
@@ -382,7 +382,7 @@ export default function AdminLegendariosPage() {
                 <button type="submit" className="flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-widest" style={{ background: "#E85D04", color: "white" }}>
                   Salvar Evento
                 </button>
-                <button type="button" onClick={cancelEventForm} className="flex-1 py-2 rounded-lg text-xs" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }}>
+                <button type="button" onClick={cancelEventForm} className="flex-1 py-2 rounded-lg text-xs" style={{ background: "var(--bg-2)", border: "1px solid var(--bg-2)", color: "var(--text-muted)" }}>
                   Cancelar
                 </button>
               </div>

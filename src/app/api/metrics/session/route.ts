@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createClient } from "@/shared/services/supabase/supabase.server";
+import { createServiceClient } from "@/shared/services/supabase/supabase.server";
 
 export async function POST(request: Request) {
   try {
@@ -16,7 +16,8 @@ export async function POST(request: Request) {
     };
 
     const { sessionSeconds = 0, section } = body;
-    const today = new Date().toISOString().split("T")[0];
+    const { getTodayBR } = await import("@/shared/lib/utils");
+    const today = getTodayBR();
     const serviceClient = await createServiceClient();
 
     // Buscar registro do dia

@@ -1,11 +1,18 @@
+/**
+ * Task 10 — Auth obrigatório + rate limit + validação Zod
+ * Refatorado para usar generateAI com userId + feature: "homenagens_reescrever"
+ */
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import { generateAI } from "@/shared/services/ai/ai.service";
+import { requireAuthOrUnauthorized } from "@/shared/services/auth/server";
+import { withRateLimit } from "@/shared/services/rate-limit/rate-limit.service";
 
-export async function POST(req: NextRequest) {
-  try {
-    const { texto } = await req.json();
-    if (!texto) return NextResponse.json({ error: "Texto obrigatório" }, { status: 400 });
+const schema = z.object({
+  texto: z.string().min(1).max(3000),
+});
 
-    const prompt = `Aja como um redator especializado em textos cristãos para igreja evangélica, com sensibilidade pastoral e linguagem humana.
+const PROMPT_TEMPLATE = (texto: string) => `Aja como um redator especializado em textos cristãos para igreja evangélica, com sensibilidade pastoral e linguagem humana.
 
 Sua tarefa é reescrever um texto de homenagem (como aniversário, gratidão, mensagem para esposa, filhos ou família), mantendo fielmente o sentimento, a intenção e as ideias do autor original.
 
@@ -35,25 +42,39 @@ ${texto}
 
 Resposta final (apenas o texto reescrito, sem comentários adicionais):`;
 
-    const res = await fetch(`${process.env.OPENAI_API_BASE ?? "https://api.openai.com"}/v1/chat/completions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [{ role: "user", content: prompt }],
-        max_tokens: 800,
-        temperature: 0.7,
-      }),
-    });
-    const json = await res.json();
-    const reescrito: string = json.choices?.[0]?.message?.content?.trim() ?? "";
+export async function POST(req: NextRequest) {
+  const auth = await requireAuthOrUnauthorized();
+  if (auth instanceof NextResponse) return auth;
 
-    return NextResponse.json({ texto: reescrito, caracteres: reescrito.length });
+  try {
+    const body = await req.json();
+    const parsed = schema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Dados inválidos", details: parsed.error.flatten() }, { status: 400 });
+    }
+
+    const { texto } = parsed.data;
+
+    return withRateLimit(
+      `homenagens:${auth.user.id}`,
+      { max: 5, windowMs: 60_000 },
+      async () => {
+        const { content } = await generateAI({
+          provider: "openai",
+          model: "gpt-4o-mini",
+          feature: "homenagens_reescrever",
+          messages: [{ role: "user", content: PROMPT_TEMPLATE(texto) }],
+          maxTokens: 800,
+          temperature: 0.7,
+          userId: auth.user.id,
+        });
+
+        const reescrito = content.trim();
+        return NextResponse.json({ texto: reescrito, caracteres: reescrito.length });
+      },
+    );
   } catch (err) {
-    console.error("Erro ao reescrever homenagem:", err);
+    console.error("[homenagens/reescrever] Erro:", err);
     return NextResponse.json({ error: "Erro ao processar texto" }, { status: 500 });
   }
 }

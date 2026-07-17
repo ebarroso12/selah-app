@@ -69,7 +69,7 @@ export default function IgrejaPage() {
           </h1>
           <p
             className="text-sm mt-1 tracking-widest uppercase"
-            style={{ color: "rgba(201,168,76,0.6)", fontFamily: "var(--font-cinzel)" }}
+            style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}
           >
             Franca — SP
           </p>
@@ -77,7 +77,7 @@ export default function IgrejaPage() {
 
         <p
           className="text-sm leading-relaxed max-w-md mx-auto"
-          style={{ color: "rgba(245,242,235,0.6)" }}
+          style={{ color: "var(--text-muted)" }}
         >
           Centro Apostólico e Profético de Cura e Paternidade. Uma família para você pertencer.
         </p>
@@ -95,7 +95,7 @@ export default function IgrejaPage() {
               style={{
                 background: "rgba(201,168,76,0.08)",
                 border: "1px solid rgba(201,168,76,0.2)",
-                color: "rgba(201,168,76,0.8)",
+                color: "var(--gold-label)",
                 fontFamily: "var(--font-cinzel)",
                 letterSpacing: "0.06em",
               }}
@@ -112,19 +112,19 @@ export default function IgrejaPage() {
         >
           <p
             className="text-xs tracking-widest uppercase mb-3"
-            style={{ color: "rgba(201,168,76,0.55)", fontFamily: "var(--font-cinzel)" }}
+            style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}
           >
             Cultos
           </p>
-          <div className="flex justify-between" style={{ color: "rgba(245,242,235,0.75)" }}>
+          <div className="flex justify-between" style={{ color: "var(--text)" }}>
             <span>Quarta-feira</span>
             <span style={{ color: "#c9a227" }}>20h00</span>
           </div>
-          <div className="flex justify-between" style={{ color: "rgba(245,242,235,0.75)" }}>
+          <div className="flex justify-between" style={{ color: "var(--text)" }}>
             <span>Domingo</span>
             <span style={{ color: "#c9a227" }}>10h00 e 18h00</span>
           </div>
-          <p className="text-xs mt-2" style={{ color: "rgba(245,242,235,0.4)" }}>
+          <p className="text-xs mt-2" style={{ color: "var(--text-subtle)" }}>
             Av. Alagoas, 1163 — Jardim Paulista, Franca-SP
           </p>
         </div>
@@ -139,7 +139,7 @@ export default function IgrejaPage() {
             style={{
               background: "rgba(201,168,76,0.08)",
               border: "1px solid rgba(201,168,76,0.2)",
-              color: "rgba(201,168,76,0.85)",
+              color: "var(--gold-label)",
               fontFamily: "var(--font-cinzel)",
               letterSpacing: "0.05em",
             }}
@@ -157,7 +157,7 @@ export default function IgrejaPage() {
             style={{
               background: "rgba(201,168,76,0.08)",
               border: "1px solid rgba(201,168,76,0.2)",
-              color: "rgba(201,168,76,0.85)",
+              color: "var(--gold-label)",
               fontFamily: "var(--font-cinzel)",
               letterSpacing: "0.05em",
             }}
@@ -175,10 +175,10 @@ export default function IgrejaPage() {
         className="card p-5"
         style={{ borderColor: "rgba(201,168,76,0.15)", borderLeft: "3px solid rgba(201,168,76,0.4)" }}
       >
-        <p className="text-sm italic leading-relaxed" style={{ color: "rgba(245,242,235,0.7)" }}>
+        <p className="text-sm italic leading-relaxed" style={{ color: "var(--text-muted)" }}>
           "Também os levarei ao meu santo monte, e os alegrarei na minha casa de oração; os seus holocaustos e os seus sacrifícios serão aceitos no meu altar; porque a minha casa será chamada casa de oração para todos os povos."
         </p>
-        <p className="text-xs mt-2" style={{ color: "rgba(201,168,76,0.6)", fontFamily: "var(--font-cinzel)" }}>
+        <p className="text-xs mt-2" style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
           Isaías 56:7
         </p>
       </div>
@@ -187,7 +187,7 @@ export default function IgrejaPage() {
       <div>
         <p
           className="text-xs tracking-widest uppercase mb-5"
-          style={{ color: "rgba(201,168,76,0.55)", fontFamily: "var(--font-cinzel)" }}
+          style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}
         >
           Nossa Liderança
         </p>
@@ -221,17 +221,17 @@ export default function IgrejaPage() {
               <div className="flex-1 min-w-0">
                 <p
                   className="font-semibold text-sm"
-                  style={{ color: "rgba(245,242,235,0.92)", fontFamily: "var(--font-cinzel)" }}
+                  style={{ color: "var(--text)", fontFamily: "var(--font-cinzel)" }}
                 >
                   {p.nome}
                 </p>
                 <p
                   className="text-xs mb-2"
-                  style={{ color: "rgba(201,168,76,0.65)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.04em" }}
+                  style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.04em" }}
                 >
                   {p.titulo}
                 </p>
-                <p className="text-xs leading-relaxed" style={{ color: "rgba(245,242,235,0.55)" }}>
+                <p className="text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
                   {p.bio}
                 </p>
                 <Link
@@ -239,7 +239,7 @@ export default function IgrejaPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 mt-3 text-xs transition-opacity hover:opacity-80"
-                  style={{ color: "rgba(201,168,76,0.7)", fontFamily: "var(--font-cinzel)" }}
+                  style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}
                 >
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
@@ -259,7 +259,7 @@ export default function IgrejaPage() {
       >
         <p
           className="text-xs tracking-widest uppercase mb-3"
-          style={{ color: "rgba(201,168,76,0.55)", fontFamily: "var(--font-cinzel)" }}
+          style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}
         >
           Também na Liderança
         </p>
@@ -278,10 +278,10 @@ export default function IgrejaPage() {
             MA
           </div>
           <div>
-            <p className="text-sm font-semibold" style={{ color: "rgba(245,242,235,0.9)", fontFamily: "var(--font-cinzel)" }}>
+            <p className="text-sm font-semibold" style={{ color: "var(--text)", fontFamily: "var(--font-cinzel)" }}>
               Pr. Marco Martins Arantes
             </p>
-            <p className="text-xs" style={{ color: "rgba(201,168,76,0.6)", fontFamily: "var(--font-cinzel)" }}>
+            <p className="text-xs" style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
               Pastor — Casa de Oração Franca
             </p>
           </div>
@@ -292,11 +292,11 @@ export default function IgrejaPage() {
       <div className="card p-5 space-y-3" style={{ borderColor: "rgba(201,168,76,0.12)" }}>
         <p
           className="text-xs tracking-widest uppercase"
-          style={{ color: "rgba(201,168,76,0.55)", fontFamily: "var(--font-cinzel)" }}
+          style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}
         >
           Nossa Visão
         </p>
-        <p className="text-sm leading-relaxed" style={{ color: "rgba(245,242,235,0.65)" }}>
+        <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
           Fazer de Franca a "Cidade da Oração" — uma comunidade profética onde cada membro entende que pode ser a boca de Deus na Terra. Uma igreja avivada, que evangeliza, influencia e levanta famílias inteiras para Jesus Cristo.
         </p>
       </div>

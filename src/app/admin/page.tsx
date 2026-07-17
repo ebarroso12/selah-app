@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 
-const gold = "#c9a227";
+const gold = "var(--gold)";
 const OPENCLAW_URL = "https://openclaw.n8ndredson.com/chat?session=agent%3Amain%3Amain";
 
 interface UserStat {
@@ -36,8 +36,8 @@ interface StatsData {
 }
 
 const card: React.CSSProperties = {
-  background: "rgba(255,255,255,0.04)",
-  border: "1px solid rgba(201,162,39,0.15)",
+  background: "var(--bg-card)",
+  border: "1px solid var(--border)",
   borderRadius: 12,
   padding: "1rem",
 };
@@ -117,7 +117,7 @@ export default function AdminDashboard() {
       <div style={{ marginBottom: "1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
         <div>
           <h1 style={{ fontFamily: "var(--font-cinzel,serif)", color: gold, fontSize: "1.4rem", letterSpacing: "0.15em", margin: 0 }}>DASHBOARD</h1>
-          <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.8rem", margin: "4px 0 0" }}>Visão geral do SELAH</p>
+          <p style={{ color: "var(--text-subtle)", fontSize: "0.8rem", margin: "4px 0 0" }}>Visão geral do SELAH</p>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
           <button onClick={loadStats} style={{ background: "rgba(201,162,39,0.08)", border: "1px solid rgba(201,162,39,0.2)", borderRadius: 8, color: gold, padding: "0.4rem 0.8rem", fontSize: "0.78rem", cursor: "pointer" }}>
@@ -153,7 +153,7 @@ export default function AdminDashboard() {
               <div key={m.label} style={{ ...card }}>
                 <div style={{ fontSize: "1.3rem", marginBottom: 6 }}>{m.icon}</div>
                 <div style={{ color: m.color, fontSize: "1.7rem", fontWeight: 700, lineHeight: 1, fontFamily: "var(--font-cinzel,serif)" }}>{m.value.toLocaleString("pt-BR")}</div>
-                <div style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.68rem", marginTop: 5, textTransform: "uppercase", letterSpacing: "0.05em" }}>{m.label}</div>
+                <div style={{ color: "var(--text-subtle)", fontSize: "0.68rem", marginTop: 5, textTransform: "uppercase", letterSpacing: "0.05em" }}>{m.label}</div>
               </div>
             ))}
           </div>
@@ -165,7 +165,7 @@ export default function AdminDashboard() {
                 <h2 style={{ color: gold, fontSize: "0.85rem", letterSpacing: "0.1em", textTransform: "uppercase", margin: 0, fontFamily: "var(--font-cinzel,serif)" }}>
                   Usuários Cadastrados ({stats?.totalUsers ?? 0})
                 </h2>
-                <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.7rem", margin: "3px 0 0" }}>
+                <p style={{ color: "var(--text-subtle)", fontSize: "0.7rem", margin: "3px 0 0" }}>
                   🟢 {stats?.onlineNow ?? 0} online agora · ☀️ {stats?.activeToday ?? 0} ativos hoje
                 </p>
               </div>
@@ -174,7 +174,7 @@ export default function AdminDashboard() {
                 placeholder="Buscar..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(201,162,39,0.2)", borderRadius: 8, color: "white", padding: "0.35rem 0.7rem", fontSize: "0.8rem", outline: "none", width: 160 }}
+                style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: 8, color: "var(--text)", padding: "0.35rem 0.7rem", fontSize: "0.8rem", outline: "none", width: 160 }}
               />
             </div>
 
@@ -183,15 +183,15 @@ export default function AdminDashboard() {
                 <thead>
                   <tr style={{ borderBottom: "1px solid rgba(201,162,39,0.1)" }}>
                     {["Nome", "Email", "Igreja / Cidade", "Cadastro", "Último Acesso", "Tempo de Uso", "Status"].map((h) => (
-                      <th key={h} style={{ color: "rgba(201,162,39,0.55)", fontWeight: 500, padding: "0.6rem 0.75rem", textAlign: "left", whiteSpace: "nowrap", fontSize: "0.68rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>{h}</th>
+                      <th key={h} style={{ color: "var(--gold-label)", fontWeight: 500, padding: "0.6rem 0.75rem", textAlign: "left", whiteSpace: "nowrap", fontSize: "0.68rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {displayedUsers.length === 0 ? (
-                    <tr><td colSpan={7} style={{ textAlign: "center", padding: "2rem", color: "rgba(255,255,255,0.3)" }}>Nenhum usuário encontrado</td></tr>
+                    <tr><td colSpan={7} style={{ textAlign: "center", padding: "2rem", color: "var(--text-subtle)" }}>Nenhum usuário encontrado</td></tr>
                   ) : displayedUsers.map((u, i) => (
-                    <tr key={u.id} style={{ borderBottom: i < displayedUsers.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none", background: u.isOnline ? "rgba(52,211,153,0.03)" : "transparent" }}>
+                    <tr key={u.id} style={{ borderBottom: i < displayedUsers.length - 1 ? "1px solid var(--bg-2)" : "none", background: u.isOnline ? "rgba(52,211,153,0.03)" : "transparent" }}>
                       <td style={{ padding: "0.6rem 0.75rem", whiteSpace: "nowrap" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                           {u.isOnline && <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#34d399", display: "inline-block", flexShrink: 0 }} />}
@@ -200,18 +200,18 @@ export default function AdminDashboard() {
                           </Link>
                         </div>
                       </td>
-                      <td style={{ padding: "0.6rem 0.75rem", color: "rgba(255,255,255,0.4)", fontSize: "0.72rem" }}>{u.email}</td>
-                      <td style={{ padding: "0.6rem 0.75rem", color: "rgba(255,255,255,0.4)", fontSize: "0.72rem" }}>
+                      <td style={{ padding: "0.6rem 0.75rem", color: "var(--text-subtle)", fontSize: "0.72rem" }}>{u.email}</td>
+                      <td style={{ padding: "0.6rem 0.75rem", color: "var(--text-subtle)", fontSize: "0.72rem" }}>
                         {u.church_name || u.city ? `${u.church_name || ""}${u.city ? ` · ${u.city}` : ""}` : "—"}
                       </td>
-                      <td style={{ padding: "0.6rem 0.75rem", color: "rgba(255,255,255,0.3)", fontSize: "0.72rem", whiteSpace: "nowrap" }}>
+                      <td style={{ padding: "0.6rem 0.75rem", color: "var(--text-subtle)", fontSize: "0.72rem", whiteSpace: "nowrap" }}>
                         {new Date(u.created_at).toLocaleDateString("pt-BR")}
                       </td>
-                      <td style={{ padding: "0.6rem 0.75rem", fontSize: "0.72rem", whiteSpace: "nowrap", color: u.isOnline ? "#34d399" : "rgba(255,255,255,0.35)" }}>
+                      <td style={{ padding: "0.6rem 0.75rem", fontSize: "0.72rem", whiteSpace: "nowrap", color: u.isOnline ? "#34d399" : "var(--text-subtle)" }}>
                         {timeAgo(u.last_seen_at)}
                       </td>
                       <td style={{ padding: "0.6rem 0.75rem", whiteSpace: "nowrap" }}>
-                        <span style={{ color: u.totalMinutes > 0 ? "#fb923c" : "rgba(255,255,255,0.2)", fontSize: "0.78rem", fontFamily: "var(--font-cinzel,serif)" }}>
+                        <span style={{ color: u.totalMinutes > 0 ? "#fb923c" : "var(--text-subtle)", fontSize: "0.78rem", fontFamily: "var(--font-cinzel,serif)" }}>
                           {u.totalMinutes > 0 ? fmtMin(u.totalMinutes) : "—"}
                         </span>
                       </td>
@@ -227,7 +227,7 @@ export default function AdminDashboard() {
             </div>
 
             {filteredUsers.length > 10 && (
-              <div style={{ padding: "0.75rem 1rem", borderTop: "1px solid rgba(255,255,255,0.05)", textAlign: "center" }}>
+              <div style={{ padding: "0.75rem 1rem", borderTop: "1px solid var(--bg-2)", textAlign: "center" }}>
                 <button
                   onClick={() => setShowAllUsers(!showAllUsers)}
                   style={{ background: "none", border: "none", color: gold, fontSize: "0.78rem", cursor: "pointer" }}
@@ -245,7 +245,7 @@ export default function AdminDashboard() {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
           <div>
             <h2 style={{ color: gold, fontSize: "0.9rem", letterSpacing: "0.1em", textTransform: "uppercase", margin: 0, fontFamily: "var(--font-cinzel,serif)" }}>IA — Relatório Automático</h2>
-            <p style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.73rem", margin: "4px 0 0" }}>Análise inteligente da plataforma</p>
+            <p style={{ color: "var(--text-subtle)", fontSize: "0.73rem", margin: "4px 0 0" }}>Análise inteligente da plataforma</p>
           </div>
           <button onClick={handleIaReport} disabled={iaLoading}
             style={{ background: iaLoading ? "rgba(201,162,39,0.05)" : "rgba(201,162,39,0.12)", border: `1px solid rgba(201,162,39,${iaLoading ? "0.1" : "0.35"})`, borderRadius: 8, color: iaLoading ? "rgba(201,162,39,0.4)" : gold, padding: "0.5rem 1rem", fontSize: "0.82rem", cursor: iaLoading ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 6 }}>
@@ -253,12 +253,12 @@ export default function AdminDashboard() {
           </button>
         </div>
         {iaError && <div style={{ marginTop: "0.75rem", background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 8, padding: "0.75rem", color: "#ef4444", fontSize: "0.8rem" }}>{iaError}</div>}
-        {iaReport && <div style={{ marginTop: "0.75rem", background: "rgba(201,162,39,0.04)", border: "1px solid rgba(201,162,39,0.12)", borderRadius: 8, padding: "1rem", color: "rgba(255,255,255,0.8)", fontSize: "0.85rem", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{iaReport}</div>}
+        {iaReport && <div style={{ marginTop: "0.75rem", background: "rgba(201,162,39,0.04)", border: "1px solid rgba(201,162,39,0.12)", borderRadius: 8, padding: "1rem", color: "var(--text)", fontSize: "0.85rem", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{iaReport}</div>}
       </div>
 
       {/* Ações Rápidas */}
       <div style={{ marginBottom: "1.5rem" }}>
-        <h2 style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.72rem", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.75rem" }}>Ações Rápidas</h2>
+        <h2 style={{ color: "var(--text-subtle)", fontSize: "0.72rem", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.75rem" }}>Ações Rápidas</h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(150px,1fr))", gap: "0.5rem" }}>
           {[
             { href: "/admin/usuarios", icon: "👥", label: "Usuários" },
@@ -270,7 +270,7 @@ export default function AdminDashboard() {
             { href: "/admin/legendarios", icon: "⭐", label: "Legendários" },
             { href: "/admin/homenagens", icon: "🕊️", label: "Homenagens" },
           ].map((a) => (
-            <Link key={a.href} href={a.href} style={{ display: "flex", alignItems: "center", gap: 8, padding: "0.75rem 1rem", background: "rgba(201,162,39,0.06)", border: "1px solid rgba(201,162,39,0.15)", borderRadius: 10, color: "rgba(255,255,255,0.8)", fontSize: "0.82rem", textDecoration: "none" }}>
+            <Link key={a.href} href={a.href} style={{ display: "flex", alignItems: "center", gap: 8, padding: "0.75rem 1rem", background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: 10, color: "var(--text)", fontSize: "0.82rem", textDecoration: "none", fontWeight: 500 }}>
               <span>{a.icon}</span>{a.label}
             </Link>
           ))}

@@ -2,12 +2,16 @@
   "framework": "nextjs",
   "crons": [
     {
-      "path": "/api/devocional/generate",
+      "path": "/api/ai/devocional/generate",
       "schedule": "0 5 * * *"
     },
     {
       "path": "/api/admin/healthcheck",
-      "schedule": "0 */6 * * *"
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/cleanup-homenagens",
+      "schedule": "0 4 * * *"
     }
   ],
   "headers": [
@@ -18,16 +22,10 @@
         { "key": "X-Frame-Options", "value": "DENY" },
         { "key": "X-XSS-Protection", "value": "1; mode=block" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.openai.com; frame-ancestors 'none';" }
       ]
     }
-  ],
-  "env": {
-    "NEXT_PUBLIC_SUPABASE_URL": "https://urmhuxluepexyycptflr.supabase.co",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVybWh1eGx1ZXBleHl5Y3B0ZmxyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2MjY1OTksImV4cCI6MjA5MzIwMjU5OX0.xkJe3vAe8ofuDm5E81ZwksXBqz9N1TLrwf0KkalFYHo",
-    "SUPABASE_SERVICE_ROLE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVybWh1eGx1ZXBleHl5Y3B0ZmxyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzYyNjU5OSwiZXhwIjoyMDkzMjAyNTk5fQ.d_tWHDdQv8vdqQGCAefAnUcmnaYAnAAb0emUXuQ5TkA",
-    "ADMIN_EMAIL": "edson.barroso@gmail.com",
-    "NEXT_PUBLIC_APP_URL": "https://selah-lac.vercel.app",
-    "OPENAI_API_KEY": "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"
-  }
+  ]
 }

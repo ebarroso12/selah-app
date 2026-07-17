@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
-import { sendNewUserNotificationToAdmin } from "@/lib/email/client";
+import { createServiceClient } from "@/shared/services/supabase/supabase.server";
+import { emailService } from "@/shared/services/email/email.service";
 
-// Rate limiting simples em memória (por IP)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 const RATE_LIMIT_MAX = 3;
-const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hora
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000;
 
 function checkRateLimit(ip: string): boolean {
   const now = Date.now();
@@ -20,7 +19,6 @@ function checkRateLimit(ip: string): boolean {
 }
 
 export async function POST(request: Request) {
-  // Rate limiting por IP
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     request.headers.get("x-real-ip") ??
@@ -47,12 +45,9 @@ export async function POST(request: Request) {
     }
 
     const supabase = await createServiceClient();
-
     const { data: profile } = await supabase
       .from("profiles")
-      .select(
-        "full_name, email, whatsapp, church_name, city, state, gender, is_legendario, is_legendario_spouse"
-      )
+      .select("full_name, email, whatsapp, church_name, city, state, gender, is_legendario, is_legendario_spouse")
       .eq("id", userId)
       .maybeSingle();
 
@@ -60,26 +55,25 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Perfil não encontrado" }, { status: 404 });
     }
 
-    await sendNewUserNotificationToAdmin(
-      profile as {
-        full_name: string;
-        email: string;
-        whatsapp?: string | null;
-        church_name: string;
-        city: string;
-        state: string;
-        gender: string;
-        is_legendario: boolean;
-        is_legendario_spouse: boolean;
-      }
-    );
+    await emailService.send({
+      template: "newUser",
+      to: profile.email,
+      data: {
+        full_name: profile.full_name,
+        email: profile.email,
+        whatsapp: profile.whatsapp,
+        church_name: profile.church_name,
+        city: profile.city,
+        state: profile.state,
+        gender: profile.gender,
+        is_legendario: profile.is_legendario ?? false,
+        is_legendario_spouse: profile.is_legendario_spouse ?? false,
+      },
+    });
 
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("[notify/new-user] Erro:", error);
-    return NextResponse.json(
-      { error: "Falha ao enviar notificação" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Falha ao enviar notificação" }, { status: 500 });
   }
 }

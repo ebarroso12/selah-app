@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/shared/services/supabase/supabase.server";
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,21 +9,23 @@ export async function POST(req: NextRequest) {
 
     const formData = await req.formData();
 
-    const nomeHomenageante = formData.get("nomeHomenageante") as string;
-    const igHomenageante = formData.get("igHomenageante") as string;
-    const nomeHomenageado = formData.get("nomeHomenageado") as string;
-    const parentesco = formData.get("parentesco") as string;
-    const igHomenageado = formData.get("igHomenageado") as string;
-    const ehLegendario = formData.get("ehLegendario") as string;
-    const numeroLegendario = formData.get("numeroLegendario") as string;
+    const autorNome = formData.get("autorNome") as string;
+    const autorInstagram = formData.get("autorInstagram") as string | null;
+    const autorLendarioNumero = formData.get("autorLendarioNumero") as string | null;
+    const homenageadoNome = formData.get("homenageadoNome") as string;
+    const homenageadoParentesco = formData.get("homenageadoParentesco") as string;
+    const homenageadoInstagram = formData.get("homenageadoInstagram") as string | null;
+    const homenageadoLegendario = formData.get("homenageadoLegendario") === "true";
     const texto = formData.get("texto") as string;
     const fotoCapa = Number(formData.get("fotoCapa") ?? 0);
 
+    if (!autorNome || !homenageadoNome || !homenageadoParentesco || !texto) {
+      return NextResponse.json({ error: "Campos obrigatórios ausentes." }, { status: 400 });
+    }
     if (texto.length > 2000) {
       return NextResponse.json({ error: "Texto ultrapassa 2.000 caracteres." }, { status: 400 });
     }
 
-    // Upload das fotos para o Supabase Storage
     const fotoUrls: string[] = [];
     for (let i = 0; i < 2; i++) {
       const file = formData.get(`foto${i}`) as File | null;
@@ -40,19 +42,18 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Salvar no banco
     const { error: dbError } = await supabase.from("homenagens").insert({
       user_id: user.id,
-      nome_homenageante: nomeHomenageante,
-      instagram_homenageante: igHomenageante,
-      nome_homenageado: nomeHomenageado,
-      parentesco,
-      instagram_homenageado: igHomenageado || null,
-      eh_legendario: ehLegendario === "sim",
-      numero_legendario: numeroLegendario ? Number(numeroLegendario) : null,
+      autor_nome: autorNome,
+      autor_instagram: autorInstagram || null,
+      autor_legendario_numero: autorLendarioNumero ? Number(autorLendarioNumero) : null,
+      homenageado_nome: homenageadoNome,
+      homenageado_parentesco: homenageadoParentesco,
+      homenageado_instagram: homenageadoInstagram || null,
+      homenageado_legendario: homenageadoLegendario,
       texto,
       fotos: fotoUrls,
-      foto_capa: fotoCapa,
+      foto_capa_index: fotoCapa,
       status: "pending",
     });
 

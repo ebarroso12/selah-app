@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/shared/services/supabase/supabase.server";
 import type { Profile } from "@/types/database";
 import ProfileForm from "./ProfileForm";
 
@@ -30,7 +30,7 @@ export default async function PerfilPage() {
     <div className="p-6 max-w-3xl mx-auto space-y-8">
       <div>
         <p className="text-xs tracking-widest uppercase mb-1"
-          style={{ color: "rgba(201,162,39,0.55)", fontFamily: "var(--font-cinzel)" }}>
+          style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
           Minha Conta
         </p>
         <h1 className="text-2xl">Perfil</h1>
@@ -47,7 +47,7 @@ export default async function PerfilPage() {
             <p className="text-2xl font-bold" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)" }}>
               {s.value}
             </p>
-            <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.45)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em" }}>
+            <p className="text-xs mt-1" style={{ color: "var(--text-subtle)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em" }}>
               {s.label}
             </p>
           </div>
@@ -57,7 +57,7 @@ export default async function PerfilPage() {
       {/* Badges */}
       <div className="card p-5">
         <p className="text-xs tracking-widest uppercase mb-3"
-          style={{ color: "rgba(201,162,39,0.55)", fontFamily: "var(--font-cinzel)" }}>
+          style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
           Identificação
         </p>
         <div className="flex flex-wrap gap-2">

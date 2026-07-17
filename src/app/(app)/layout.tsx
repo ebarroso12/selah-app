@@ -1,37 +1,19 @@
 export const dynamic = "force-dynamic";
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
-import Sidebar from "@/components/ui/Sidebar";
-import BottomNav from "@/components/ui/BottomNav";
-import SessionTracker from "@/components/ui/SessionTracker";
-import type { Profile } from "@/types/database";
-
-// Email do administrador — sempre lido da variável de ambiente
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "";
+import { requireApproved } from "@/shared/services/auth/server";
+import Sidebar from "@/shared/components/layout/Sidebar";
+import BottomNav from "@/shared/components/layout/BottomNav";
+import SessionTracker from "@/shared/components/layout/SessionTracker";
+import { FirstVisitRedirect } from "@/shared/components/layout/FirstVisitRedirect";
 
 export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Redireciona para /login, /register ou /pending-approval conforme o estado do usuário
+  const { profile } = await requireApproved();
 
-  if (!user) redirect("/login");
-
-  const { data: profileData } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  const profile = profileData as Profile | null;
-
-  if (!profile) redirect("/register");
-
-  const isAdmin = (Boolean(ADMIN_EMAIL) && user.email === ADMIN_EMAIL) || user.email === "edson.barroso@gmail.com";
+  const isAdmin = profile.role === "admin";
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -56,6 +38,9 @@ export default async function AppLayout({
 
       {/* Rastreamento de sessão — atualiza last_seen_at e user_metrics a cada 2 min */}
       <SessionTracker />
+
+      {/* Redireciona para /bem-vindo na primeira vez que o usuário acessa */}
+      <FirstVisitRedirect />
     </div>
   );
 }

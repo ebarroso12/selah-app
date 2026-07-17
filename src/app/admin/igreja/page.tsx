@@ -1,7 +1,7 @@
 "use client";
 export const dynamic = "force-dynamic";
 import { useEffect, useRef, useState } from "react";
-import { getBrowserClient } from "@/lib/supabase/browser";
+import { getBrowserClient } from "@/shared/services/supabase/supabase.browser";
 
 interface ChurchInfo {
   id?: string;
@@ -31,8 +31,8 @@ const emptyChurch: ChurchInfo = {
 };
 
 const inp = "w-full px-3 py-2 rounded-lg text-sm outline-none";
-const inpStyle = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(201,162,39,0.2)", color: "rgba(255,255,255,0.85)" };
-const labelStyle = { color: "rgba(201,162,39,0.7)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em", textTransform: "uppercase" as const, fontSize: "0.7rem" };
+const inpStyle = { background: "var(--bg-2)", border: "1px solid rgba(201,162,39,0.2)", color: "var(--text)" };
+const labelStyle = { color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em", textTransform: "uppercase" as const, fontSize: "0.7rem" };
 
 export default function AdminIgrejaPage() {
   const supabase = getBrowserClient();
@@ -192,7 +192,7 @@ export default function AdminIgrejaPage() {
     <div className="p-4 md:p-6 space-y-6">
       <div>
         <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Igreja</h1>
-        <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.4)" }}>Gestão da Casa de Oração</p>
+        <p className="text-xs mt-1" style={{ color: "var(--text-subtle)" }}>Gestão da Casa de Oração</p>
       </div>
 
       {/* Tabs */}
@@ -273,7 +273,7 @@ export default function AdminIgrejaPage() {
                   >×</button>
                 </div>
               ) : (
-                <div className="h-24 w-full rounded-lg flex items-center justify-center text-white/20 text-sm" style={{ background: "rgba(255,255,255,0.03)", border: "1px dashed rgba(255,255,255,0.1)" }}>
+                <div className="h-24 w-full rounded-lg flex items-center justify-center text-white/20 text-sm" style={{ background: "var(--bg-2)", border: "1px dashed var(--bg-2)" }}>
                   Sem logo
                 </div>
               )}
@@ -301,7 +301,7 @@ export default function AdminIgrejaPage() {
                   >×</button>
                 </div>
               ) : (
-                <div className="h-24 w-full rounded-lg flex items-center justify-center text-white/20 text-sm" style={{ background: "rgba(255,255,255,0.03)", border: "1px dashed rgba(255,255,255,0.1)" }}>
+                <div className="h-24 w-full rounded-lg flex items-center justify-center text-white/20 text-sm" style={{ background: "var(--bg-2)", border: "1px dashed var(--bg-2)" }}>
                   Sem foto
                 </div>
               )}

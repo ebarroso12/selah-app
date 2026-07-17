@@ -29,7 +29,7 @@ export default function PreviewAdmin() {
           ))}
         </nav>
         <div className="px-3 py-4 border-t" style={{ borderColor: "rgba(201,162,39,0.12)" }}>
-          <p className="text-xs px-3" style={{ color: "rgba(201,162,39,0.5)", fontFamily: "var(--font-cinzel)" }}>
+          <p className="text-xs px-3" style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
             Dr. Edson Barroso
           </p>
         </div>
@@ -39,7 +39,7 @@ export default function PreviewAdmin() {
         <div className="max-w-5xl mx-auto space-y-8">
           <div>
             <h1 className="text-2xl mb-1">Dashboard</h1>
-            <p className="text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
+            <p className="text-sm" style={{ color: "var(--text-subtle)" }}>
               Visao geral do SELAH · Dr. Edson Barroso
             </p>
           </div>
@@ -48,7 +48,7 @@ export default function PreviewAdmin() {
             {stats.map((s) => (
               <div key={s.label} className={`card p-5 ${s.urgent ? "glow-gold" : ""}`}>
                 <p className="text-3xl font-bold" style={{ color: s.color, fontFamily: "var(--font-cinzel)" }}>{s.value}</p>
-                <p className="text-xs mt-1.5" style={{ color: "rgba(255,255,255,0.5)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.05em" }}>{s.label}</p>
+                <p className="text-xs mt-1.5" style={{ color: "var(--text-muted)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.05em" }}>{s.label}</p>
                 {s.urgent && <p className="text-xs mt-1" style={{ color: "#fbbf24", textDecoration: "underline" }}>Revisar agora</p>}
               </div>
             ))}
@@ -65,8 +65,8 @@ export default function PreviewAdmin() {
                       {u.legendario && <span className="badge badge-gold">Legendario</span>}
                       {u.spouse && <span className="badge badge-gold">Esposa Legendario</span>}
                     </div>
-                    <p className="text-sm" style={{ color: "rgba(255,255,255,0.5)" }}>{u.email}</p>
-                    <div className="flex gap-3 text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
+                    <p className="text-sm" style={{ color: "var(--text-muted)" }}>{u.email}</p>
+                    <div className="flex gap-3 text-xs" style={{ color: "var(--text-subtle)" }}>
                       <span>{u.gender}</span><span>·</span>
                       <span>{u.church}</span><span>·</span>
                       <span>{u.city}</span><span>·</span>

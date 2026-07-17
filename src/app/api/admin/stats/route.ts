@@ -1,4 +1,4 @@
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/shared/services/supabase/supabase.server";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";

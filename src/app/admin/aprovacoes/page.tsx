@@ -1,7 +1,7 @@
 "use client";
 export const dynamic = "force-dynamic";
 import { useEffect, useState } from "react";
-import { getBrowserClient } from "@/lib/supabase/browser";
+import { getBrowserClient } from "@/shared/services/supabase/supabase.browser";
 
 
 interface Profile {
@@ -81,7 +81,7 @@ export default function AprovacoesPage() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Aprovações</h1>
-          <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.4)" }}>
+          <p className="text-xs mt-1" style={{ color: "var(--text-subtle)" }}>
             {loading ? "Carregando..." : `${pending.length} usuário${pending.length !== 1 ? "s" : ""} aguardando aprovação`}
           </p>
         </div>
@@ -102,14 +102,14 @@ export default function AprovacoesPage() {
       )}
 
       {loading ? (
-        <p className="text-center text-sm py-8" style={{ color: "rgba(255,255,255,0.3)" }}>Carregando...</p>
+        <p className="text-center text-sm py-8" style={{ color: "var(--text-subtle)" }}>Carregando...</p>
       ) : pending.length === 0 ? (
         <div className="card p-12 text-center space-y-3">
           <p className="text-3xl">✅</p>
-          <p className="font-semibold" style={{ color: "rgba(255,255,255,0.6)", fontFamily: "var(--font-cinzel)" }}>
+          <p className="font-semibold" style={{ color: "var(--text-muted)", fontFamily: "var(--font-cinzel)" }}>
             Nenhuma aprovação pendente
           </p>
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>
+          <p className="text-sm" style={{ color: "var(--text-subtle)" }}>
             Todos os usuários cadastrados já foram processados.
           </p>
         </div>
@@ -121,7 +121,7 @@ export default function AprovacoesPage() {
               <div className="flex items-start justify-between gap-3 flex-wrap">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                    <p className="font-semibold text-sm" style={{ color: "rgba(255,255,255,0.9)", fontFamily: "var(--font-cinzel)" }}>
+                    <p className="font-semibold text-sm" style={{ color: "var(--text)", fontFamily: "var(--font-cinzel)" }}>
                       {u.full_name}
                     </p>
                     {u.is_legendario && (
@@ -137,11 +137,11 @@ export default function AprovacoesPage() {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>{u.email}</p>
+                  <p className="text-xs" style={{ color: "var(--text-muted)" }}>{u.email}</p>
                   {u.whatsapp && (
-                    <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>📱 {u.whatsapp}</p>
+                    <p className="text-xs" style={{ color: "var(--text-subtle)" }}>📱 {u.whatsapp}</p>
                   )}
-                  <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
+                  <p className="text-xs mt-0.5" style={{ color: "var(--text-subtle)" }}>
                     {u.church_name} · {u.city}/{u.state} · {u.gender === "male" ? "Homem" : "Mulher"}
                   </p>
                 </div>
@@ -150,14 +150,14 @@ export default function AprovacoesPage() {
                     style={{ background: "rgba(251,191,36,0.1)", color: "#fbbf24", border: "1px solid rgba(251,191,36,0.3)", fontFamily: "var(--font-cinzel)", fontSize: "0.62rem" }}>
                     Pendente
                   </span>
-                  <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.25)" }}>
+                  <p className="text-xs mt-1" style={{ color: "var(--text-subtle)" }}>
                     {new Date(u.created_at).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })}
                   </p>
                 </div>
               </div>
 
               {/* Ações */}
-              <div className="flex gap-2 flex-wrap pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+              <div className="flex gap-2 flex-wrap pt-2" style={{ borderTop: "1px solid var(--bg-2)" }}>
                 <button onClick={() => approve(u.id, u.full_name)}
                   className="flex-1 py-2 rounded-lg text-xs font-semibold"
                   style={{ background: "rgba(52,211,153,0.12)", border: "1px solid rgba(52,211,153,0.35)", color: "#34d399" }}>

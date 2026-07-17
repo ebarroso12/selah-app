@@ -1,14 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/shared/services/supabase/supabase.server";
+import { requireAdminOrForbidden } from "@/shared/services/auth/server";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
+  const authResult = await requireAdminOrForbidden();
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const supabase = await createServiceClient();
     const formData = await request.formData();
     const file = formData.get("file") as File;
-    const folder = (formData.get("folder") as string) || "misc";
+    const rawFolder = (formData.get("folder") as string) || "misc";
+    const folder =
+      rawFolder
+        .replace(/\.\./g, "")
+        .replace(/[^a-zA-Z0-9/_-]/g, "")
+        .replace(/\/+/g, "/")
+        .replace(/^\/|\/$/g, "") || "misc";
 
     if (!file) {
       return NextResponse.json({ error: "Nenhum arquivo enviado" }, { status: 400 });
