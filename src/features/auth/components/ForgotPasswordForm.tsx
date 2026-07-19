@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { forgotPasswordSchema, type ForgotPasswordInput } from "../schemas/auth.schema";
 import { requestPasswordReset } from "../services/auth.service";
+import { SelahLogo } from "@/shared/components/brand/SelahLogo";
 
 export function ForgotPasswordForm() {
   const [sent, setSent] = useState(false);
@@ -32,6 +33,7 @@ export function ForgotPasswordForm() {
   return (
     <div className="card p-8 glow-gold">
       <div className="text-center mb-8">
+        <SelahLogo size={56} className="mx-auto mb-3" />
         <p className="selah-wordmark mb-1">SELAH</p>
         <p
           className="text-xs tracking-widest uppercase"

@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { SelahLogo } from "@/shared/components/brand/SelahLogo";
+import { ClockWeather } from "@/shared/components/brand/ClockWeather";
 
 export function BemVindoClient() {
   const router = useRouter();
@@ -25,6 +27,7 @@ export function BemVindoClient() {
       <div className="flex-1 flex flex-col items-center justify-start px-5 py-10 max-w-2xl mx-auto w-full">
 
         {/* ── Wordmark ────────────────────────────────────────────────────── */}
+        <SelahLogo size={84} className="mb-4" />
         <p
           className="selah-wordmark mb-1 text-center"
           style={{ fontSize: "2rem", letterSpacing: "0.35em" }}
@@ -32,11 +35,12 @@ export function BemVindoClient() {
           SELAH
         </p>
         <p
-          className="text-xs tracking-widest uppercase mb-10 text-center"
+          className="text-xs tracking-widest uppercase mb-2 text-center"
           style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}
         >
           Pause · Ore · Cresça
         </p>
+        <ClockWeather className="mb-8" />
 
         {/* ── Foto ────────────────────────────────────────────────────────── */}
         <div

@@ -7,4 +7,4 @@
  * O cliente compara a versão embutida no bundle com a do servidor
  * (/api/version). Quando divergem, o menu mostra o botão de atualização.
  */
-export const APP_VERSION = "1.7";
+export const APP_VERSION = "1.8";

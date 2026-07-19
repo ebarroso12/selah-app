@@ -9,7 +9,7 @@ import { useAppUpdate } from "@/shared/hooks/useAppUpdate";
 /* ── Ícones SVG inline ─────────────────────────────────────────── */
 
 function IconHome({ active }: { active: boolean }) {
-  const c = active ? "#c9a227" : "var(--text-subtle)";
+  const c = active ? "var(--gold)" : "var(--text-subtle)";
   return (
     <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke={c} strokeWidth={active ? 2 : 1.5}>
       <path strokeLinecap="round" strokeLinejoin="round"
@@ -20,7 +20,7 @@ function IconHome({ active }: { active: boolean }) {
 
 /** Devocional — sol nascendo (luz do dia com Deus) */
 function IconDevocional({ active }: { active: boolean }) {
-  const c = active ? "#c9a227" : "var(--text-subtle)";
+  const c = active ? "var(--gold)" : "var(--text-subtle)";
   return (
     <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke={c} strokeWidth={active ? 2 : 1.5}>
       <path strokeLinecap="round" strokeLinejoin="round"
@@ -40,7 +40,7 @@ function IconHomenagens({ active }: { active: boolean }) {
 }
 
 function IconMenu({ active }: { active: boolean }) {
-  const c = active ? "#c9a227" : "var(--text-subtle)";
+  const c = active ? "var(--gold)" : "var(--text-subtle)";
   return (
     <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke={c} strokeWidth={active ? 2 : 1.5}>
       <path strokeLinecap="round" strokeLinejoin="round"
@@ -71,8 +71,8 @@ export default function BottomNav({ isAdmin = false }: { isAdmin?: boolean }) {
   const kairoActive = pathname === "/dr-edson" || pathname.startsWith("/dr-edson/");
 
   const leftTabs = [
-    { href: "/home", label: "Início", Icon: IconHome, activeColor: "#c9a227" },
-    { href: "/devocional", label: "Devocional", Icon: IconDevocional, activeColor: "#c9a227" },
+    { href: "/home", label: "Início", Icon: IconHome, activeColor: "var(--gold)" },
+    { href: "/devocional", label: "Devocional", Icon: IconDevocional, activeColor: "var(--gold)" },
   ];
 
   // Para o admin, o 4º slot vira o painel Admin; Homenagens fica no Menu
@@ -92,7 +92,7 @@ export default function BottomNav({ isAdmin = false }: { isAdmin?: boolean }) {
         className="flex flex-col items-center gap-1 px-2.5 py-1.5 rounded-xl transition-all relative"
         style={{
           textDecoration: "none",
-          background: active ? "rgba(201,162,39,0.08)" : "transparent",
+          background: active ? "var(--gold-bg)" : "transparent",
         }}
       >
         <Icon active={active} />
@@ -145,16 +145,16 @@ export default function BottomNav({ isAdmin = false }: { isAdmin?: boolean }) {
             style={{
               width: 56,
               height: 56,
-              background: "linear-gradient(135deg, #E2C464 0%, #C9A84C 45%, #A07830 100%)",
+              background: "linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 45%, var(--gold-dark) 100%)",
               border: "1px solid rgba(255,255,255,0.28)",
               boxShadow: kairoActive
-                ? "0 0 0 3px rgba(226,196,100,0.35), 0 6px 26px rgba(201,168,76,0.6)"
-                : "0 6px 20px rgba(201,168,76,0.4), 0 2px 8px rgba(0,0,0,0.45)",
+                ? "0 0 0 3px var(--gold-glow), 0 6px 26px rgba(184,115,51,0.6)"
+                : "0 6px 20px rgba(184,115,51,0.4), 0 2px 8px rgba(0,0,0,0.45)",
               animation: kairoActive ? "none" : "kairo-breathe 3.5s ease-in-out infinite",
             }}
           >
             {/* Sparkles — presença, luz */}
-            <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="#0C1221" strokeWidth={1.8}>
+            <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="var(--primary-foreground)" strokeWidth={1.8}>
               <path strokeLinecap="round" strokeLinejoin="round"
                 d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
             </svg>
@@ -164,7 +164,7 @@ export default function BottomNav({ isAdmin = false }: { isAdmin?: boolean }) {
               fontSize: "0.6rem",
               fontFamily: "var(--font-cinzel)",
               letterSpacing: "0.08em",
-              color: kairoActive ? "#E2C464" : "var(--gold-label)",
+              color: kairoActive ? "var(--gold-light)" : "var(--gold-label)",
               lineHeight: 1,
               marginTop: 5,
             }}
@@ -180,7 +180,7 @@ export default function BottomNav({ isAdmin = false }: { isAdmin?: boolean }) {
           onClick={() => setMenuOpen(true)}
           className="flex flex-col items-center gap-1 px-2.5 py-1.5 rounded-xl transition-all relative"
           style={{
-            background: menuOpen ? "rgba(201,162,39,0.08)" : "transparent",
+            background: menuOpen ? "var(--gold-bg)" : "transparent",
             border: "none",
             cursor: "pointer",
           }}
@@ -190,8 +190,8 @@ export default function BottomNav({ isAdmin = false }: { isAdmin?: boolean }) {
             <span
               className="absolute top-0.5 right-1.5 w-2 h-2 rounded-full"
               style={{
-                background: "linear-gradient(135deg, #E2C464, #A07830)",
-                boxShadow: "0 0 6px rgba(201,168,76,0.8)",
+                background: "linear-gradient(135deg, var(--gold-light), var(--gold-dark))",
+                boxShadow: "0 0 6px rgba(184,115,51,0.8)",
                 animation: "kairo-breathe 2.5s ease-in-out infinite",
               }}
             />
@@ -202,7 +202,7 @@ export default function BottomNav({ isAdmin = false }: { isAdmin?: boolean }) {
               fontSize: "0.6rem",
               fontFamily: "var(--font-cinzel)",
               letterSpacing: "0.04em",
-              color: menuOpen ? "#c9a227" : "var(--text-subtle)",
+              color: menuOpen ? "var(--gold)" : "var(--text-subtle)",
               lineHeight: 1,
             }}
           >

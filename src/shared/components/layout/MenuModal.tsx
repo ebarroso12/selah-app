@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect } from "react";
 import { useAppUpdate } from "@/shared/hooks/useAppUpdate";
+import { useInstallPrompt } from "@/shared/hooks/useInstallPrompt";
 
 interface MenuModalProps {
   open: boolean;
@@ -149,6 +150,7 @@ const menuItems = [
 
 export default function MenuModal({ open, onClose }: MenuModalProps) {
   const { currentVersion, latestVersion, updateAvailable, updating, applyUpdate } = useAppUpdate();
+  const { canInstall, isIOS, promptInstall } = useInstallPrompt();
 
   // Fechar com ESC
   useEffect(() => {
@@ -182,7 +184,7 @@ export default function MenuModal({ open, onClose }: MenuModalProps) {
         className="w-full max-w-lg rounded-t-3xl overflow-hidden"
         style={{
           background: "var(--bg-card)",
-          border: "1px solid rgba(201,162,39,0.15)",
+          border: "1px solid var(--gold-bg)",
           borderBottom: "none",
           maxHeight: "88vh",
           overflowY: "auto",
@@ -193,7 +195,7 @@ export default function MenuModal({ open, onClose }: MenuModalProps) {
         {/* Cabeçalho */}
         <div
           className="flex items-center justify-between px-6 py-4"
-          style={{ borderBottom: "1px solid rgba(201,162,39,0.1)" }}
+          style={{ borderBottom: "1px solid rgba(184,115,51,0.1)" }}
         >
           <h2
             className="text-base font-bold"
@@ -224,13 +226,13 @@ export default function MenuModal({ open, onClose }: MenuModalProps) {
               disabled={updating}
               className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl transition-all active:scale-[0.98]"
               style={{
-                background: "linear-gradient(135deg, #E2C464 0%, #C9A84C 55%, #A07830 100%)",
+                background: "linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 55%, var(--gold-dark) 100%)",
                 border: "1px solid rgba(255,255,255,0.28)",
                 boxShadow: "0 4px 18px var(--gold-glow)",
                 cursor: "pointer",
               }}
             >
-              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#0C1221" strokeWidth={2}>
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="var(--primary-foreground)" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round"
                   d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
               </svg>
@@ -240,7 +242,7 @@ export default function MenuModal({ open, onClose }: MenuModalProps) {
                   fontSize: "0.8rem",
                   fontWeight: 700,
                   letterSpacing: "0.06em",
-                  color: "#0C1221",
+                  color: "var(--primary-foreground)",
                 }}
               >
                 {updating ? "Atualizando..." : `Atualizar para v${latestVersion}`}
@@ -251,6 +253,43 @@ export default function MenuModal({ open, onClose }: MenuModalProps) {
               style={{ fontSize: "0.65rem", color: "var(--text-subtle)" }}
             >
               Nova versão disponível — toque para atualizar agora
+            </p>
+          </div>
+        )}
+
+        {/* Instalar app — Android/Chrome (prompt nativo) */}
+        {canInstall && (
+          <div className="px-4 pt-4">
+            <button
+              onClick={promptInstall}
+              className="btn-outline w-full flex items-center justify-center gap-2 py-3"
+              style={{ fontSize: "0.8rem" }}
+            >
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round"
+                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+              </svg>
+              Instalar o SELAH no celular
+            </button>
+            <p className="text-center mt-2" style={{ fontSize: "0.65rem", color: "var(--text-subtle)" }}>
+              Acesso rápido direto da tela inicial, sem precisar abrir o navegador
+            </p>
+          </div>
+        )}
+
+        {/* Instalar app — iOS Safari (não existe prompt automático, só o fluxo manual) */}
+        {isIOS && (
+          <div
+            className="mx-4 mt-4 p-3 rounded-2xl flex items-start gap-3"
+            style={{ background: "var(--gold-bg)", border: "1px solid var(--nav-border)" }}
+          >
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5} className="shrink-0 mt-0.5">
+              <path strokeLinecap="round" strokeLinejoin="round"
+                d="M7.5 7.5h-.75A2.25 2.25 0 004.5 9.75v7.5a2.25 2.25 0 002.25 2.25h7.5a2.25 2.25 0 002.25-2.25v-7.5a2.25 2.25 0 00-2.25-2.25h-.75m-6-3l3-3m0 0l3 3m-3-3v11.25" />
+            </svg>
+            <p style={{ fontSize: "0.7rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
+              Pra instalar no iPhone: toque em <strong style={{ color: "var(--gold-label)" }}>Compartilhar</strong> na
+              barra do Safari e escolha <strong style={{ color: "var(--gold-label)" }}>Adicionar à Tela de Início</strong>.
             </p>
           </div>
         )}
@@ -300,11 +339,11 @@ export default function MenuModal({ open, onClose }: MenuModalProps) {
         {/* Rodapé */}
         <div
           className="px-6 py-4 text-center"
-          style={{ borderTop: "1px solid rgba(201,162,39,0.08)" }}
+          style={{ borderTop: "1px solid rgba(184,115,51,0.08)" }}
         >
           <p
             className="text-xs"
-            style={{ color: "rgba(201,162,39,0.4)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.08em" }}
+            style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.08em" }}
           >
             SELAH · Dr. Edson Barroso · v{currentVersion}
           </p>

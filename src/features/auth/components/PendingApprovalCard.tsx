@@ -1,6 +1,7 @@
 "use client";
 
 import { useSignOut } from "../hooks/useSignOut";
+import { SelahLogo } from "@/shared/components/brand/SelahLogo";
 
 interface PendingApprovalCardProps {
   email?: string | null;
@@ -12,6 +13,7 @@ export function PendingApprovalCard({ email }: PendingApprovalCardProps) {
   return (
     <div className="card p-8 glow-gold text-center">
       <div className="text-center mb-6">
+        <SelahLogo size={56} className="mx-auto mb-3" />
         <p className="selah-wordmark mb-1">SELAH</p>
       </div>
 

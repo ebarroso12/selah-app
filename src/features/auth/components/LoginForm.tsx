@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signInSchema, type SignInInput } from "../schemas/auth.schema";
 import { useSignIn } from "../hooks/useSignIn";
 import { signInWithGoogle } from "../services/auth.service";
+import { SelahLogo } from "@/shared/components/brand/SelahLogo";
 
 export function LoginForm() {
   const { submit, loading, error } = useSignIn();
@@ -28,6 +29,7 @@ export function LoginForm() {
   return (
     <div className="card p-8 glow-gold">
       <div className="text-center mb-8">
+        <SelahLogo size={56} className="mx-auto mb-3" />
         <p className="selah-wordmark mb-1">SELAH</p>
         <p
           className="text-xs tracking-widest uppercase"

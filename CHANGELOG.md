@@ -5,6 +5,38 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
 ---
 
+## [1.8] — 2026-07-19
+
+### Rebrand cobre (lote 3): ícones PWA, navegação, instalação e emblema
+
+#### Ícones do PWA regerados a partir da marca
+- Novos `public/icon.png`, `icon-192.png`, `icon-512.png`, `apple-icon.png` e
+  `src/app/favicon.ico`, gerados a partir do master `marca/icon-master-1024.png`
+  (adicionado ao repositório de assets da marca), substituindo os ícones da
+  identidade anterior.
+
+#### Limpeza do dourado-latão legado na navegação
+- Resíduos de `#c9a227` / `rgba(201,168,76,x)` migrados para o cobre novo em
+  `Sidebar.tsx`, `BottomNav.tsx` e `MenuModal.tsx` — componentes de layout
+  compartilhado que não haviam sido cobertos nas rodadas anteriores.
+
+#### Instalação do PWA
+- Novo hook `useInstallPrompt.ts` e botão "Instalar o SELAH no celular"
+  (prompt nativo no Android/Chrome) com instrução manual para o iOS Safari,
+  integrados no `MenuModal.tsx`.
+
+#### Emblema da marca + relógio/clima
+- `SelahLogo.tsx`: emblema circular com variantes clara/escura pré-compostas
+  (`public/logo-badge-light.png` / `logo-badge-dark.png`), com troca automática
+  por CSS conforme o tema (regras `.selah-logo-light` / `.selah-logo-dark` em
+  `globals.css`).
+- `ClockWeather.tsx`: relógio + temperatura de Franca-SP via Open-Meteo
+  (sem chave de API).
+- Integrados na `Sidebar`, na tela `bem-vindo` e nos 5 componentes de auth
+  (Login, Registro, Esqueci a senha, Redefinir senha, Aguardando aprovação).
+
+---
+
 ## [1.6] — 2026-07-19
 
 ### Correções pós-auditoria: testes, cron do devocional

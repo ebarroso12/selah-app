@@ -7,6 +7,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/shared/services/supabase/supabase.client";
 import type { Profile } from "@/types/database";
 import { getInitials } from "@/shared/lib/utils";
+import { SelahLogo } from "@/shared/components/brand/SelahLogo";
+import { ClockWeather } from "@/shared/components/brand/ClockWeather";
 
 interface NavItem {
   href: string;
@@ -199,23 +201,25 @@ export default function Sidebar({ profile, isAdmin }: SidebarProps) {
   function getAccentHoverStyle(accent?: string) {
     if (accent === "wine") return "rgba(123,31,58,0.1)";
     if (accent === "heal") return "rgba(42,122,75,0.1)";
-    return "rgba(201,168,76,0.08)";
+    return "var(--gold-bg)";
   }
 
   return (
     <aside className="sidebar hidden md:flex flex-col w-56 shrink-0 h-screen sticky top-0">
       {/* Logo */}
       <div className="px-5 py-6 border-b" style={{ borderColor: "var(--border)" }}>
-        <Link href="/home">
+        <Link href="/home" className="flex items-center gap-2.5">
+          <SelahLogo size={36} variant="dark" />
           <span className="selah-wordmark" style={{ fontSize: "1.2rem" }}>SELAH</span>
         </Link>
         <p className="mt-1 text-xs sidebar-text-label" style={{
           fontFamily: "var(--font-cinzel)",
           letterSpacing: "0.12em",
-          color: "rgba(201,168,76,0.55)"
+          color: "var(--gold-label)"
         }}>
           Pause · Ore · Cresça
         </p>
+        <ClockWeather className="mt-2" />
       </div>
 
       {/* Navigation */}
@@ -233,7 +237,7 @@ export default function Sidebar({ profile, isAdmin }: SidebarProps) {
         {/* Seção especial: Casa de Oração */}
         <div className="pt-4 pb-1 px-3">
           <p className="text-xs" style={{
-            color: "rgba(201,168,76,0.45)",
+            color: "var(--gold-label)",
             fontFamily: "var(--font-cinzel)",
             letterSpacing: "0.12em"
           }}>
@@ -271,7 +275,7 @@ export default function Sidebar({ profile, isAdmin }: SidebarProps) {
           <>
             <div className="pt-4 pb-1 px-3">
               <p className="text-xs" style={{
-                color: "rgba(201,168,76,0.45)",
+                color: "var(--gold-label)",
                 fontFamily: "var(--font-cinzel)",
                 letterSpacing: "0.12em"
               }}>
@@ -302,7 +306,7 @@ export default function Sidebar({ profile, isAdmin }: SidebarProps) {
       <div className="px-3 py-4 border-t" style={{ borderColor: "var(--border)" }}>
         <Link href="/perfil" className={`sidebar-link ${pathname === "/perfil" ? "active" : ""}`}>
           <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-bold overflow-hidden"
-            style={{ background: "rgba(201,168,76,0.18)", color: "#C9A84C", fontFamily: "var(--font-cinzel)" }}>
+            style={{ background: "var(--gold-bg)", color: "var(--gold)", fontFamily: "var(--font-cinzel)" }}>
             {profile.photo_url
               ? <Image src={profile.photo_url} alt="" width={28} height={28} className="w-full h-full object-cover" />
               : getInitials(profile.full_name)}

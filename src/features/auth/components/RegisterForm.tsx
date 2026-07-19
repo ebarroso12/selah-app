@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpSchema, type SignUpInput } from "../schemas/auth.schema";
 import { useSignUp } from "../hooks/useSignUp";
 import { signInWithGoogle } from "../services/auth.service";
+import { SelahLogo } from "@/shared/components/brand/SelahLogo";
 
 function Eye() {
   return (
@@ -47,6 +48,7 @@ export function RegisterForm() {
   return (
     <div className="card p-8 glow-gold">
       <div className="text-center mb-6">
+        <SelahLogo size={56} className="mx-auto mb-3" />
         <p className="selah-wordmark mb-1">SELAH</p>
         <p
           className="text-xs tracking-widest uppercase"

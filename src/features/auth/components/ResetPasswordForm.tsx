@@ -8,6 +8,7 @@ import { resetPasswordSchema, type ResetPasswordInput } from "../schemas/auth.sc
 import { resetPassword } from "../services/auth.service";
 import { createClient } from "@/shared/services/supabase/supabase.client";
 import { PasswordInput } from "@/shared/components/ui/password-input";
+import { SelahLogo } from "@/shared/components/brand/SelahLogo";
 
 export function ResetPasswordForm() {
   const router = useRouter();
@@ -51,6 +52,7 @@ export function ResetPasswordForm() {
   return (
     <div className="card p-8 glow-gold">
       <div className="text-center mb-8">
+        <SelahLogo size={56} className="mx-auto mb-3" />
         <p className="selah-wordmark mb-1">SELAH</p>
         <p
           className="text-xs tracking-widest uppercase"

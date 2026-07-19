@@ -630,4 +630,10 @@
     color: #C9A84C;
     border-color: #C9A84C;
   }
+
+  /* ── SelahLogo (variant="auto") — troca de badge conforme o tema ────────── */
+  .selah-logo-light { display: none; }
+  .selah-logo-dark  { display: block; }
+  .light .selah-logo-light { display: block; }
+  .light .selah-logo-dark  { display: none; }
 }
