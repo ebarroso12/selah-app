@@ -4,8 +4,8 @@
   "description": "App devocional da Casa de Oração e Ministério Legendários Brasil",
   "start_url": "/home",
   "display": "standalone",
-  "background_color": "#080d1a",
-  "theme_color": "#080d1a",
+  "background_color": "#1C1917",
+  "theme_color": "#1C1917",
   "orientation": "portrait-primary",
   "lang": "pt-BR",
   "icons": [
