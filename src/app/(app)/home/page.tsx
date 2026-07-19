@@ -66,8 +66,101 @@ export default async function HomePage() {
         </p>
       </div>
 
-      {/* ── 4 cards de destaque em grid 2×2 (mobile) / 4 colunas (desktop) ── */}
+      {/* ── Kairo em evidência — amparo nas horas de angústia ── */}
+      <Link href="/dr-edson" style={{ textDecoration: "none" }}>
+        <div
+          className="p-5 md:p-6 rounded-xl cursor-pointer transition-all active:scale-[0.98]"
+          style={{
+            background: "linear-gradient(135deg, rgba(123,31,58,0.35) 0%, var(--bg-card) 60%)",
+            border: "1px solid rgba(201,162,39,0.3)",
+            boxShadow: "0 0 28px rgba(123,31,58,0.25)",
+          }}
+        >
+          <div className="flex items-start gap-4">
+            <div
+              className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center shrink-0"
+              style={{
+                background: "linear-gradient(135deg, var(--wine) 0%, var(--gold) 100%)",
+                boxShadow: "0 0 18px rgba(201,162,39,0.35)",
+              }}
+            >
+              <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="#fff" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round"
+                  d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                <path strokeLinecap="round" strokeLinejoin="round"
+                  d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.456-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
+              </svg>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p
+                className="text-sm md:text-base font-bold leading-snug"
+                style={{ color: "var(--gold)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.05em" }}
+              >
+                Horas de angústia? Você não está sozinho.
+              </p>
+              <p className="text-xs md:text-sm mt-1.5 leading-relaxed" style={{ color: "var(--text-muted)" }}>
+                Converse com o Kairo — assistente pastoral, bíblico e acolhedor, pronto para te ouvir a qualquer hora do dia ou da noite.
+              </p>
+              <p className="scripture text-xs mt-2 italic" style={{ color: "var(--text-subtle)" }}>
+                &quot;Perto está o Senhor dos que têm o coração quebrantado.&quot; — Salmos 34:18
+              </p>
+              <span
+                className="inline-block mt-3 px-4 py-2 rounded-lg text-xs font-bold"
+                style={{
+                  background: "linear-gradient(135deg, var(--wine) 0%, rgba(123,31,58,0.7) 100%)",
+                  color: "#fff",
+                  fontFamily: "var(--font-cinzel)",
+                  letterSpacing: "0.06em",
+                  border: "1px solid rgba(201,162,39,0.35)",
+                }}
+              >
+                Conversar com o Kairo agora
+              </span>
+            </div>
+          </div>
+        </div>
+      </Link>
+
+      {/* ── Cards de acesso rápido ── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+
+        {/* Card Devocional — primeiro, em evidência */}
+        <Link href="/devocional" style={{ textDecoration: "none" }}>
+          <div
+            className="card p-4 h-full flex flex-col gap-2 cursor-pointer transition-all active:scale-95"
+            style={{
+              minHeight: 130,
+              border: "1px solid rgba(201,162,39,0.45)",
+              background: "linear-gradient(135deg, var(--gold-bg) 0%, var(--bg-card) 100%)",
+              boxShadow: "0 0 18px rgba(201,162,39,0.15)",
+            }}
+          >
+            <div
+              className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+              style={{
+                background: "linear-gradient(135deg, rgba(201,162,39,0.35) 0%, rgba(201,162,39,0.12) 100%)",
+                border: "1px solid rgba(201,162,39,0.5)",
+              }}
+            >
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round"
+                  d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <p
+                className="text-xs font-bold leading-tight"
+                style={{ color: "var(--gold)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.04em" }}
+              >
+                Devocional
+              </p>
+              <p className="text-xs mt-1 leading-snug" style={{ color: "var(--text-muted)" }}>
+                Comece o dia com Deus
+              </p>
+            </div>
+            <span className="badge badge-gold self-start" style={{ fontSize: "0.6rem" }}>DIÁRIO</span>
+          </div>
+        </Link>
 
         {/* Card Kairo */}
         <Link href="/dr-edson" style={{ textDecoration: "none" }}>
@@ -82,17 +175,20 @@ export default async function HomePage() {
                 boxShadow: "0 0 14px rgba(123,31,58,0.4)",
               }}
             >
-              <span style={{ fontSize: "1.1rem" }}>✦</span>
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#fff" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round"
+                  d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+              </svg>
             </div>
             <div className="flex-1">
               <p
                 className="text-xs font-bold leading-tight"
                 style={{ color: "var(--gold)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.04em" }}
               >
-                Assistente Kairo
+                Kairo IA
               </p>
               <p className="text-xs mt-1 leading-snug" style={{ color: "var(--text-muted)" }}>
-                IA pastoral · Anti-medo
+                Amparo pastoral 24h
               </p>
             </div>
             <span className="badge badge-wine self-start" style={{ fontSize: "0.6rem" }}>IA</span>
@@ -150,43 +246,7 @@ export default async function HomePage() {
           </div>
         </Link>
 
-        {/* Card Devocional */}
-        <Link href="/devocional" style={{ textDecoration: "none" }}>
-          <div
-            className="card p-4 h-full flex flex-col gap-2 cursor-pointer transition-all active:scale-95"
-            style={{
-              minHeight: 130,
-              border: "1px solid rgba(201,162,39,0.25)",
-              background: "linear-gradient(135deg, var(--gold-bg) 0%, var(--bg-card) 100%)",
-            }}
-          >
-            <div
-              className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
-              style={{
-                background: "linear-gradient(135deg, rgba(201,162,39,0.3) 0%, rgba(201,162,39,0.1) 100%)",
-                border: "1px solid rgba(201,162,39,0.4)",
-              }}
-            >
-              <span style={{ fontSize: "1.2rem" }}>📖</span>
-            </div>
-            <div className="flex-1">
-              <p
-                className="text-xs font-bold leading-tight"
-                style={{ color: "var(--gold)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.04em" }}
-              >
-                Devocional
-              </p>
-              <p className="text-xs mt-1 leading-snug" style={{ color: "var(--text-muted)" }}>
-                Reflexão do dia
-              </p>
-            </div>
-            {devotional?.generated_by_ai && (
-              <span className="badge badge-gold self-start" style={{ fontSize: "0.6rem" }}>IA</span>
-            )}
-          </div>
-        </Link>
-
-        {/* Card Homenagens — DESTAQUE */}
+        {/* Card Homenagens */}
         <Link href="/homenagens" style={{ textDecoration: "none" }}>
           <div
             className="card p-4 h-full flex flex-col gap-2 cursor-pointer transition-all active:scale-95"
@@ -204,7 +264,10 @@ export default async function HomePage() {
                 boxShadow: "0 0 14px var(--violet-glow)",
               }}
             >
-              <span style={{ fontSize: "1.2rem" }}>🕊️</span>
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="var(--violet)" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round"
+                  d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+              </svg>
             </div>
             <div className="flex-1">
               <p
@@ -239,7 +302,7 @@ export default async function HomePage() {
         {/* Devocional do dia — conteúdo */}
         <div className="lg:col-span-2">
           <div className="card p-6 h-full">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-1">
               <p
                 className="text-xs tracking-widest uppercase"
                 style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}
@@ -250,6 +313,12 @@ export default async function HomePage() {
                 <span className="badge badge-gold">IA</span>
               )}
             </div>
+            <p
+              className="text-sm mb-4"
+              style={{ color: "var(--text-muted)", fontFamily: "var(--font-lora)", fontStyle: "italic" }}
+            >
+              Comece seu dia com Deus — alguns minutos na Palavra transformam tudo.
+            </p>
 
             {devotional ? (
               <div className="space-y-4">
@@ -411,10 +480,12 @@ export default async function HomePage() {
               background: "linear-gradient(135deg, rgba(139,92,246,0.5) 0%, rgba(109,40,217,0.3) 100%)",
               border: "2px solid var(--violet-border)",
               boxShadow: "0 0 18px var(--violet-glow)",
-              fontSize: "1.6rem",
             }}
           >
-            🕊️
+            <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="var(--violet)" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round"
+                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+            </svg>
           </div>
           <div className="flex-1 min-w-0">
             <p
