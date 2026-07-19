@@ -5,6 +5,22 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
 ---
 
+## [1.10] — 2026-07-19
+
+### Evento em destaque: TOP 1782 · Track 3 Colinas
+
+#### Bloco "Próximo Evento" na página Legendários
+- Novo bloco em `src/app/(app)/legendarios/page.tsx` promovendo o evento
+  **TOP 1782 · Track 3 Colinas**, com descrição real do evento e as 3 etapas.
+- Contagem regressiva ao vivo (client-side) até a data do evento.
+- Botões de ação: Garantir Vaga, Instagram e Grupo do WhatsApp.
+
+#### Componente reutilizável de contagem regressiva
+- Novo `src/shared/components/ui/CountdownTimer.tsx` — componente genérico
+  client-side de contagem regressiva, reutilizável em qualquer página.
+
+---
+
 ## [1.9] — 2026-07-19
 
 ### Página de Parceiros do Selah

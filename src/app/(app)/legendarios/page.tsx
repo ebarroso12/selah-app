@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 import Image from "next/image";
 import Link from "next/link";
+import { CountdownTimer } from "@/shared/components/ui/CountdownTimer";
 
 export const metadata = {
   title: "Legendários",
@@ -87,6 +88,153 @@ export default function LegendariosPage() {
       </div>
 
       <div className="max-w-5xl mx-auto px-6 py-8 space-y-8">
+
+        {/* Próximo Evento — TOP 1782 · Track 3 Colinas */}
+        <div
+          className="rounded-2xl overflow-hidden"
+          style={{ border: `2px solid ${ORANGE}`, boxShadow: "0 0 50px rgba(232,93,4,0.3)" }}
+        >
+          <div
+            className="px-6 py-2.5 text-center"
+            style={{ background: `linear-gradient(135deg, ${ORANGE} 0%, ${ORANGE_L} 100%)` }}
+          >
+            <span
+              className="text-xs font-bold"
+              style={{ color: "#fff", fontFamily: "var(--font-cinzel)", letterSpacing: "0.18em" }}
+            >
+              🔥 PRÓXIMO EVENTO
+            </span>
+          </div>
+
+          <div
+            className="p-6 sm:p-8 space-y-6 text-center"
+            style={{ background: `linear-gradient(180deg, rgba(232,93,4,0.14) 0%, var(--bg-card) 65%)` }}
+          >
+            <div>
+              <h2
+                className="text-2xl sm:text-3xl"
+                style={{ color: ORANGE_L, fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em" }}
+              >
+                TOP 1782 · Track 3 Colinas
+              </h2>
+              <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
+                27 a 30 de agosto de 2026 · 72 horas de imersão
+              </p>
+            </div>
+
+            {/* Contagem regressiva */}
+            <div>
+              <p
+                className="text-xs tracking-widest uppercase mb-3"
+                style={{ color: ORANGE_L, fontFamily: "var(--font-cinzel)" }}
+              >
+                Faltam para o evento
+              </p>
+              <CountdownTimer target="2026-08-27T08:00:00-03:00" accentColor={ORANGE} />
+            </div>
+
+            <p className="text-sm leading-relaxed max-w-xl mx-auto" style={{ color: "var(--text)" }}>
+              Uma imersão de 72 horas que combina natureza, desafios físicos, confronto espiritual e
+              transformação real — com um propósito claro: <strong style={{ color: ORANGE_L }}>devolver o herói a cada família</strong>.
+            </p>
+
+            {/* 3 etapas */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
+              {[
+                { n: "1", t: "Confrontação", d: "Tira da passividade e da zona de conforto." },
+                { n: "2", t: "Desafio", d: "Chama a sua melhor versão." },
+                { n: "3", t: "Propósito", d: "No topo, encontra Jesus." },
+              ].map((s) => (
+                <div key={s.n} className="p-4 rounded-xl" style={{ background: ORANGE_BG, border: `1px solid ${ORANGE_BORDER}` }}>
+                  <span
+                    className="inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold mb-2"
+                    style={{ background: ORANGE, color: "#fff", fontFamily: "var(--font-cinzel)" }}
+                  >
+                    {s.n}
+                  </span>
+                  <p className="text-sm font-bold" style={{ color: ORANGE_L, fontFamily: "var(--font-cinzel)" }}>{s.t}</p>
+                  <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>{s.d}</p>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-xs italic" style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.08em" }}>
+              AHU — Amor · Honra · Unidade
+            </p>
+
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row gap-3 items-center justify-center pt-2">
+              <a
+                href="https://ticketandgo.com.br/legendarios-top-1782-track-3-colinas?id=6ba864f0-6579-48ca-83d6-ba4b16dfcaab"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto text-center"
+                style={{
+                  background: `linear-gradient(135deg, ${ORANGE} 0%, ${ORANGE_L} 100%)`,
+                  color: "#fff",
+                  fontFamily: "var(--font-cinzel)",
+                  letterSpacing: "0.08em",
+                  padding: "13px 28px",
+                  borderRadius: "8px",
+                  fontWeight: 700,
+                  fontSize: "0.85rem",
+                  textDecoration: "none",
+                  boxShadow: "0 4px 20px rgba(232,93,4,0.5)",
+                }}
+              >
+                Garantir Minha Vaga
+              </a>
+              <a
+                href="https://www.instagram.com/legendarios3colinas"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto text-center"
+                style={{
+                  border: `1.5px solid ${ORANGE}`,
+                  color: ORANGE_L,
+                  fontFamily: "var(--font-cinzel)",
+                  letterSpacing: "0.06em",
+                  padding: "11px 24px",
+                  borderRadius: "8px",
+                  fontWeight: 600,
+                  fontSize: "0.8rem",
+                  textDecoration: "none",
+                }}
+              >
+                Instagram
+              </a>
+              <a
+                href="https://chat.whatsapp.com/LkfTncbrJAfAPutDtjay8L?mode=ems_copy_t"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto text-center"
+                style={{
+                  border: `1.5px solid ${ORANGE}`,
+                  color: ORANGE_L,
+                  fontFamily: "var(--font-cinzel)",
+                  letterSpacing: "0.06em",
+                  padding: "11px 24px",
+                  borderRadius: "8px",
+                  fontWeight: 600,
+                  fontSize: "0.8rem",
+                  textDecoration: "none",
+                }}
+              >
+                Grupo do WhatsApp
+              </a>
+            </div>
+
+            <a
+              href="https://www.legendarios3colinas.com.br/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block text-xs hover:underline"
+              style={{ color: "var(--text-subtle)" }}
+            >
+              legendarios3colinas.com.br
+            </a>
+          </div>
+        </div>
 
         {/* Manifesto */}
         <div
