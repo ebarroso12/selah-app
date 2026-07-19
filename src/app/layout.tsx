@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     "Pause. Ore. Cresça. Seu espaço devocional da Casa de Oração e Ministério Legendários.",
   manifest: "/manifest.json",
   appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "SELAH" },
-  icons: { icon: "/icon.png", apple: "/apple-icon.png" },
+  icons: { icon: "/icon.png?v=2", apple: "/apple-icon.png?v=2" },
 };
 
 export const viewport: Viewport = {
