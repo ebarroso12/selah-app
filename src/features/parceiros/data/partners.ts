@@ -9,7 +9,7 @@ export interface Partner {
   contacts: {
     phones: string[];
     whatsapp: { label: string; url: string };
-    email: string;
+    email?: string;
     addresses: { label: string; line: string; mapsUrl: string }[];
     hours: string;
     social: { label: string; url: string }[];
@@ -19,6 +19,42 @@ export interface Partner {
 /** Parceiros do projeto Selah. Todo o conteúdo institucional vem do site
  * oficial de cada parceiro — não invente ou infira dados que não estejam lá. */
 export const partners: Partner[] = [
+  {
+    slug: "edson-barroso",
+    name: "Dr. Edson Barroso",
+    tagline: "Saúde mental com olhar humano e integrativo",
+    logo: "/parceiros/edson-barroso.png",
+    url: "https://www.dredsonbarroso.com.br/",
+    summary: [
+      "O Dr. Edson Barroso, idealizador do SELAH, é psiquiatra pós-graduado em Saúde Mental e Medicina Integrativa, com sólida formação em Saúde Mental Adulto e Infantil, TDAH, Transtorno do Espectro Autista (TEA), Burnout e uso medicinal de Canabidiol. Sua abordagem une ciência e sensibilidade para investigar as raízes do sofrimento psíquico — não só tratar o sintoma que aparece, mas entender o que, no corpo e na história de vida de cada pessoa, sustenta aquela dor.",
+      "Cuidar da mente é também cuidar da vida espiritual: é difícil orar, servir, amar e sonhar quando o corpo e a mente vivem em exaustão silenciosa. Por isso o acompanhamento vai além da consulta — é um verdadeiro plano de medicina de alta performance, com exames laboratoriais que avaliam vitaminas, hormônios, minerais, colesterol e glicemia, porque corpo e mente devem caminhar em harmonia para que exista saúde real.",
+      "Muitos adultos carregam décadas de TDAH ou traços de autismo nunca diagnosticados — e passaram a vida sendo chamados de difíceis, dispersos ou frios, sem nunca saber o motivo real. Casamentos se desgastam e terminam por dores que ninguém sabe nomear. É para essas histórias — as que não cabem numa consulta de 15 minutos — que existe esse cuidado: profundo, ético e humano, para quem finalmente precisa ser ouvido de verdade.",
+    ],
+    areas: [
+      "Saúde Mental Adulto",
+      "Saúde Mental Infantil",
+      "TDAH",
+      "TEA (Autismo)",
+      "Burnout",
+      "Canabidiol Medicinal",
+      "Compulsão Alimentar",
+    ],
+    contacts: {
+      phones: ["(16) 99312-0938"],
+      whatsapp: { label: "Agendar Consulta no WhatsApp", url: "https://wa.me/5516993120938" },
+      addresses: [
+        {
+          label: "Consultório — Franca/SP",
+          line: "Edifício Santa Maria — R. Paulo César Pachêco, 470, Sala 403, São José, Franca-SP, 14401-283",
+          mapsUrl: "https://www.google.com/maps/search/?api=1&query=R.+Paulo+C%C3%A9sar+Pach%C3%AAco,+470,+Franca-SP",
+        },
+      ],
+      hours: "Presencial em Franca-SP e atendimento online para todo o Brasil",
+      social: [
+        { label: "Instagram", url: "https://www.instagram.com/dredsonbarroso/" },
+      ],
+    },
+  },
   {
     slug: "oliveira-aguilar",
     name: "Oliveira & Aguilar Advocacia",

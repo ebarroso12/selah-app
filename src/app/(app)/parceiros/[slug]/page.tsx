@@ -134,10 +134,12 @@ export default async function PartnerDetailPage({ params }: { params: Promise<{ 
                 <span style={{ color: "var(--gold)" }} className="mt-0.5 shrink-0"><IconPhone /></span>
                 <span>{p.contacts.phones.join(" · ")}</span>
               </div>
-              <div className="flex items-start gap-2">
-                <span style={{ color: "var(--gold)" }} className="mt-0.5 shrink-0"><IconMail /></span>
-                <a href={`mailto:${p.contacts.email}`} className="hover:underline">{p.contacts.email}</a>
-              </div>
+              {p.contacts.email && (
+                <div className="flex items-start gap-2">
+                  <span style={{ color: "var(--gold)" }} className="mt-0.5 shrink-0"><IconMail /></span>
+                  <a href={`mailto:${p.contacts.email}`} className="hover:underline">{p.contacts.email}</a>
+                </div>
+              )}
               {p.contacts.addresses.map((addr) => (
                 <div key={addr.label} className="flex items-start gap-2">
                   <span style={{ color: "var(--gold)" }} className="mt-0.5 shrink-0"><IconMapPin /></span>

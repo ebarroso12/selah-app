@@ -5,6 +5,26 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
 ---
 
+## [1.13] — 2026-07-19
+
+### Dr. Edson Barroso adicionado como parceiro principal
+
+#### Novo parceiro em destaque
+- Nova entrada `edson-barroso` no INÍCIO do array `partners`
+  (`src/features/parceiros/data/partners.ts`), aparecendo antes de
+  Oliveira & Aguilar e Dra. Claudia Starling na listagem de `/parceiros`.
+  Conteúdo institucional real do Dr. Edson Barroso — psiquiatra, idealizador
+  do SELAH — extraído do site oficial, sem invenção.
+- Logo oficial em `public/parceiros/edson-barroso.png`.
+
+#### Ajuste de contrato
+- Campo `email` da interface `Partner` agora é opcional (este parceiro não
+  divulga e-mail público).
+- Renderização do e-mail na subpágina do parceiro
+  (`src/app/(app)/parceiros/[slug]/page.tsx`) passou a ser condicional.
+
+---
+
 ## [1.12] — 2026-07-19
 
 ### Página "Propósito Social" com primeira causa social
