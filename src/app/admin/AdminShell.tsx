@@ -23,6 +23,8 @@ const NAV_SECTIONS: { group: string; items: NavItem[] }[] = [
       { href: "/admin/conteudo", label: "Devocionais", icon: "📖", perm: "manage_devocional" },
       { href: "/admin/eventos", label: "Eventos", icon: "📅", perm: "manage_events" },
       { href: "/admin/legendarios", label: "Legendários", icon: "🔥", perm: "manage_legendarios" },
+      { href: "/admin/parceiros", label: "Parceiros", icon: "🤝", perm: "manage_parceiros" },
+      { href: "/admin/proposito-social", label: "Propósito Social", icon: "💜", perm: "manage_proposito" },
       { href: "/admin/igreja", label: "Igreja", icon: "⛪", perm: "manage_igreja" },
       { href: "/admin/kairo-prompt", label: "Prompt Kairo", icon: "🤖", perm: "manage_kairo" },
       { href: "/admin/lojinha", label: "Lojinha", icon: "🛒", perm: "manage_lojinha" },

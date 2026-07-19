@@ -1,15 +1,22 @@
 ---
 name: adicionar-parceiro
-description: Adiciona um novo parceiro à página /parceiros do Selah App — busca dados reais do site oficial do parceiro, baixa/trata o logo, e cria a entrada de dados sem precisar tocar nas páginas (o index e a subpágina de detalhe já são data-driven). Use quando o usuário pedir para adicionar/cadastrar um novo parceiro, patrocinador ou apoiador do app.
+description: Adiciona um novo parceiro à página /parceiros do Selah App — busca dados reais do site oficial do parceiro, trata o logo, e cadastra a entrada pelo painel admin (ou direto na tabela public.partners no Supabase). Use quando o usuário pedir para adicionar/cadastrar um novo parceiro, patrocinador ou apoiador do app.
 ---
 
 # Adicionar Parceiro ao Selah
 
-A página de parceiros é **100% data-driven**: `src/app/(app)/parceiros/page.tsx` (grade de
-miniaturas) e `src/app/(app)/parceiros/[slug]/page.tsx` (subpágina de detalhe, com apresentação,
-áreas de atuação e contatos) leem direto de `src/features/parceiros/data/partners.ts`. Pra
-adicionar um parceiro novo, **normalmente você só precisa editar esse arquivo de dados** — nenhuma
-página precisa mudar.
+**MUDANÇA IMPORTANTE (2026-07):** o conteúdo dos parceiros **não fica mais em arquivo TypeScript**.
+Foi migrado para a tabela `public.partners` no Supabase (migration `010_cms_content_tables.sql`).
+As páginas `src/app/(app)/parceiros/page.tsx` e `.../[slug]/page.tsx` agora leem do banco via
+`getPartners()` / `getPartnerBySlug()` em `src/features/parceiros/data/partners.ts` — **você não edita
+mais `partners.ts` para cadastrar um parceiro**. O cadastro é feito por uma destas vias:
+
+1. **Painel admin (preferencial para o dono do produto):** `/admin/parceiros` — formulário completo
+   com nome, tagline, upload de logo, site, áreas, parágrafos de apresentação, avaliação Google,
+   vídeo, contatos, reordenação (▲▼) e exclusão. Inclui um botão **"✨ Melhorar com IA"** ao lado da
+   apresentação que gera/reescreve o texto (a partir de notas brutas reais, sem inventar fatos).
+2. **Direto no banco (quando um agente cadastra):** inserir uma linha em `public.partners` via SQL/
+   Supabase, respeitando o schema abaixo.
 
 ## Passo 1 — Coletar informações reais (nunca inventar)
 
@@ -30,65 +37,52 @@ existe uma imagem de logo no cabeçalho da página e sua URL completa (src da ta
 ```
 
 Se a primeira busca não trouxer bio dos fundadores/sócios ou detalhes de contato completos, tente
-uma segunda chamada de `WebFetch` em subpáginas prováveis (`/sobre`, `/quem-somos`, `/contato`) ou
-repita com um prompt mais específico focado no que faltou.
+uma segunda chamada de `WebFetch` em subpáginas prováveis (`/sobre`, `/quem-somos`, `/contato`).
 
 ## Passo 2 — Conseguir o logo
 
-Duas origens possíveis:
+No painel admin, o próprio formulário faz upload do logo (botão "Enviar logo" → `/api/admin/upload`,
+que salva no bucket `selah-images` e devolve a URL pública). Se você (agente) for tratar o logo por
+fora, pode usar `sharp` para recortar a margem e subir a imagem, ou reaproveitar um caminho local em
+`public/parceiros/<slug>.png`. **Não redesenhe nem recolore a marca do parceiro** — a marca é deles.
+O logo é sempre exibido sobre um cartão claro neutro (`#F7F5F1`), o que resolve a maioria dos casos
+de contraste. Depois de rodar qualquer script `sharp`/`node` temporário, **apague o arquivo** (não
+deixar lixo no repo).
 
-**(a) Usuário anexou uma imagem** (ex: arquivo em Downloads) — leia com `Read`, confirme fundo
-(branco sólido, transparente, etc.), e recorte a margem excessiva com `sharp`:
+## Passo 3 — Cadastrar
 
-```js
-const sharp = require("sharp");
-sharp(origem)
-  .trim({ threshold: 15 })      // remove a margem sólida ao redor
-  .resize({ width: 640 })
-  .png()
-  .toFile(`public/parceiros/${slug}.png`);
-```
+### Via painel admin (recomendado)
+Vá em `/admin/parceiros` → "+ Novo Parceiro", preencha os campos e salve. Use o botão de IA para
+gerar a apresentação a partir das notas reais coletadas no Passo 1 (o prompt da IA também é editável
+por lá). A ordem na página é controlada pelos botões ▲▼ (campo `sort_order`).
 
-Rode o script a partir da raiz do projeto (`node script.js` com `cwd` em `C:\selahedson-main`) pra
-o `require("sharp")` resolver — não rode de fora do projeto. Depois de rodar, DELETE qualquer
-script temporário criado (não deixar lixo no repo).
+### Via banco (schema da tabela `public.partners`)
+| Coluna | Tipo | Observação |
+|--------|------|-----------|
+| `slug` | text (unique) | kebab-case curto e estável — vira a URL `/parceiros/<slug>` |
+| `name` | text | |
+| `tagline` | text | |
+| `logo_url` | text | caminho local (`/parceiros/...`) ou URL do storage |
+| `website_url` | text | |
+| `summary` | text[] | 3–4 parágrafos de apresentação |
+| `areas` | text[] | áreas de atuação (badges) |
+| `google_review_url` | text (nullable) | |
+| `video_url` / `video_thumbnail_url` / `video_caption` | text (nullable) | vídeo em destaque |
+| `contacts` | jsonb | `{ phones[], whatsapp{label,url}, email?, addresses[{label,line,mapsUrl}], hours, social[{label,url}] }` |
+| `sort_order` | integer | menor = aparece primeiro |
 
-**(b) URL de logo encontrada no `WebFetch`** — baixe direto:
-
-```bash
-curl -sL "<url-do-logo>" -o public/parceiros/<slug>.png
-```
-
-Sempre confira o resultado com `Read` antes de seguir (visualizar a imagem), e cheque metadados
-(`sharp(...).metadata()`) se precisar confirmar transparência/dimensões.
-
-**Não redesenhe nem recolore a marca do parceiro** (diferente do logo do próprio Selah) — a marca é
-deles, use como está. Se o fundo da logo brigar muito com o tema, ela já é exibida sobre um cartão
-claro neutro (`#F7F5F1`) tanto na miniatura quanto na subpágina — isso resolve a maioria dos casos.
-
-## Passo 3 — Adicionar a entrada em `partners.ts`
-
-Siga a interface `Partner` já definida no arquivo e o mesmo tom de voz dos parceiros existentes:
-2–3 parágrafos de apresentação (quem é, credenciais/história, propósito/diferencial — terminando
-se possível numa frase-lema real do parceiro), lista de áreas de atuação como badges curtos, e o
-bloco de contatos completo com todos os campos que você conseguiu confirmar no Passo 1. Campos sem
-dado real confirmado devem ser omitidos (ex: se não achar YouTube, não coloque o array vazio nem
-invente o link — só não inclua esse item em `social`).
-
-`slug` deve ser um kebab-case curto e estável (não muda depois, pois vira a URL
-`/parceiros/<slug>`).
+Mantenha o mesmo tom de voz dos parceiros existentes (apresentação profunda e persuasiva) e omita
+campos sem dado real confirmado. `slug` não muda depois de criado.
 
 ## Passo 4 — Validar e publicar
 
-1. `npx tsc --noEmit` — precisa ficar limpo.
-2. Confirme visualmente (dev server local ou, se preferir testar já publicado, delegar push e
-   revisar em produção) que a miniatura e a subpágina renderizam bem.
-3. Commit + push é feito pelo agente `aiox-devops` (padrão do projeto — `git push` é exclusivo
-   dele). Peça pra ele também fazer o bump de versão (`src/config/version.ts`, `package.json`,
-   `CHANGELOG.md`) igual às entregas anteriores, pra acionar o botão de atualizar do PWA.
+1. `npx tsc --noEmit` — precisa ficar limpo (só necessário se você mexeu em código; cadastro puro
+   pelo admin/banco não altera código).
+2. Confirme visualmente que a miniatura e a subpágina renderizam bem.
+3. Commit + push é feito pelo agente `aiox-devops` (padrão do projeto — `git push` é exclusivo dele).
 
 ## Quando o layout PRECISA mudar
 
 Só mexa em `page.tsx` ou `[slug]/page.tsx` se o pedido for sobre a APRESENTAÇÃO (ex: mudar de grade
-2 colunas pra lista, adicionar uma seção nova tipo depoimentos) — não pra simplesmente cadastrar
-mais um parceiro.
+2 colunas pra lista, adicionar uma seção nova) — não pra simplesmente cadastrar mais um parceiro.
+Para mudar o mapeamento de campos DB→interface, edite `src/features/parceiros/data/partners.ts`.

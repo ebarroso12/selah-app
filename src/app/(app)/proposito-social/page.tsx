@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { causes } from "@/features/proposito-social/data/causes";
+import { getCauses } from "@/features/proposito-social/data/causes";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -44,7 +44,8 @@ function IconHeartHands() {
   );
 }
 
-export default function PropositoSocialPage() {
+export default async function PropositoSocialPage() {
+  const causes = await getCauses();
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 space-y-8">
       {/* Header */}

@@ -1,11 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { partners } from "@/features/parceiros/data/partners";
+import { getPartners } from "@/features/parceiros/data/partners";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Parceiros" };
 
-export default function ParceirosPage() {
+export default async function ParceirosPage() {
+  const partners = await getPartners();
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 space-y-8">
       {/* Header */}

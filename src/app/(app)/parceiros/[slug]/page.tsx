@@ -1,17 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { partners } from "@/features/parceiros/data/partners";
+import { getPartnerBySlug } from "@/features/parceiros/data/partners";
 
 export const dynamic = "force-dynamic";
 
-export function generateStaticParams() {
-  return partners.map((p) => ({ slug: p.slug }));
-}
-
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const partner = partners.find((p) => p.slug === slug);
+  const partner = await getPartnerBySlug(slug);
   return { title: partner ? partner.name : "Parceiro" };
 }
 
@@ -75,7 +71,7 @@ function IconArrowLeft() {
 
 export default async function PartnerDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const p = partners.find((partner) => partner.slug === slug);
+  const p = await getPartnerBySlug(slug);
   if (!p) notFound();
 
   return (

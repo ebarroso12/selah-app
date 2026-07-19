@@ -2,7 +2,32 @@
 export const dynamic = "force-dynamic";
 import { useEffect, useRef, useState } from "react";
 import { getBrowserClient } from "@/shared/services/supabase/supabase.browser";
+import { AiContentPanel } from "@/features/admin-cms/components/AiContentPanel";
 
+interface FeaturedStep { title: string; description: string }
+interface FeaturedEventRow {
+  id: string;
+  title: string;
+  date_range: string;
+  target_date: string | null;
+  description: string;
+  steps: FeaturedStep[];
+  motto: string;
+  payment_url: string | null;
+  instagram_url: string | null;
+  whatsapp_group_url: string | null;
+  official_site_url: string | null;
+  is_active: boolean;
+}
+
+/** Converte ISO → valor de <input type="datetime-local"> em horário local. */
+function isoToLocalInput(iso: string | null): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
 
 interface LegendarioMember {
   id: string;
@@ -36,10 +61,19 @@ export default function AdminLegendariosPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [msg, setMsg] = useState("");
-  const [activeTab, setActiveTab] = useState<"membros" | "eventos">("membros");
+  const [activeTab, setActiveTab] = useState<"membros" | "eventos" | "destaque">("membros");
   const [uploadingId, setUploadingId] = useState<string | null>(null);
   const [numberValues, setNumberValues] = useState<Record<string, string>>({});
   const fileRefs = useRef<Record<string, HTMLInputElement | null>>({});
+
+  // Evento em Destaque ("Próximo Evento")
+  const [featured, setFeatured] = useState<FeaturedEventRow | null>(null);
+  const [feat, setFeat] = useState({
+    title: "", date_range: "", target_date_local: "", description: "", motto: "",
+    payment_url: "", instagram_url: "", whatsapp_group_url: "", official_site_url: "",
+    steps: [] as FeaturedStep[],
+  });
+  const [savingFeat, setSavingFeat] = useState(false);
 
   // Event Form
   const [showEventForm, setShowEventForm] = useState(false);
@@ -53,9 +87,10 @@ export default function AdminLegendariosPage() {
 
   async function load() {
     setLoading(true);
-    const [mRes, eRes] = await Promise.all([
+    const [mRes, eRes, fRes] = await Promise.all([
       supabase.from("profiles").select("*").order("full_name", { ascending: true }),
-      supabase.from("events").select("*").in("category", ["rpm", "top", "outro"]).order("date_start", { ascending: false })
+      supabase.from("events").select("*").in("category", ["rpm", "top", "outro"]).order("date_start", { ascending: false }),
+      supabase.from("legendarios_featured_event").select("*").order("updated_at", { ascending: false }).limit(1).maybeSingle(),
     ]);
     const membersData = (mRes.data ?? []) as LegendarioMember[];
     setMembers(membersData);
@@ -66,7 +101,47 @@ export default function AdminLegendariosPage() {
     });
     setNumberValues(nums);
     setEvents((eRes.data ?? []) as LegendarioEvent[]);
+
+    const fRow = (fRes.data ?? null) as FeaturedEventRow | null;
+    setFeatured(fRow);
+    setFeat({
+      title: fRow?.title ?? "",
+      date_range: fRow?.date_range ?? "",
+      target_date_local: isoToLocalInput(fRow?.target_date ?? null),
+      description: fRow?.description ?? "",
+      motto: fRow?.motto ?? "",
+      payment_url: fRow?.payment_url ?? "",
+      instagram_url: fRow?.instagram_url ?? "",
+      whatsapp_group_url: fRow?.whatsapp_group_url ?? "",
+      official_site_url: fRow?.official_site_url ?? "",
+      steps: fRow?.steps ?? [],
+    });
     setLoading(false);
+  }
+
+  async function saveFeatured() {
+    setSavingFeat(true);
+    const payload = {
+      title: feat.title.trim(),
+      date_range: feat.date_range.trim(),
+      target_date: feat.target_date_local ? new Date(feat.target_date_local).toISOString() : null,
+      description: feat.description.trim(),
+      steps: feat.steps.filter(s => s.title.trim() || s.description.trim()),
+      motto: feat.motto.trim(),
+      payment_url: feat.payment_url.trim() || null,
+      instagram_url: feat.instagram_url.trim() || null,
+      whatsapp_group_url: feat.whatsapp_group_url.trim() || null,
+      official_site_url: feat.official_site_url.trim() || null,
+      is_active: true,
+      updated_at: new Date().toISOString(),
+    };
+    const { error } = featured
+      ? await supabase.from("legendarios_featured_event").update(payload).eq("id", featured.id)
+      : await supabase.from("legendarios_featured_event").insert(payload);
+    setSavingFeat(false);
+    setMsg(error ? "Erro: " + error.message : "✓ Evento em destaque salvo!");
+    setTimeout(() => setMsg(""), 3500);
+    if (!error) load();
   }
 
   useEffect(() => { load(); }, []);
@@ -212,6 +287,7 @@ export default function AdminLegendariosPage() {
       <div className="flex gap-2 border-b border-white/10">
         <button onClick={() => setActiveTab("membros")} className={`px-4 py-2 text-xs font-bold uppercase tracking-widest ${activeTab === "membros" ? "border-b-2 border-[#E85D04] text-[#E85D04]" : "text-white/40"}`}>Membros</button>
         <button onClick={() => setActiveTab("eventos")} className={`px-4 py-2 text-xs font-bold uppercase tracking-widest ${activeTab === "eventos" ? "border-b-2 border-[#E85D04] text-[#E85D04]" : "text-white/40"}`}>Eventos</button>
+        <button onClick={() => setActiveTab("destaque")} className={`px-4 py-2 text-xs font-bold uppercase tracking-widest ${activeTab === "destaque" ? "border-b-2 border-[#E85D04] text-[#E85D04]" : "text-white/40"}`}>Evento em Destaque</button>
       </div>
 
       {msg && <p className="text-xs text-center py-2 px-3 rounded-lg" style={{ background: msg.startsWith("✓") ? "rgba(52,211,153,0.1)" : "rgba(239,68,68,0.1)", color: msg.startsWith("✓") ? "#34d399" : "#ef4444" }}>{msg}</p>}
@@ -295,7 +371,7 @@ export default function AdminLegendariosPage() {
             )}
           </div>
         </div>
-      ) : (
+      ) : activeTab === "eventos" ? (
         <div className="space-y-4">
           <button
             onClick={() => setShowEventForm(true)}
@@ -411,6 +487,89 @@ export default function AdminLegendariosPage() {
               <p className="text-center text-sm text-white/30 py-8">Nenhum evento cadastrado.</p>
             )}
           </div>
+        </div>
+      ) : (
+        <div className="card p-5 space-y-4">
+          <p className="text-sm font-bold text-[#E85D04]" style={{ fontFamily: "var(--font-cinzel)" }}>
+            Próximo Evento (bloco em destaque da página /legendarios)
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block mb-1 text-[10px] uppercase tracking-widest" style={{ color: "rgba(232,93,4,0.7)" }}>Título</label>
+              <input className={inp} style={inpStyle} value={feat.title} onChange={e => setFeat({ ...feat, title: e.target.value })} placeholder="Ex: TOP 1782 · Track 3 Colinas" />
+            </div>
+            <div>
+              <label className="block mb-1 text-[10px] uppercase tracking-widest" style={{ color: "rgba(232,93,4,0.7)" }}>Período (texto)</label>
+              <input className={inp} style={inpStyle} value={feat.date_range} onChange={e => setFeat({ ...feat, date_range: e.target.value })} placeholder="27 a 30 de agosto de 2026 · 72 horas de imersão" />
+            </div>
+          </div>
+
+          <div>
+            <label className="block mb-1 text-[10px] uppercase tracking-widest" style={{ color: "rgba(232,93,4,0.7)" }}>Data/hora alvo (contagem regressiva)</label>
+            <input type="datetime-local" className={inp} style={inpStyle} value={feat.target_date_local} onChange={e => setFeat({ ...feat, target_date_local: e.target.value })} />
+          </div>
+
+          <div>
+            <label className="block mb-1 text-[10px] uppercase tracking-widest" style={{ color: "rgba(232,93,4,0.7)" }}>Descrição</label>
+            <textarea className={`${inp} resize-y`} style={inpStyle} rows={4} value={feat.description} onChange={e => setFeat({ ...feat, description: e.target.value })} />
+            <AiContentPanel
+              kind="legendarios_event"
+              name={feat.title}
+              url={feat.official_site_url}
+              acceptLabel="Usar como descrição"
+              onAccept={(paragraphs) => setFeat({ ...feat, description: paragraphs.join("\n\n") })}
+            />
+          </div>
+
+          {/* Etapas */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="text-[10px] uppercase tracking-widest" style={{ color: "rgba(232,93,4,0.7)" }}>Etapas</label>
+              <button type="button" className="text-[11px] text-[#E85D04]"
+                onClick={() => setFeat({ ...feat, steps: [...feat.steps, { title: "", description: "" }] })}>+ Adicionar etapa</button>
+            </div>
+            {feat.steps.map((s, i) => (
+              <div key={i} className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <input className={inp} style={inpStyle} placeholder="Título da etapa" value={s.title}
+                  onChange={e => setFeat({ ...feat, steps: feat.steps.map((x, j) => j === i ? { ...x, title: e.target.value } : x) })} />
+                <div className="flex gap-1">
+                  <input className={inp} style={inpStyle} placeholder="Descrição" value={s.description}
+                    onChange={e => setFeat({ ...feat, steps: feat.steps.map((x, j) => j === i ? { ...x, description: e.target.value } : x) })} />
+                  <button type="button" className="px-2 text-red-500" onClick={() => setFeat({ ...feat, steps: feat.steps.filter((_, j) => j !== i) })}>×</button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div>
+            <label className="block mb-1 text-[10px] uppercase tracking-widest" style={{ color: "rgba(232,93,4,0.7)" }}>Lema (motto)</label>
+            <input className={inp} style={inpStyle} value={feat.motto} onChange={e => setFeat({ ...feat, motto: e.target.value })} placeholder="AHU — Amor · Honra · Unidade" />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block mb-1 text-[10px] uppercase tracking-widest" style={{ color: "rgba(232,93,4,0.7)" }}>Link de pagamento / inscrição</label>
+              <input className={inp} style={inpStyle} value={feat.payment_url} onChange={e => setFeat({ ...feat, payment_url: e.target.value })} placeholder="https://..." />
+            </div>
+            <div>
+              <label className="block mb-1 text-[10px] uppercase tracking-widest" style={{ color: "rgba(232,93,4,0.7)" }}>Instagram</label>
+              <input className={inp} style={inpStyle} value={feat.instagram_url} onChange={e => setFeat({ ...feat, instagram_url: e.target.value })} placeholder="https://instagram.com/..." />
+            </div>
+            <div>
+              <label className="block mb-1 text-[10px] uppercase tracking-widest" style={{ color: "rgba(232,93,4,0.7)" }}>Grupo do WhatsApp</label>
+              <input className={inp} style={inpStyle} value={feat.whatsapp_group_url} onChange={e => setFeat({ ...feat, whatsapp_group_url: e.target.value })} placeholder="https://chat.whatsapp.com/..." />
+            </div>
+            <div>
+              <label className="block mb-1 text-[10px] uppercase tracking-widest" style={{ color: "rgba(232,93,4,0.7)" }}>Site oficial</label>
+              <input className={inp} style={inpStyle} value={feat.official_site_url} onChange={e => setFeat({ ...feat, official_site_url: e.target.value })} placeholder="https://..." />
+            </div>
+          </div>
+
+          <button onClick={saveFeatured} disabled={savingFeat} className="w-full py-2 rounded-lg text-xs font-bold uppercase tracking-widest"
+            style={{ background: "#E85D04", color: "#fff", opacity: savingFeat ? 0.6 : 1 }}>
+            {savingFeat ? "Salvando..." : "Salvar Evento em Destaque"}
+          </button>
         </div>
       )}
     </div>

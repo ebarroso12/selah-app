@@ -15,6 +15,8 @@ export const PERMISSIONS = {
   manage_devocional: "Gerenciar devocionais",
   manage_kairo: "Editar prompt do Kairo",
   manage_legendarios: "Gerenciar legendários",
+  manage_parceiros: "Gerenciar parceiros",
+  manage_proposito: "Gerenciar propósito social",
   manage_igreja: "Gerenciar dados da igreja",
   manage_lojinha: "Gerenciar destaques da Lojinha",
   view_metrics: "Ver métricas",

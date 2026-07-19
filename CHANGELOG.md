@@ -5,6 +5,45 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
 ---
 
+## [1.0] — 2026-07-19
+
+### Reinício de versionamento + CMS admin completo (Parceiros, Propósito Social, Legendários)
+
+> **Nota sobre versionamento:** a contagem de versão foi reiniciada a partir
+> deste release. As versões anteriores (até 1.14) fazem parte do histórico e
+> permanecem documentadas abaixo. A partir daqui, `src/config/version.ts` e
+> `package.json` recomeçam em `1.0` / `1.0.0` e os próximos módulos incrementam
+> normalmente: 1.1, 1.2, 1.3...
+
+#### CMS Admin dinâmico
+- Novas tabelas no Supabase (`supabase/migrations/010_cms_content_tables.sql`):
+  `partners`, `social_causes`, `legendarios_featured_event`, com RLS e seeds.
+- Dados de Parceiros e Propósito Social migrados de arrays estáticos para fetch
+  do Supabase (`src/features/parceiros/data/partners.ts`,
+  `src/features/proposito-social/data/causes.ts`).
+- Novo dado de evento em destaque de Legendários
+  (`src/features/legendarios/data/featured-event.ts`).
+- Páginas públicas passam a consumir os dados dinâmicos
+  (`parceiros`, `parceiros/[slug]`, `proposito-social`, `legendarios`).
+
+#### Painéis de administração
+- Novo CRUD admin de Parceiros (`src/app/admin/parceiros/`).
+- Novo CRUD admin de Propósito Social (`src/app/admin/proposito-social/`).
+- Nova aba "Evento em Destaque" no admin de Legendários
+  (`src/app/admin/legendarios/page.tsx`), com links de menu atualizados em
+  `src/app/admin/AdminShell.tsx`.
+
+#### Geração de texto por IA
+- Novos endpoints reaproveitando a camada `generateAI()` existente
+  (`src/app/api/admin/cms-ai-generate/`, `src/app/api/admin/cms-ai-prompt/`).
+- Prompts default e componente reutilizável do painel de IA em
+  `src/features/admin-cms/`, com prompt editável pelo admin.
+
+#### Permissões
+- Duas novas permissões em `src/shared/services/auth/permissions.ts`.
+
+---
+
 ## [1.14] — 2026-07-19
 
 ### Dr. Edson Barroso: logo, texto, avaliação Google e vídeo + botão flutuante de atualização
