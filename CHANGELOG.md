@@ -5,6 +5,29 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
 ---
 
+## [1.11] — 2026-07-19
+
+### Página de Parceiros reestruturada + segundo parceiro
+
+#### Índice de parceiros + subpágina por parceiro
+- `src/app/(app)/parceiros/page.tsx` deixou de empilhar os cards completos e
+  passou a ser um índice com grade de miniaturas — cada miniatura linka para a
+  subpágina de detalhe do respectivo parceiro.
+- Nova rota dinâmica `src/app/(app)/parceiros/[slug]/page.tsx` — subpágina de
+  detalhe por parceiro, mantendo a estrutura rica original (apresentação, áreas
+  de atuação e canais de contato).
+
+#### Segundo parceiro: Dra. Claudia Starling
+- Dados institucionais reais extraídos do site oficial adicionados em
+  `src/features/parceiros/data/partners.ts` (sem invenção).
+- Logo em `public/parceiros/claudia-starling.png`.
+
+#### Skill de automação
+- Nova skill de projeto `.claude/skills/adicionar-parceiro/SKILL.md`
+  documentando o processo repetível de adicionar novos parceiros.
+
+---
+
 ## [1.10] — 2026-07-19
 
 ### Evento em destaque: TOP 1782 · Track 3 Colinas

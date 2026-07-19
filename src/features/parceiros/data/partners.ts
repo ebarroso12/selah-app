@@ -63,4 +63,52 @@ export const partners: Partner[] = [
       ],
     },
   },
+  {
+    slug: "claudia-starling",
+    name: "Dra. Claudia Starling",
+    tagline: "Realce a sua beleza natural",
+    logo: "/parceiros/claudia-starling.png",
+    url: "https://draclaudiastarling.com.br/",
+    summary: [
+      "A Dra. Claudia Starling é PhD e Doutora em Odontologia (concentração em Ortodontia), Mestre em Ortodontia e especialista em Ortopedia e Ortodontia pela Terapia Bioprogressiva de Ricketts. Tem qualificação em Harmonização Orofacial pela Universidade de Harvard, em Odontologia Sistêmica e em Halitose pela ABHA.",
+      "Credenciada Invisalign pela Pensilvânia (Filadélfia, EUA), é reconhecida como a primeira Invisalign Doctor do Brasil. Atua com harmonização facial, Invisalign, tratamento de halitose, modulação hormonal, implantes e procedimentos não invasivos, sempre com abordagem personalizada — resumida no seu lema \"Harmonizar é se amar\".",
+      "Além da atuação clínica, a Dra. Claudia dedica parte do seu trabalho ao projeto social \"Princesa Rivânia\", que resgata mulheres do ciclo de violência doméstica através de reconstrução facial gratuita.",
+    ],
+    areas: [
+      "Harmonização Facial",
+      "Invisalign",
+      "Odontologia",
+      "Halitose",
+      "Modulação Hormonal",
+      "Implantes",
+    ],
+    contacts: {
+      phones: [
+        "(31) 9 9636-1330 — Belo Horizonte",
+        "(31) 9 9651-1330 — São Paulo",
+        "(31) 9 9651-1330 — Fortaleza",
+        "(33) 3271-7229 — Governador Valadares",
+        "(33) 9 9157-9632 — Governador Valadares",
+      ],
+      whatsapp: { label: "Falar no WhatsApp", url: "https://wa.me/5531996361330" },
+      email: "draclaudiastarlingphd@gmail.com",
+      addresses: [
+        {
+          label: "Belo Horizonte/MG",
+          line: "Ed. Lifecenter — Av. do Contorno, 4747, 13º andar, sala 1302, Bairro Serra",
+          mapsUrl: "https://www.google.com/maps/search/?api=1&query=Av.+do+Contorno,+4747,+Belo+Horizonte-MG",
+        },
+        {
+          label: "Governador Valadares/MG",
+          line: "R. Barão do Rio Branco, 461, salas 207/208, Ed. Rio Branco Centro",
+          mapsUrl: "https://www.google.com/maps/search/?api=1&query=R.+Bar%C3%A3o+do+Rio+Branco,+461,+Governador+Valadares-MG",
+        },
+      ],
+      hours: "Todos os dias, 8h às 22h",
+      social: [
+        { label: "Instagram", url: "https://www.instagram.com/draclaudiastarling/" },
+        { label: "Facebook", url: "https://www.facebook.com/claudia.starling" },
+      ],
+    },
+  },
 ];
