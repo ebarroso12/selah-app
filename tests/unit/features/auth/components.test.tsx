@@ -55,7 +55,7 @@ describe("Task 4.3 — LoginForm", () => {
     render(<LoginForm />);
 
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/senha/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^senha/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /entrar/i })).toBeInTheDocument();
   });
 
@@ -81,7 +81,7 @@ describe("Task 4.3 — LoginForm", () => {
     render(<LoginForm />);
 
     fireEvent.change(screen.getByLabelText(/email/i), { target: { value: "user@test.com" } });
-    fireEvent.change(screen.getByLabelText(/senha/i), { target: { value: "Senha1234" } });
+    fireEvent.change(screen.getByLabelText(/^senha/i), { target: { value: "Senha1234" } });
     fireEvent.click(screen.getByRole("button", { name: /entrar/i }));
 
     await waitFor(() => {
@@ -99,7 +99,7 @@ describe("Task 4.3 — LoginForm", () => {
     render(<LoginForm />);
 
     fireEvent.change(screen.getByLabelText(/email/i), { target: { value: "user@test.com" } });
-    fireEvent.change(screen.getByLabelText(/senha/i), { target: { value: "wrongpass" } });
+    fireEvent.change(screen.getByLabelText(/^senha/i), { target: { value: "wrongpass" } });
     fireEvent.click(screen.getByRole("button", { name: /entrar/i }));
 
     await waitFor(() => {

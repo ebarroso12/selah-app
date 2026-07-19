@@ -21,7 +21,13 @@ vi.mock("@/shared/services/supabase/supabase.server", () => ({
       insert: vi.fn().mockResolvedValue({ error: null }),
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
+      in: vi.fn().mockResolvedValue({
+        data: [{ key: "ai_default_budget_brl", value: "5.00" }],
+        error: null,
+      }),
       maybeSingle: vi.fn().mockResolvedValue({ data: null }),
+      upsert: vi.fn().mockResolvedValue({ error: null }),
+      update: vi.fn().mockReturnThis(),
     }),
   }),
 }));

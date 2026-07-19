@@ -5,6 +5,32 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
 ---
 
+## [1.6] — 2026-07-19
+
+### Correções pós-auditoria: testes, cron do devocional
+
+#### Testes (269/269 passando, eram 264/269)
+- `LoginForm`: 3 testes usavam `getByLabelText(/senha/i)` sem âncora, colidindo
+  com o aria-label do botão de olho ("Mostrar/Ocultar senha"). Corrigido para
+  `/^senha/i`, mesmo padrão já usado nos testes do RegisterForm.
+- `useRequireApproval`: hook e teste testavam um redirecionamento para
+  `/pending-approval` que não reflete mais a regra de negócio atual
+  ("usuários são criados já aprovados", conforme `requireApproved` server-side).
+  JSDoc do hook e teste atualizados; adicionado teste de redirecionamento
+  para status `banned`.
+- `ai.test.ts`: mock do Supabase client não implementava `.in()`/`.upsert()`,
+  usados por `ai-budget/settings.ts` e `budget.service.ts`. Mock completado.
+
+#### Cron do devocional diário
+- `CRON_SECRET` nunca tinha sido configurado (perdido na recriação do projeto
+  Vercel) — o cron de `/api/ai/devocional/generate` sempre retornava 401 e
+  nenhum devocional era gerado. Gerado novo secret, configurado na Vercel;
+  cron diário (05h UTC) volta a funcionar a partir de hoje.
+- Devocional do dia 19/07/2026 gerado manualmente para validar o fluxo
+  ("Caminhos de Vida e Sabedoria" — Salmos 1:1-6).
+
+---
+
 ## [1.5] — 2026-07-19
 
 ### Correção crítica: leitura e busca da Bíblia estavam bloqueadas

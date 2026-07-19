@@ -176,7 +176,7 @@ describe("Task 4.2 — useRequireApproval", () => {
     vi.clearAllMocks();
   });
 
-  it("redireciona para /pending-approval quando status=pending", async () => {
+  it("não redireciona quando status=pending (não exige mais aprovação manual)", async () => {
     const fakeUser = { id: "u1" };
     const fakeProfile = { id: "u1", status: "pending" };
 
@@ -188,9 +188,27 @@ describe("Task 4.2 — useRequireApproval", () => {
     });
 
     const { useRequireApproval } = await import("@/features/auth/hooks/useRequireApproval");
+    const { result } = renderHook(() => useRequireApproval());
+
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(mockReplace).not.toHaveBeenCalled();
+  });
+
+  it("redireciona para /login com erro quando status=banned", async () => {
+    const fakeUser = { id: "u3" };
+    const fakeProfile = { id: "u3", status: "banned" };
+
+    mockGetUser.mockResolvedValue({ data: { user: fakeUser } });
+    mockFrom.mockReturnValue({
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      maybeSingle: vi.fn().mockResolvedValue({ data: fakeProfile, error: null }),
+    });
+
+    const { useRequireApproval } = await import("@/features/auth/hooks/useRequireApproval");
     renderHook(() => useRequireApproval());
 
-    await waitFor(() => expect(mockReplace).toHaveBeenCalledWith("/pending-approval"));
+    await waitFor(() => expect(mockReplace).toHaveBeenCalledWith("/login?error=banned"));
   });
 
   it("não redireciona quando status=approved", async () => {

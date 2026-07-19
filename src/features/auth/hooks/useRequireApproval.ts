@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "./useAuth";
 
 /**
- * Redireciona para `/pending-approval` se o perfil do usuário não estiver aprovado.
- * Redireciona para `/login` se não houver sessão ativa.
+ * Redireciona para `/login` se não houver sessão ativa, ou se o perfil
+ * estiver rejeitado/banido. Não exige mais aprovação manual — usuários
+ * são criados já aprovados (mesma regra de `requireApproved`, server-side).
  */
 export function useRequireApproval() {
   const { user, profile, loading } = useAuth();
