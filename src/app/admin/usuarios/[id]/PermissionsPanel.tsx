@@ -63,8 +63,8 @@ export default function PermissionsPanel({ userId, initialPermissions, isUserAdm
             <label key={key}
               className="flex items-start gap-3 p-3 rounded-lg cursor-pointer transition-colors"
               style={{
-                background: checked ? "rgba(201,162,39,0.08)" : "var(--bg-2)",
-                border: `1px solid ${checked ? "rgba(201,162,39,0.3)" : "var(--bg-2)"}`,
+                background: checked ? "rgba(184,115,51,0.08)" : "var(--bg-2)",
+                border: `1px solid ${checked ? "rgba(184,115,51,0.3)" : "var(--bg-2)"}`,
                 opacity: disabled || isUserAdmin ? 0.7 : 1,
               }}>
               <input
@@ -72,10 +72,10 @@ export default function PermissionsPanel({ userId, initialPermissions, isUserAdm
                 checked={checked}
                 disabled={disabled || isUserAdmin}
                 onChange={() => toggle(key)}
-                className="mt-1 accent-[#c9a227]"
+                className="mt-1 accent-[#B87333]"
               />
               <div>
-                <p className="text-sm font-semibold" style={{ color: checked ? "#c9a227" : "var(--text)" }}>
+                <p className="text-sm font-semibold" style={{ color: checked ? "#B87333" : "var(--text)" }}>
                   {PERMISSIONS[key]}
                 </p>
                 <p className="text-[10px] mt-0.5" style={{ color: "var(--text-subtle)", fontFamily: "monospace" }}>

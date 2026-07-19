@@ -145,7 +145,7 @@ export default function MetricasPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#c9a227]"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#B87333]"></div>
       </div>
     );
   }
@@ -153,13 +153,13 @@ export default function MetricasPage() {
   return (
     <div className="p-6 space-y-8">
       <div>
-        <h1 className="text-2xl mb-1" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Métricas</h1>
+        <h1 className="text-2xl mb-1" style={{ fontFamily: "var(--font-cinzel)", color: "#B87333" }}>Métricas</h1>
         <p className="text-sm" style={{ color: "var(--text-subtle)" }}>Últimos 30 dias · Visível apenas para o Admin Master</p>
       </div>
 
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
         {[
-          { label: "Usuários Ativos", value: kpis.totalApproved, color: "#c9a227" },
+          { label: "Usuários Ativos", value: kpis.totalApproved, color: "#B87333" },
           { label: "Aguardando", value: kpis.totalPending, color: "#fbbf24" },
           { label: "Minutos de Uso", value: kpis.totalSessionMin, color: "#fb923c" },
           { label: "Tokens Gastos", value: kpis.totalTokens.toLocaleString("pt-BR"), color: "#a78bfa", raw: true },
@@ -189,7 +189,7 @@ export default function MetricasPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr style={{ borderBottom: "1px solid rgba(201,162,39,0.12)" }}>
+                <tr style={{ borderBottom: "1px solid rgba(184,115,51,0.12)" }}>
                   {["Usuário", "Tempo Total", "Kairo (IA)", "Devocional", "Bíblia", "Oração", "Tokens"].map((h) => (
                     <th key={h} className="text-left px-3 py-2"
                       style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", fontSize: "0.65rem", letterSpacing: "0.08em", textTransform: "uppercase", whiteSpace: "nowrap" }}>
@@ -209,7 +209,7 @@ export default function MetricasPage() {
                     <td className="px-3 py-2.5"><p style={{ color: "#34d399", fontFamily: "var(--font-cinzel)", fontSize: "0.8rem" }}>{u.devocionais}</p></td>
                     <td className="px-3 py-2.5"><p style={{ color: "#60a5fa", fontFamily: "var(--font-cinzel)", fontSize: "0.8rem" }}>{u.biblia}</p></td>
                     <td className="px-3 py-2.5"><p style={{ color: "#f472b6", fontFamily: "var(--font-cinzel)", fontSize: "0.8rem" }}>{u.oracao}</p></td>
-                    <td className="px-3 py-2.5"><p style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)", fontSize: "0.8rem" }}>{u.tokens.toLocaleString("pt-BR")}</p></td>
+                    <td className="px-3 py-2.5"><p style={{ color: "#B87333", fontFamily: "var(--font-cinzel)", fontSize: "0.8rem" }}>{u.tokens.toLocaleString("pt-BR")}</p></td>
                   </tr>
                 ))}
               </tbody>
@@ -238,7 +238,7 @@ export default function MetricasPage() {
                       <p className="text-xs ml-2 shrink-0" style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>{count}</p>
                     </div>
                     <div className="h-1 rounded-full overflow-hidden" style={{ background: "var(--bg-2)" }}>
-                      <div className="h-full rounded-full" style={{ width: `${pct}%`, background: "rgba(201,162,39,0.6)" }} />
+                      <div className="h-full rounded-full" style={{ width: `${pct}%`, background: "rgba(184,115,51,0.6)" }} />
                     </div>
                   </div>
                 </div>
@@ -259,7 +259,7 @@ export default function MetricasPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr style={{ borderBottom: "1px solid rgba(201,162,39,0.1)" }}>
+                <tr style={{ borderBottom: "1px solid rgba(184,115,51,0.1)" }}>
                   {["Data", "Devocionais", "Versículos Fav.", "Tempo de Uso"].map((h) => (
                     <th key={h} className="text-left px-3 py-2"
                       style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", fontSize: "0.65rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>
@@ -274,8 +274,8 @@ export default function MetricasPage() {
                     <td className="px-3 py-2" style={{ color: "var(--text-muted)", fontFamily: "var(--font-cinzel)", fontSize: "0.78rem" }}>
                       {new Date(m.date).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })}
                     </td>
-                    <td className="px-3 py-2" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)", fontSize: "0.85rem" }}>{m.devocionais_read ?? 0}</td>
-                    <td className="px-3 py-2" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)", fontSize: "0.85rem" }}>{m.verses_favorited ?? 0}</td>
+                    <td className="px-3 py-2" style={{ color: "#B87333", fontFamily: "var(--font-cinzel)", fontSize: "0.85rem" }}>{m.devocionais_read ?? 0}</td>
+                    <td className="px-3 py-2" style={{ color: "#B87333", fontFamily: "var(--font-cinzel)", fontSize: "0.85rem" }}>{m.verses_favorited ?? 0}</td>
                     <td className="px-3 py-2" style={{ color: "var(--text-muted)", fontSize: "0.8rem" }}>{fmtMin(m.session_duration_seconds ?? 0)}</td>
                   </tr>
                 ))}

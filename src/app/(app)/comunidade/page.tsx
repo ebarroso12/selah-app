@@ -65,9 +65,9 @@ export default async function ComunidadePage({
                 letterSpacing: "0.06em",
                 textTransform: "uppercase",
                 textDecoration: "none",
-                background: isActive ? "#c9a227" : "var(--bg-2)",
+                background: isActive ? "var(--gold)" : "var(--bg-2)",
                 color: isActive ? "#080d1a" : "var(--text-muted)",
-                border: `1px solid ${isActive ? "#c9a227" : "var(--border)"}`,
+                border: `1px solid ${isActive ? "var(--gold)" : "var(--border)"}`,
               }}
             >
               {label}
@@ -78,7 +78,7 @@ export default async function ComunidadePage({
 
       <TestimonyList testimonies={testimonies} />
 
-      <div className="border-t pt-8" style={{ borderColor: "rgba(201,162,39,0.12)" }}>
+      <div className="border-t pt-8" style={{ borderColor: "rgba(184,115,51,0.12)" }}>
         <h2 className="text-lg mb-1">Compartilhar Testemunho</h2>
         <p className="text-sm mb-5" style={{ color: "var(--text-subtle)" }}>
           Seu testemunho será revisado antes de ser publicado.

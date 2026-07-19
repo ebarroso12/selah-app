@@ -19,7 +19,7 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 const inp = "w-full px-3 py-2 rounded-lg text-sm outline-none";
-const inpStyle = { background: "var(--bg-2)", border: "1px solid rgba(201,162,39,0.2)", color: "var(--text)" };
+const inpStyle = { background: "var(--bg-2)", border: "1px solid rgba(184,115,51,0.2)", color: "var(--text)" };
 const labelStyle = { color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em", textTransform: "uppercase" as const, fontSize: "0.7rem" };
 
 export default function AdminComunidadePage() {
@@ -86,7 +86,7 @@ export default function AdminComunidadePage() {
   return (
     <div className="p-4 md:p-6 space-y-6">
       <div>
-        <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Comunidade</h1>
+        <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#B87333" }}>Comunidade</h1>
         <p className="text-xs mt-1" style={{ color: "var(--text-subtle)" }}>
           Moderação de testemunhos e publicações da comunidade
         </p>
@@ -102,9 +102,9 @@ export default function AdminComunidadePage() {
           <button key={f.key} onClick={() => setFilter(f.key as typeof filter)}
             className="px-3 py-1.5 rounded-lg text-xs font-semibold tracking-widest uppercase"
             style={{
-              background: filter === f.key ? "rgba(201,162,39,0.15)" : "var(--bg-2)",
-              border: `1px solid ${filter === f.key ? "rgba(201,162,39,0.4)" : "var(--bg-2)"}`,
-              color: filter === f.key ? "#c9a227" : "var(--text-subtle)",
+              background: filter === f.key ? "rgba(184,115,51,0.15)" : "var(--bg-2)",
+              border: `1px solid ${filter === f.key ? "rgba(184,115,51,0.4)" : "var(--bg-2)"}`,
+              color: filter === f.key ? "#B87333" : "var(--text-subtle)",
             }}>
             {f.label}
           </button>
@@ -114,7 +114,7 @@ export default function AdminComunidadePage() {
       {/* Formulário de edição */}
       {showForm && editing && (
         <div className="card p-5 space-y-4">
-          <p className="text-sm font-semibold" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)" }}>
+          <p className="text-sm font-semibold" style={{ color: "#B87333", fontFamily: "var(--font-cinzel)" }}>
             Editar Testemunho
           </p>
           <div>
@@ -137,7 +137,7 @@ export default function AdminComunidadePage() {
           {msg && <p className="text-xs" style={{ color: msg.startsWith("✓") ? "#34d399" : "#ef4444" }}>{msg}</p>}
           <div className="flex gap-3">
             <button onClick={save} disabled={saving} className="px-5 py-2 rounded-lg text-xs font-semibold"
-              style={{ background: "rgba(201,162,39,0.2)", border: "1px solid rgba(201,162,39,0.5)", color: "#c9a227", opacity: saving ? 0.6 : 1 }}>
+              style={{ background: "rgba(184,115,51,0.2)", border: "1px solid rgba(184,115,51,0.5)", color: "#B87333", opacity: saving ? 0.6 : 1 }}>
               {saving ? "Salvando..." : "Salvar"}
             </button>
             <button onClick={() => setShowForm(false)} className="px-5 py-2 rounded-lg text-xs"
@@ -160,7 +160,7 @@ export default function AdminComunidadePage() {
         <div className="space-y-3">
           {items.map(item => (
             <div key={item.id} className="card p-4 space-y-3"
-              style={{ borderColor: !item.approved ? "rgba(251,191,36,0.2)" : "rgba(201,162,39,0.1)" }}>
+              style={{ borderColor: !item.approved ? "rgba(251,191,36,0.2)" : "rgba(184,115,51,0.1)" }}>
               <div className="flex items-start justify-between gap-3 flex-wrap">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1 flex-wrap">
@@ -168,7 +168,7 @@ export default function AdminComunidadePage() {
                       {item.title}
                     </p>
                     <span className="text-xs px-2 py-0.5 rounded-full"
-                      style={{ background: "rgba(201,162,39,0.1)", color: "#c9a227", border: "1px solid rgba(201,162,39,0.2)", fontSize: "0.62rem" }}>
+                      style={{ background: "rgba(184,115,51,0.1)", color: "#B87333", border: "1px solid rgba(184,115,51,0.2)", fontSize: "0.62rem" }}>
                       {TYPE_LABELS[item.type] ?? item.type}
                     </span>
                     <span className="text-xs px-2 py-0.5 rounded-full"

@@ -63,7 +63,7 @@ export default function IgrejaPage() {
         <div>
           <h1
             className="text-3xl tracking-widest uppercase"
-            style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)" }}
+            style={{ color: "var(--gold)", fontFamily: "var(--font-cinzel)" }}
           >
             Casa de Oração
           </h1>
@@ -108,7 +108,7 @@ export default function IgrejaPage() {
         {/* Horários */}
         <div
           className="card p-4 text-sm space-y-1"
-          style={{ borderColor: "rgba(201,168,76,0.15)" }}
+          style={{ borderColor: "color-mix(in srgb, var(--gold) 15%, transparent)" }}
         >
           <p
             className="text-xs tracking-widest uppercase mb-3"
@@ -118,11 +118,11 @@ export default function IgrejaPage() {
           </p>
           <div className="flex justify-between" style={{ color: "var(--text)" }}>
             <span>Quarta-feira</span>
-            <span style={{ color: "#c9a227" }}>20h00</span>
+            <span style={{ color: "var(--gold-label)" }}>20h00</span>
           </div>
           <div className="flex justify-between" style={{ color: "var(--text)" }}>
             <span>Domingo</span>
-            <span style={{ color: "#c9a227" }}>10h00 e 18h00</span>
+            <span style={{ color: "var(--gold-label)" }}>10h00 e 18h00</span>
           </div>
           <p className="text-xs mt-2" style={{ color: "var(--text-subtle)" }}>
             Av. Alagoas, 1163 — Jardim Paulista, Franca-SP
@@ -267,9 +267,9 @@ export default function IgrejaPage() {
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center shrink-0"
             style={{
-              background: "rgba(201,168,76,0.1)",
-              border: "1.5px solid rgba(201,168,76,0.25)",
-              color: "#c9a227",
+              background: "color-mix(in srgb, var(--gold) 10%, transparent)",
+              border: "1.5px solid color-mix(in srgb, var(--gold) 25%, transparent)",
+              color: "var(--gold-label)",
               fontFamily: "var(--font-cinzel)",
               fontSize: "1rem",
               fontWeight: 700,

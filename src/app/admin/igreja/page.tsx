@@ -31,7 +31,7 @@ const emptyChurch: ChurchInfo = {
 };
 
 const inp = "w-full px-3 py-2 rounded-lg text-sm outline-none";
-const inpStyle = { background: "var(--bg-2)", border: "1px solid rgba(201,162,39,0.2)", color: "var(--text)" };
+const inpStyle = { background: "var(--bg-2)", border: "1px solid rgba(184,115,51,0.2)", color: "var(--text)" };
 const labelStyle = { color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em", textTransform: "uppercase" as const, fontSize: "0.7rem" };
 
 export default function AdminIgrejaPage() {
@@ -191,21 +191,21 @@ export default function AdminIgrejaPage() {
   return (
     <div className="p-4 md:p-6 space-y-6">
       <div>
-        <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Igreja</h1>
+        <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#B87333" }}>Igreja</h1>
         <p className="text-xs mt-1" style={{ color: "var(--text-subtle)" }}>Gestão da Casa de Oração</p>
       </div>
 
       {/* Tabs */}
       <div className="flex gap-2 border-b border-white/10">
-        <button onClick={() => setActiveTab("membros")} className={`px-4 py-2 text-xs font-bold uppercase tracking-widest ${activeTab === "membros" ? "border-b-2 border-[#c9a227] text-[#c9a227]" : "text-white/40"}`}>
+        <button onClick={() => setActiveTab("membros")} className={`px-4 py-2 text-xs font-bold uppercase tracking-widest ${activeTab === "membros" ? "border-b-2 border-[#B87333] text-[#B87333]" : "text-white/40"}`}>
           Membros
         </button>
-        <button onClick={() => setActiveTab("info")} className={`px-4 py-2 text-xs font-bold uppercase tracking-widest ${activeTab === "info" ? "border-b-2 border-[#c9a227] text-[#c9a227]" : "text-white/40"}`}>
+        <button onClick={() => setActiveTab("info")} className={`px-4 py-2 text-xs font-bold uppercase tracking-widest ${activeTab === "info" ? "border-b-2 border-[#B87333] text-[#B87333]" : "text-white/40"}`}>
           Informações
         </button>
       </div>
 
-      {msg && <p className="text-xs text-center py-2 px-3 rounded-lg" style={{ background: msg.startsWith("✓") ? "rgba(52,211,153,0.1)" : "rgba(201,162,39,0.08)", color: msg.startsWith("✓") ? "#34d399" : "#c9a227" }}>{msg}</p>}
+      {msg && <p className="text-xs text-center py-2 px-3 rounded-lg" style={{ background: msg.startsWith("✓") ? "rgba(52,211,153,0.1)" : "rgba(184,115,51,0.08)", color: msg.startsWith("✓") ? "#34d399" : "#B87333" }}>{msg}</p>}
 
       {activeTab === "membros" ? (
         <div className="space-y-4">
@@ -281,7 +281,7 @@ export default function AdminIgrejaPage() {
                 onClick={() => logoRef.current?.click()}
                 disabled={uploadingLogo}
                 className="w-full py-2 rounded-lg text-xs"
-                style={{ background: "rgba(201,162,39,0.1)", border: "1px solid rgba(201,162,39,0.3)", color: "#c9a227", opacity: uploadingLogo ? 0.5 : 1 }}
+                style={{ background: "rgba(184,115,51,0.1)", border: "1px solid rgba(184,115,51,0.3)", color: "#B87333", opacity: uploadingLogo ? 0.5 : 1 }}
               >
                 {uploadingLogo ? "Enviando..." : "📎 Enviar Logo"}
               </button>
@@ -309,7 +309,7 @@ export default function AdminIgrejaPage() {
                 onClick={() => photoRef.current?.click()}
                 disabled={uploadingPhoto}
                 className="w-full py-2 rounded-lg text-xs"
-                style={{ background: "rgba(201,162,39,0.1)", border: "1px solid rgba(201,162,39,0.3)", color: "#c9a227", opacity: uploadingPhoto ? 0.5 : 1 }}
+                style={{ background: "rgba(184,115,51,0.1)", border: "1px solid rgba(184,115,51,0.3)", color: "#B87333", opacity: uploadingPhoto ? 0.5 : 1 }}
               >
                 {uploadingPhoto ? "Enviando..." : "📎 Enviar Foto"}
               </button>
@@ -319,7 +319,7 @@ export default function AdminIgrejaPage() {
 
           {/* Informações */}
           <div className="card p-5 space-y-4">
-            <p className="text-sm font-semibold" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)" }}>Dados da Igreja</p>
+            <p className="text-sm font-semibold" style={{ color: "#B87333", fontFamily: "var(--font-cinzel)" }}>Dados da Igreja</p>
             
             <div>
               <label className="block mb-1" style={labelStyle}>Nome da Igreja</label>
@@ -376,7 +376,7 @@ export default function AdminIgrejaPage() {
               onClick={saveChurch}
               disabled={savingChurch}
               className="w-full py-2 rounded-lg text-sm font-semibold tracking-widest uppercase"
-              style={{ background: "rgba(201,162,39,0.2)", border: "1px solid rgba(201,162,39,0.5)", color: "#c9a227", opacity: savingChurch ? 0.6 : 1 }}
+              style={{ background: "rgba(184,115,51,0.2)", border: "1px solid rgba(184,115,51,0.5)", color: "#B87333", opacity: savingChurch ? 0.6 : 1 }}
             >
               {savingChurch ? "Salvando..." : "Salvar Informações"}
             </button>

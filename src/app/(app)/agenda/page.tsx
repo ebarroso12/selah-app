@@ -47,7 +47,7 @@ export default function AgendaPage() {
     <div className="p-4 md:p-6 space-y-6 max-w-4xl mx-auto">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Agenda</h1>
+          <h1 className="text-2xl" style={{ fontFamily: "var(--font-cinzel)", color: "var(--gold)" }}>Agenda</h1>
           <p className="text-sm mt-0.5" style={{ color: "var(--text-subtle)" }}>
             Seus compromissos abençoados com Salmos
           </p>
@@ -63,7 +63,7 @@ export default function AgendaPage() {
 
       {msg && (
         <div className="px-4 py-3 rounded-lg text-sm"
-          style={{ background: "rgba(201,162,39,0.12)", color: "#c9a227", border: "1px solid rgba(201,162,39,0.25)" }}>
+          style={{ background: "var(--gold-bg)", color: "var(--gold)", border: "1px solid var(--gold-glow)" }}>
           {msg}
         </div>
       )}
@@ -77,7 +77,7 @@ export default function AgendaPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
             </svg>
           </button>
-          <h2 style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227", fontSize: "1rem", letterSpacing: "0.1em" }}>
+          <h2 style={{ fontFamily: "var(--font-cinzel)", color: "var(--gold)", fontSize: "1rem", letterSpacing: "0.1em" }}>
             {MONTH_NAMES[month]} {year}
           </h2>
           <button onClick={() => setCurrentMonth(new Date(year, month + 1, 1))}
@@ -109,9 +109,9 @@ export default function AgendaPage() {
               <button key={day} onClick={() => setSelectedDate(isSelected ? null : dateStr)}
                 className="relative aspect-square rounded-lg flex flex-col items-center justify-center transition-all"
                 style={{
-                  background: isSelected ? "rgba(201,162,39,0.2)" : isToday ? "rgba(201,162,39,0.08)" : "transparent",
-                  border: isSelected ? "1px solid rgba(201,162,39,0.5)" : isToday ? "1px solid rgba(201,162,39,0.2)" : "1px solid transparent",
-                  color: isToday ? "#c9a227" : "var(--text-muted)",
+                  background: isSelected ? "var(--gold-glow)" : isToday ? "var(--gold-bg)" : "transparent",
+                  border: isSelected ? "1px solid var(--gold-glow)" : isToday ? "1px solid var(--gold-glow)" : "1px solid transparent",
+                  color: isToday ? "var(--gold)" : "var(--text-muted)",
                   fontFamily: isToday ? "var(--font-cinzel)" : "inherit",
                   fontSize: "0.8rem",
                 }}>
@@ -119,7 +119,7 @@ export default function AgendaPage() {
                 {dayEvents.length > 0 && (
                   <div className="absolute bottom-1 flex gap-0.5">
                     {dayEvents.slice(0, 3).map((_, idx) => (
-                      <div key={idx} className="w-1 h-1 rounded-full" style={{ background: "#c9a227" }} />
+                      <div key={idx} className="w-1 h-1 rounded-full" style={{ background: "var(--gold)" }} />
                     ))}
                   </div>
                 )}
@@ -133,12 +133,12 @@ export default function AgendaPage() {
       {selectedDate && (
         <div className="card p-4 space-y-3">
           <div className="flex items-center justify-between">
-            <p style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227", fontSize: "0.85rem", letterSpacing: "0.06em" }}>
+            <p style={{ fontFamily: "var(--font-cinzel)", color: "var(--gold)", fontSize: "0.85rem", letterSpacing: "0.06em" }}>
               {new Date(selectedDate + "T12:00:00").toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" })}
             </p>
             <button onClick={() => setShowForm(true)}
               className="text-xs px-3 py-1.5 rounded-lg"
-              style={{ background: "rgba(201,162,39,0.1)", color: "#c9a227", border: "1px solid rgba(201,162,39,0.2)" }}>
+              style={{ background: "var(--gold-bg)", color: "var(--gold)", border: "1px solid var(--gold-glow)" }}>
               + Adicionar
             </button>
           </div>
@@ -160,7 +160,7 @@ export default function AgendaPage() {
           </p>
           {loading ? (
             <div className="flex justify-center py-6">
-              <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-[#c9a227]" />
+              <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-[var(--gold)]" />
             </div>
           ) : events.filter((e) => e.date >= today).length === 0 ? (
             <p className="text-sm py-4 text-center" style={{ color: "var(--text-subtle)" }}>
@@ -171,8 +171,8 @@ export default function AgendaPage() {
               <div key={ev.id} className="flex items-center gap-3 rounded-xl p-3"
                 style={{ background: "var(--bg-2)", border: "1px solid var(--bg-2)" }}>
                 <div className="shrink-0 w-10 h-10 rounded-lg flex flex-col items-center justify-center"
-                  style={{ background: "rgba(201,162,39,0.1)", border: "1px solid rgba(201,162,39,0.2)" }}>
-                  <p style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)", fontSize: "0.9rem", lineHeight: "1" }}>
+                  style={{ background: "var(--gold-bg)", border: "1px solid var(--gold-glow)" }}>
+                  <p style={{ color: "var(--gold)", fontFamily: "var(--font-cinzel)", fontSize: "0.9rem", lineHeight: "1" }}>
                     {new Date(ev.date + "T12:00:00").getDate()}
                   </p>
                   <p style={{ color: "var(--gold-label)", fontSize: "0.5rem", fontFamily: "var(--font-cinzel)", letterSpacing: "0.05em" }}>

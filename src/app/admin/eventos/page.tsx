@@ -25,7 +25,7 @@ const emptyForm = {
 };
 
 const inp = "w-full px-3 py-2 rounded-lg text-sm outline-none";
-const inpStyle = { background: "var(--bg-2)", border: "1px solid rgba(201,162,39,0.2)", color: "var(--text)" };
+const inpStyle = { background: "var(--bg-2)", border: "1px solid rgba(184,115,51,0.2)", color: "var(--text)" };
 const labelStyle = { color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em", textTransform: "uppercase" as const, fontSize: "0.7rem" };
 
 export default function AdminEventosPage() {
@@ -96,13 +96,13 @@ export default function AdminEventosPage() {
     <div className="p-4 md:p-6 space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Eventos</h1>
+          <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#B87333" }}>Eventos</h1>
           <p className="text-xs mt-1" style={{ color: "var(--text-subtle)" }}>
             Agenda da Casa de Oração e Ministério Legendários
           </p>
         </div>
         <button onClick={openNew} className="px-4 py-2 rounded-lg text-xs font-semibold tracking-widest uppercase"
-          style={{ background: "rgba(201,162,39,0.15)", border: "1px solid rgba(201,162,39,0.4)", color: "#c9a227" }}>
+          style={{ background: "rgba(184,115,51,0.15)", border: "1px solid rgba(184,115,51,0.4)", color: "#B87333" }}>
           + Novo Evento
         </button>
       </div>
@@ -112,9 +112,9 @@ export default function AdminEventosPage() {
           <button key={f.key} onClick={() => setFilter(f.key as "upcoming" | "all")}
             className="px-4 py-2 rounded-lg text-xs font-semibold tracking-widest uppercase"
             style={{
-              background: filter === f.key ? "rgba(201,162,39,0.15)" : "var(--bg-2)",
-              border: `1px solid ${filter === f.key ? "rgba(201,162,39,0.4)" : "var(--bg-2)"}`,
-              color: filter === f.key ? "#c9a227" : "var(--text-subtle)",
+              background: filter === f.key ? "rgba(184,115,51,0.15)" : "var(--bg-2)",
+              border: `1px solid ${filter === f.key ? "rgba(184,115,51,0.4)" : "var(--bg-2)"}`,
+              color: filter === f.key ? "#B87333" : "var(--text-subtle)",
             }}>
             {f.label}
           </button>
@@ -124,7 +124,7 @@ export default function AdminEventosPage() {
       {/* Formulário */}
       {showForm && (
         <div className="card p-5 space-y-4">
-          <p className="text-sm font-semibold" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)" }}>
+          <p className="text-sm font-semibold" style={{ color: "#B87333", fontFamily: "var(--font-cinzel)" }}>
             {editingId ? "Editar Evento" : "Novo Evento"}
           </p>
           <div>
@@ -167,7 +167,7 @@ export default function AdminEventosPage() {
           {msg && <p className="text-xs" style={{ color: msg.startsWith("✓") ? "#34d399" : "#ef4444" }}>{msg}</p>}
           <div className="flex gap-3">
             <button onClick={save} disabled={saving} className="px-5 py-2 rounded-lg text-xs font-semibold tracking-widest uppercase"
-              style={{ background: "rgba(201,162,39,0.2)", border: "1px solid rgba(201,162,39,0.5)", color: "#c9a227", opacity: saving ? 0.6 : 1 }}>
+              style={{ background: "rgba(184,115,51,0.2)", border: "1px solid rgba(184,115,51,0.5)", color: "#B87333", opacity: saving ? 0.6 : 1 }}>
               {saving ? "Salvando..." : editingId ? "Salvar Alterações" : "Criar Evento"}
             </button>
             <button onClick={() => setShowForm(false)} className="px-5 py-2 rounded-lg text-xs"
@@ -188,7 +188,7 @@ export default function AdminEventosPage() {
         <div className="card p-10 text-center">
           <p style={{ color: "var(--text-subtle)" }}>Nenhum evento encontrado.</p>
           <button onClick={openNew} className="mt-4 px-4 py-2 rounded-lg text-xs"
-            style={{ background: "rgba(201,162,39,0.1)", border: "1px solid rgba(201,162,39,0.3)", color: "#c9a227" }}>
+            style={{ background: "rgba(184,115,51,0.1)", border: "1px solid rgba(184,115,51,0.3)", color: "#B87333" }}>
             Criar o primeiro evento
           </button>
         </div>

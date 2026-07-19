@@ -64,18 +64,18 @@ export default function AdminShell({ children, role, permissions }: AdminShellPr
     <div
       id="admin-sidebar"
       className="flex flex-col h-full"
-      style={{ background: "var(--bg-sidebar)", borderRight: "1px solid rgba(201,162,39,0.12)" }}
+      style={{ background: "var(--bg-sidebar)", borderRight: "1px solid rgba(184,115,51,0.12)" }}
     >
       <div className="px-5 py-5 flex items-center justify-between"
-        style={{ borderBottom: "1px solid rgba(201,162,39,0.12)" }}>
+        style={{ borderBottom: "1px solid rgba(184,115,51,0.12)" }}>
         <div>
           <Link href="/home" onClick={() => setOpen(false)}>
-            <span style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227", fontSize: "1.1rem", letterSpacing: "0.2em" }}>
+            <span style={{ fontFamily: "var(--font-cinzel)", color: "#B87333", fontSize: "1.1rem", letterSpacing: "0.2em" }}>
               SELAH
             </span>
           </Link>
           <span className="block mt-1 text-xs px-2 py-0.5 rounded-full w-fit"
-            style={{ background: "rgba(201,162,39,0.15)", color: "#c9a227", border: "1px solid rgba(201,162,39,0.3)", fontFamily: "var(--font-cinzel)", fontSize: "0.6rem", letterSpacing: "0.1em" }}>
+            style={{ background: "rgba(184,115,51,0.15)", color: "#B87333", border: "1px solid rgba(184,115,51,0.3)", fontFamily: "var(--font-cinzel)", fontSize: "0.6rem", letterSpacing: "0.1em" }}>
             ADMIN
           </span>
         </div>
@@ -104,9 +104,9 @@ export default function AdminShell({ children, role, permissions }: AdminShellPr
                   <Link key={item.href} href={item.href}
                     className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all"
                     style={{
-                      background: active ? "rgba(201,162,39,0.12)" : "transparent",
-                      color: active ? "#c9a227" : "var(--text-muted)",
-                      borderLeft: active ? "2px solid #c9a227" : "2px solid transparent",
+                      background: active ? "rgba(184,115,51,0.12)" : "transparent",
+                      color: active ? "#B87333" : "var(--text-muted)",
+                      borderLeft: active ? "2px solid #B87333" : "2px solid transparent",
                       fontFamily: active ? "var(--font-cinzel)" : "inherit",
                       fontSize: "0.82rem",
                       letterSpacing: active ? "0.04em" : "normal",
@@ -122,7 +122,7 @@ export default function AdminShell({ children, role, permissions }: AdminShellPr
         })}
       </nav>
 
-      <div className="px-3 py-4 space-y-1" style={{ borderTop: "1px solid rgba(201,162,39,0.1)" }}>
+      <div className="px-3 py-4 space-y-1" style={{ borderTop: "1px solid rgba(184,115,51,0.1)" }}>
         {/* Botão OpenClaw */}
         <a
           href={OPENCLAW_URL}
@@ -173,15 +173,15 @@ export default function AdminShell({ children, role, permissions }: AdminShellPr
 
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="md:hidden flex items-center justify-between px-4 py-3 shrink-0"
-          style={{ background: "var(--bg-sidebar)", borderBottom: "1px solid rgba(201,162,39,0.1)" }}>
+          style={{ background: "var(--bg-sidebar)", borderBottom: "1px solid rgba(184,115,51,0.1)" }}>
           <button id="admin-hamburger" onClick={() => setOpen(true)}
             className="p-2 rounded-lg"
-            style={{ background: "rgba(201,162,39,0.08)", border: "1px solid rgba(201,162,39,0.2)" }}>
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#c9a227" strokeWidth={2}>
+            style={{ background: "rgba(184,115,51,0.08)", border: "1px solid rgba(184,115,51,0.2)" }}>
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#B87333" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <span style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227", fontSize: "1rem", letterSpacing: "0.2em" }}>
+          <span style={{ fontFamily: "var(--font-cinzel)", color: "#B87333", fontSize: "1rem", letterSpacing: "0.2em" }}>
             ADMIN
           </span>
           <Link href="/home" className="p-2 rounded-lg"
@@ -195,7 +195,7 @@ export default function AdminShell({ children, role, permissions }: AdminShellPr
         <main className="flex-1 overflow-y-auto">
           <Suspense fallback={
             <div className="flex items-center justify-center min-h-[400px]">
-              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#c9a227]"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#B87333]"></div>
             </div>
           }>
             {children}

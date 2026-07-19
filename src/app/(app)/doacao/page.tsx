@@ -26,7 +26,7 @@ export default function DoacaoPage() {
         </p>
         <h1
           className="text-2xl"
-          style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)" }}
+          style={{ color: "var(--gold)", fontFamily: "var(--font-cinzel)" }}
         >
           Contribua com o SELAH
         </h1>
@@ -36,13 +36,13 @@ export default function DoacaoPage() {
       <div
         className="w-full rounded-2xl p-6 text-center space-y-3"
         style={{
-          background: "rgba(201,162,39,0.05)",
-          border: "1px solid rgba(201,162,39,0.18)",
+          background: "rgba(184,115,51,0.05)",
+          border: "1px solid rgba(184,115,51,0.18)",
         }}
       >
         <p className="text-sm leading-relaxed" style={{ color: "var(--text)" }}>
           O aplicativo SELAH foi desenvolvido de forma autônoma, com dedicação e amor ao
-          ministério — <strong style={{ color: "#c9a227" }}>sem cobrar nada</strong> dos
+          ministério — <strong style={{ color: "var(--gold-label)" }}>sem cobrar nada</strong> dos
           usuários. Ele é e sempre será gratuito para toda a comunidade da Casa de Oração.
         </p>
         <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
@@ -61,7 +61,7 @@ export default function DoacaoPage() {
         className="w-full rounded-2xl p-6 flex flex-col items-center space-y-5"
         style={{
           background: "var(--bg-2)",
-          border: "1px solid rgba(201,162,39,0.2)",
+          border: "1px solid rgba(184,115,51,0.2)",
         }}
       >
         <p
@@ -100,13 +100,13 @@ export default function DoacaoPage() {
           <div
             className="flex items-center gap-3 rounded-xl px-4 py-3"
             style={{
-              background: "rgba(201,162,39,0.08)",
-              border: "1px solid rgba(201,162,39,0.25)",
+              background: "rgba(184,115,51,0.08)",
+              border: "1px solid rgba(184,115,51,0.25)",
             }}
           >
             <span
               className="flex-1 text-center font-mono text-sm"
-              style={{ color: "#c9a227", letterSpacing: "0.05em" }}
+              style={{ color: "var(--gold-label)", letterSpacing: "0.05em" }}
             >
               {PIX_KEY}
             </span>
@@ -114,9 +114,9 @@ export default function DoacaoPage() {
               onClick={copyKey}
               className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
               style={{
-                background: copied ? "rgba(52,211,153,0.15)" : "rgba(201,162,39,0.15)",
-                border: `1px solid ${copied ? "rgba(52,211,153,0.4)" : "rgba(201,162,39,0.4)"}`,
-                color: copied ? "#34d399" : "#c9a227",
+                background: copied ? "rgba(52,211,153,0.15)" : "rgba(184,115,51,0.15)",
+                border: `1px solid ${copied ? "rgba(52,211,153,0.4)" : "rgba(184,115,51,0.4)"}`,
+                color: copied ? "#34d399" : "var(--gold-label)",
               }}
             >
               {copied ? "✓ Copiado!" : "Copiar"}

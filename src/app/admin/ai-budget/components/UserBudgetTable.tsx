@@ -24,7 +24,7 @@ function fmtTokens(n: number): string {
 
 const STATUS_COLOR: Record<UserBudgetRow["status"], string> = {
   ok: "#34d399",
-  warn: "#c9a227",
+  warn: "#B87333",
   blocked: "#ef4444",
 };
 

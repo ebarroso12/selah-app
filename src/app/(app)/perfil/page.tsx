@@ -44,7 +44,7 @@ export default async function PerfilPage() {
           { label: "Versículos Favoritos", value: totalFavoritos },
         ].map((s) => (
           <div key={s.label} className="card p-4 text-center">
-            <p className="text-2xl font-bold" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)" }}>
+            <p className="text-2xl font-bold" style={{ color: "var(--gold)", fontFamily: "var(--font-cinzel)" }}>
               {s.value}
             </p>
             <p className="text-xs mt-1" style={{ color: "var(--text-subtle)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em" }}>

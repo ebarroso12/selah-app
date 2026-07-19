@@ -65,7 +65,7 @@ export default function AdminHomenagensPage() {
   return (
     <div className="p-4 md:p-6 space-y-6">
       <div>
-        <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Homenagens</h1>
+        <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#B87333" }}>Homenagens</h1>
         <p className="text-xs mt-1" style={{ color: "var(--text-subtle)" }}>
           Aprovação e moderação das homenagens enviadas pelos usuários
         </p>
@@ -82,9 +82,9 @@ export default function AdminHomenagensPage() {
           <button key={f.key} onClick={() => setFilter(f.key as typeof filter)}
             className="px-3 py-1.5 rounded-lg text-xs font-semibold tracking-widest uppercase"
             style={{
-              background: filter === f.key ? "rgba(201,162,39,0.15)" : "var(--bg-2)",
-              border: `1px solid ${filter === f.key ? "rgba(201,162,39,0.4)" : "var(--bg-2)"}`,
-              color: filter === f.key ? "#c9a227" : "var(--text-subtle)",
+              background: filter === f.key ? "rgba(184,115,51,0.15)" : "var(--bg-2)",
+              border: `1px solid ${filter === f.key ? "rgba(184,115,51,0.4)" : "var(--bg-2)"}`,
+              color: filter === f.key ? "#B87333" : "var(--text-subtle)",
             }}>
             {f.label}
           </button>
@@ -107,7 +107,7 @@ export default function AdminHomenagensPage() {
             const capaUrl = item.fotos?.[item.foto_capa] ?? item.fotos?.[0];
             return (
               <div key={item.id} className="card overflow-hidden"
-                style={{ borderColor: item.status === "pending" ? "rgba(251,191,36,0.25)" : "rgba(201,162,39,0.1)" }}>
+                style={{ borderColor: item.status === "pending" ? "rgba(251,191,36,0.25)" : "rgba(184,115,51,0.1)" }}>
                 {/* Foto capa */}
                 {capaUrl && (
                   <div className="relative w-full h-40 overflow-hidden">

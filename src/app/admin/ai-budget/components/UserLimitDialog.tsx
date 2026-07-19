@@ -117,8 +117,8 @@ export function UserLimitDialog({ user, defaultBudgetBrl, onClose }: Props) {
           <div
             className="p-3 rounded-md"
             style={{
-              background: "rgba(201,162,39,0.06)",
-              border: "1px solid rgba(201,162,39,0.2)",
+              background: "rgba(184,115,51,0.06)",
+              border: "1px solid rgba(184,115,51,0.2)",
             }}
           >
             <p className="text-xs" style={{ color: "var(--text-muted)" }}>

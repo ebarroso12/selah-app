@@ -14,7 +14,7 @@ const Checkbox = React.forwardRef<
       "peer h-4 w-4 shrink-0 rounded-sm border border-[var(--border)] shadow",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]",
       "disabled:cursor-not-allowed disabled:opacity-50",
-      "data-[state=checked]:bg-[var(--gold)] data-[state=checked]:border-[var(--gold)] data-[state=checked]:text-[#060A14]",
+      "data-[state=checked]:bg-[var(--gold)] data-[state=checked]:border-[var(--gold)] data-[state=checked]:text-[var(--primary-foreground)]",
       className
     )}
     {...props}

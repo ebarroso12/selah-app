@@ -72,7 +72,7 @@ export default async function HomePage() {
           className="p-5 md:p-6 rounded-xl cursor-pointer transition-all active:scale-[0.98]"
           style={{
             background: "linear-gradient(135deg, rgba(123,31,58,0.35) 0%, var(--bg-card) 60%)",
-            border: "1px solid rgba(201,162,39,0.3)",
+            border: "1px solid rgba(184,115,51,0.3)",
             boxShadow: "0 0 28px rgba(123,31,58,0.25)",
           }}
         >
@@ -81,7 +81,7 @@ export default async function HomePage() {
               className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center shrink-0"
               style={{
                 background: "linear-gradient(135deg, var(--wine) 0%, var(--gold) 100%)",
-                boxShadow: "0 0 18px rgba(201,162,39,0.35)",
+                boxShadow: "0 0 18px rgba(184,115,51,0.35)",
               }}
             >
               <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="#fff" strokeWidth={1.5}>
@@ -111,7 +111,7 @@ export default async function HomePage() {
                   color: "#fff",
                   fontFamily: "var(--font-cinzel)",
                   letterSpacing: "0.06em",
-                  border: "1px solid rgba(201,162,39,0.35)",
+                  border: "1px solid rgba(184,115,51,0.35)",
                 }}
               >
                 Conversar com o Kairo agora
@@ -130,16 +130,16 @@ export default async function HomePage() {
             className="card p-4 h-full flex flex-col gap-2 cursor-pointer transition-all active:scale-95"
             style={{
               minHeight: 130,
-              border: "1px solid rgba(201,162,39,0.45)",
+              border: "1px solid rgba(184,115,51,0.45)",
               background: "linear-gradient(135deg, var(--gold-bg) 0%, var(--bg-card) 100%)",
-              boxShadow: "0 0 18px rgba(201,162,39,0.15)",
+              boxShadow: "0 0 18px rgba(184,115,51,0.15)",
             }}
           >
             <div
               className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
               style={{
-                background: "linear-gradient(135deg, rgba(201,162,39,0.35) 0%, rgba(201,162,39,0.12) 100%)",
-                border: "1px solid rgba(201,162,39,0.5)",
+                background: "linear-gradient(135deg, rgba(184,115,51,0.35) 0%, rgba(184,115,51,0.12) 100%)",
+                border: "1px solid rgba(184,115,51,0.5)",
               }}
             >
               <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="var(--gold)" strokeWidth={1.5}>
@@ -325,7 +325,7 @@ export default async function HomePage() {
                 <h2 className="text-lg leading-snug">{devotional.title}</h2>
                 <blockquote
                   className="scripture text-sm leading-relaxed p-4 rounded-lg"
-                  style={{ background: "rgba(201,162,39,0.05)", borderLeft: "2px solid rgba(201,162,39,0.4)" }}
+                  style={{ background: "rgba(184,115,51,0.05)", borderLeft: "2px solid rgba(184,115,51,0.4)" }}
                 >
                   {devotional.bible_passage}
                   <footer
@@ -342,7 +342,7 @@ export default async function HomePage() {
                 {devotional.prayer_text && (
                   <div
                     className="mt-4 p-4 rounded-lg"
-                    style={{ background: "var(--bg-2)", border: "1px solid rgba(201,162,39,0.12)" }}
+                    style={{ background: "var(--bg-2)", border: "1px solid rgba(184,115,51,0.12)" }}
                   >
                     <p
                       className="text-xs mb-2"
@@ -391,11 +391,11 @@ export default async function HomePage() {
                   <div key={event.id} className="flex gap-3 items-start">
                     <div
                       className="shrink-0 w-10 h-10 rounded-lg flex flex-col items-center justify-center"
-                      style={{ background: "rgba(201,162,39,0.08)", border: "1px solid rgba(201,162,39,0.2)" }}
+                      style={{ background: "rgba(184,115,51,0.08)", border: "1px solid rgba(184,115,51,0.2)" }}
                     >
                       <span
                         className="text-xs font-bold leading-none"
-                        style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)" }}
+                        style={{ color: "var(--gold)", fontFamily: "var(--font-cinzel)" }}
                       >
                         {new Date(event.date_start).getDate()}
                       </span>

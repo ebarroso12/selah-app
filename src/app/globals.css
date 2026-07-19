@@ -49,45 +49,45 @@
 
 /* ─── MODO ESCURO (padrão) ────────────────────────────────────────────────── */
 :root {
-  --bg:          #060A14;
-  --bg-2:        #0C1221;
-  --bg-card:     #111827;
-  --bg-input:    #0C1221;
-  --bg-sidebar:  #060A14;
-  --border:      rgba(201,168,76,0.2);
+  --bg:          #1C1917;   /* Warm Charcoal */
+  --bg-2:        #221F1C;
+  --bg-card:     #272422;   /* Elevated Charcoal */
+  --bg-input:    #24211E;
+  --bg-sidebar:  #1C1917;   /* igual ao --bg — charcoal quente, não navy frio */
+  --border:      rgba(230,225,220,0.10); /* hairline neutro soft-ash */
 
-  --text:        #F5F2EB;
-  --text-muted:  #A09880;
-  --text-subtle: #5C5647;
+  --text:        #E6E1DC;   /* Soft Ash — 13.5:1 AAA */
+  --text-muted:  #8A817C;   /* Muted Taupe — ~4.6:1 AA */
+  --text-subtle: #655C56;   /* decorativo/disabled — ~3:1, nunca em conteúdo real */
 
-  /* Dourado Divino — glória e santidade */
-  --gold:        #C9A84C;
-  --gold-light:  #E2C464;
-  --gold-dark:   #A07830;
-  --gold-label:  rgba(201,162,39,0.72); /* labels/dates — adapts in .light */
-  --gold-bg:     rgba(201,168,76,0.12);
-  --gold-glow:   rgba(201,168,76,0.3);
+  /* Cobre Metálico — hero copper no charcoal quente */
+  --gold:        #B87333;   /* Hero Copper — 4.6:1 sobre #1C1917 (AA texto normal) */
+  --gold-light:  #D89A5E;   /* cobre claro — hover/active/focus/glow, 7.25:1 AAA */
+  --gold-dark:   #9A5E2A;   /* cobre profundo — gradiente/pressed/bordas */
+  --gold-label:  #C68A4A;   /* labels/datas pequenas — ~5.9:1 */
+  --gold-bg:     rgba(184,115,51,0.14);
+  --gold-glow:   rgba(216,154,94,0.28); /* sobre o gold-light, pra brilhar no charcoal */
 
-  --nav-shadow:  0 8px 32px rgba(0,0,0,0.55), 0 0 0 1px rgba(201,162,39,0.08);
-  --nav-border:  rgba(201,162,39,0.18);
+  --nav-shadow:  0 8px 32px rgba(0,0,0,0.55), 0 0 0 1px rgba(184,115,51,0.10);
+  --nav-border:  rgba(184,115,51,0.16);
 
   /* Vinho Apostólico — autoridade profética */
-  --wine:        #7B1F3A;
-  --wine-light:  #A02850;
-  --wine-dark:   #560F28;
-  --wine-bg:     rgba(123,31,58,0.15);
-  --wine-glow:   rgba(123,31,58,0.35);
-  --wine-border: rgba(123,31,58,0.4);
+  --wine:        #8E2A44;
+  --wine-light:  #B03A5C;
+  --wine-dark:   #6A1A32;
+  --wine-bg:     rgba(142,42,68,0.16);
+  --wine-glow:   rgba(142,42,68,0.35);
+  --wine-border: rgba(142,42,68,0.40);
 
   /* Verde Cura — vida e esperança */
-  --heal:        #2A7A4B;
-  --heal-light:  #38A363;
-  --heal-dark:   #1A5C36;
-  --heal-bg:     rgba(42,122,75,0.15);
-  --heal-glow:   rgba(42,122,75,0.3);
-  --heal-border: rgba(42,122,75,0.4);
+  --heal:        #2E8052;
+  --heal-light:  #3CA366;
+  --heal-dark:   #1F5E3C;
+  --heal-bg:     rgba(46,128,82,0.15);
+  --heal-glow:   rgba(46,128,82,0.30);
+  --heal-border: rgba(46,128,82,0.38);
 
-  /* Violeta — Homenagens */
+  /* Violeta — Homenagens (mantido) */
   --violet:        #8B5CF6;
   --violet-light:  #A78BFA;
   --violet-dark:   #6D28D9;
@@ -106,13 +106,13 @@
   --popover:             var(--bg-card);
   --popover-foreground:  var(--text);
   --primary:             var(--gold);
-  --primary-foreground:  #060A14;
+  --primary-foreground:  #1C1917;   /* charcoal sobre cobre — AA real em qualquer tamanho */
   --secondary:           var(--wine);
-  --secondary-foreground:#F5F2EB;
+  --secondary-foreground:#E6E1DC;
   --muted:               var(--bg-2);
   --muted-foreground:    var(--text-muted);
   --accent:              var(--heal);
-  --accent-foreground:   #F5F2EB;
+  --accent-foreground:   #E6E1DC;
   --destructive:         var(--danger);
   --input:               var(--bg-input);
   --ring:                var(--gold);
@@ -121,40 +121,41 @@
 
 /* ─── MODO CLARO ──────────────────────────────────────────────────────────── */
 .light {
-  --bg:          #FAF7EF;
-  --bg-2:        #F2ECDD;
-  --bg-card:     #FFFFFF;
-  --bg-input:    #FFFFFF;
-  --bg-sidebar:  #1C1409;
-  --border:      rgba(140,110,30,0.28);
+  --bg:          #FEFEF8;
+  --bg-2:        #F5F1E6;
+  --bg-card:     #FFFEFA;
+  --bg-input:    #FFFEFA;
+  --bg-sidebar:  #2A241C;
+  --border:      rgba(85,77,70,0.14);
 
-  --text:        #17100A;
-  --text-muted:  #453714;
-  --text-subtle: #6E5C30;
+  --text:        #554D46;
+  --text-muted:  #635A51;
+  --text-subtle: #7D7369;
 
-  --gold:        #8C6A10;
-  --gold-light:  #B08820;
-  --gold-dark:   #6A5010;
-  --gold-label:  #7A5C0E; /* labels/dates — solid dark gold, great contrast on white */
-  --gold-bg:     rgba(140,106,16,0.1);
-  --gold-glow:   rgba(140,106,16,0.18);
+  /* Cobre Metálico — reaproveita a família --gold* como "cobre" no tema claro */
+  --gold:        #B87333;
+  --gold-light:  #CD8E5C;
+  --gold-dark:   #A05A28;
+  --gold-label:  #8A5322; /* labels/datas pequenas em cobre — ~6.5:1, nunca usar o hero #B87333 em texto pequeno */
+  --gold-bg:     rgba(184,115,51,0.10);
+  --gold-glow:   rgba(184,115,51,0.20);
 
-  --nav-shadow:  0 8px 26px rgba(122,92,14,0.14), 0 0 0 1px rgba(140,106,16,0.05);
-  --nav-border:  rgba(140,106,16,0.22);
+  --nav-shadow:  0 8px 26px rgba(85,77,70,0.12), 0 0 0 1px rgba(184,115,51,0.06);
+  --nav-border:  rgba(184,115,51,0.18);
 
-  --wine:        #6B1030;
-  --wine-light:  #8C1840;
-  --wine-dark:   #4A0820;
-  --wine-bg:     rgba(107,16,48,0.1);
-  --wine-glow:   rgba(107,16,48,0.25);
-  --wine-border: rgba(107,16,48,0.3);
+  --wine:        #71152E;
+  --wine-light:  #921D3E;
+  --wine-dark:   #500D1E;
+  --wine-bg:     rgba(113,21,46,0.1);
+  --wine-glow:   rgba(113,21,46,0.25);
+  --wine-border: rgba(113,21,46,0.3);
 
-  --heal:        #1E6B3A;
-  --heal-light:  #288C4E;
-  --heal-dark:   #145228;
-  --heal-bg:     rgba(30,107,58,0.1);
-  --heal-glow:   rgba(30,107,58,0.25);
-  --heal-border: rgba(30,107,58,0.3);
+  --heal:        #35664A;
+  --heal-light:  #3F7A58;
+  --heal-dark:   #24503A;
+  --heal-bg:     rgba(53,102,74,0.1);
+  --heal-glow:   rgba(53,102,74,0.25);
+  --heal-border: rgba(53,102,74,0.3);
 
   /* Violeta — Homenagens */
   --violet:        #5B21B6;
@@ -175,13 +176,13 @@
   --popover:             var(--bg-card);
   --popover-foreground:  var(--text);
   --primary:             var(--gold);
-  --primary-foreground:  #F2EDE0;
+  --primary-foreground:  #FEFEF8;
   --secondary:           var(--wine);
-  --secondary-foreground:#F2EDE0;
+  --secondary-foreground:#FEFEF8;
   --muted:               var(--bg-2);
   --muted-foreground:    var(--text-muted);
   --accent:              var(--heal);
-  --accent-foreground:   #F2EDE0;
+  --accent-foreground:   #FEFEF8;
   --destructive:         var(--danger);
   --input:               var(--bg-input);
   --ring:                var(--gold);
@@ -206,21 +207,21 @@
   /* Aura de luz dourada descendo do topo — atmosfera contemplativa */
   :root body {
     background:
-      radial-gradient(ellipse 90% 55% at 50% -15%, rgba(201, 168, 76, 0.10), transparent 70%),
-      linear-gradient(150deg, #060A14 0%, #020408 100%);
+      radial-gradient(ellipse 90% 55% at 50% -15%, rgba(184,115,51,0.08), transparent 70%),
+      linear-gradient(150deg, #1C1917 0%, #141110 100%);
     background-attachment: fixed;
   }
   .light body {
     background:
-      radial-gradient(ellipse 90% 55% at 50% -15%, rgba(212, 175, 96, 0.16), transparent 70%),
-      linear-gradient(150deg, #FAF7EF 0%, #EFE7D4 100%);
+      radial-gradient(ellipse 90% 55% at 50% -15%, rgba(184,115,51,0.06), transparent 70%),
+      linear-gradient(150deg, #FEFEF8 0%, #F7F3E8 100%);
     background-attachment: fixed;
   }
 
   /* Respiração suave do botão Kairo (BottomNav) */
   @keyframes kairo-breathe {
-    0%, 100% { box-shadow: 0 6px 20px rgba(201, 168, 76, 0.4), 0 2px 8px rgba(0, 0, 0, 0.25); }
-    50%      { box-shadow: 0 6px 30px rgba(201, 168, 76, 0.65), 0 2px 8px rgba(0, 0, 0, 0.25); }
+    0%, 100% { box-shadow: 0 6px 20px rgba(184,115,51,0.4), 0 2px 8px rgba(0,0,0,0.25); }
+    50%      { box-shadow: 0 6px 30px rgba(184,115,51,0.65), 0 2px 8px rgba(0,0,0,0.25); }
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -314,7 +315,7 @@
     justify-content: center;
     gap: 0.5rem;
     background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
-    color: #060A14;
+    color: var(--primary-foreground);
     font-family: var(--font-cinzel);
     font-weight: 700;
     font-size: 0.8125rem;

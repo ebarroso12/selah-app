@@ -92,7 +92,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
   if (loading || !user) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#c9a227]"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#B87333]"></div>
       </div>
     );
   }
@@ -108,16 +108,16 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
           ← Voltar
         </Link>
         <div>
-          <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>
+          <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#B87333" }}>
             {user.full_name as string}
           </h1>
           <p className="text-xs mt-0.5" style={{ color: "var(--text-subtle)" }}>{user.email as string}</p>
         </div>
         <span className="ml-auto text-xs px-3 py-1 rounded-full font-semibold"
           style={{
-            background: `${STATUS_COLOR[user.status as string] ?? "#c9a227"}20`,
-            color: STATUS_COLOR[user.status as string] ?? "#c9a227",
-            border: `1px solid ${STATUS_COLOR[user.status as string] ?? "#c9a227"}40`,
+            background: `${STATUS_COLOR[user.status as string] ?? "#B87333"}20`,
+            color: STATUS_COLOR[user.status as string] ?? "#B87333",
+            border: `1px solid ${STATUS_COLOR[user.status as string] ?? "#B87333"}40`,
             fontFamily: "var(--font-cinzel)",
           }}>
           {STATUS_LABEL[user.status as string] ?? user.status as string}
@@ -127,7 +127,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Min. de Uso Total", value: totalSessionMin, color: "#fb923c" },
-          { label: "Devocionais Lidos", value: totalDevocionais, color: "#c9a227" },
+          { label: "Devocionais Lidos", value: totalDevocionais, color: "#B87333" },
           { label: "Versículos Favoritos", value: totalVerses, color: "#a78bfa" },
           { label: "Pedidos de Oração", value: prayerCount, color: "#60a5fa" },
           { label: "Testemunhos", value: testimonyCount, color: "#f472b6" },
@@ -184,7 +184,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
           Ações do Administrador
         </p>
         {actionMsg && (
-          <p className="text-sm mb-4 px-3 py-2 rounded" style={{ background: "rgba(201,162,39,0.1)", color: "#c9a227", border: "1px solid rgba(201,162,39,0.2)" }}>
+          <p className="text-sm mb-4 px-3 py-2 rounded" style={{ background: "rgba(184,115,51,0.1)", color: "#B87333", border: "1px solid rgba(184,115,51,0.2)" }}>
             {actionMsg}
           </p>
         )}
@@ -219,7 +219,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr style={{ borderBottom: "1px solid rgba(201,162,39,0.12)" }}>
+                <tr style={{ borderBottom: "1px solid rgba(184,115,51,0.12)" }}>
                   {["Data", "Devocionais", "Versículos Fav.", "Tempo de Uso"].map((h) => (
                     <th key={h} className="text-left px-3 py-2"
                       style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", fontSize: "0.65rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>
@@ -234,7 +234,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                     <td className="px-3 py-2" style={{ color: "var(--text-muted)", fontFamily: "var(--font-cinzel)", fontSize: "0.78rem" }}>
                       {new Date(m.date).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })}
                     </td>
-                    <td className="px-3 py-2" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)", fontSize: "0.85rem" }}>{m.devocionais_read ?? 0}</td>
+                    <td className="px-3 py-2" style={{ color: "#B87333", fontFamily: "var(--font-cinzel)", fontSize: "0.85rem" }}>{m.devocionais_read ?? 0}</td>
                     <td className="px-3 py-2" style={{ color: "#a78bfa", fontSize: "0.85rem" }}>{m.verses_favorited ?? 0}</td>
                     <td className="px-3 py-2" style={{ color: "var(--text-muted)", fontSize: "0.8rem" }}>{fmtMin(m.session_duration_seconds ?? 0)}</td>
                   </tr>

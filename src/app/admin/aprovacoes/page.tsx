@@ -80,7 +80,7 @@ export default function AprovacoesPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Aprovações</h1>
+          <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#B87333" }}>Aprovações</h1>
           <p className="text-xs mt-1" style={{ color: "var(--text-subtle)" }}>
             {loading ? "Carregando..." : `${pending.length} usuário${pending.length !== 1 ? "s" : ""} aguardando aprovação`}
           </p>

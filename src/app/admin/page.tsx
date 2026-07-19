@@ -120,7 +120,7 @@ export default function AdminDashboard() {
           <p style={{ color: "var(--text-subtle)", fontSize: "0.8rem", margin: "4px 0 0" }}>Visão geral do SELAH</p>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
-          <button onClick={loadStats} style={{ background: "rgba(201,162,39,0.08)", border: "1px solid rgba(201,162,39,0.2)", borderRadius: 8, color: gold, padding: "0.4rem 0.8rem", fontSize: "0.78rem", cursor: "pointer" }}>
+          <button onClick={loadStats} style={{ background: "rgba(184,115,51,0.08)", border: "1px solid rgba(184,115,51,0.2)", borderRadius: 8, color: gold, padding: "0.4rem 0.8rem", fontSize: "0.78rem", cursor: "pointer" }}>
             ↻ Atualizar
           </button>
           <a href={OPENCLAW_URL} target="_blank" rel="noopener noreferrer"
@@ -160,7 +160,7 @@ export default function AdminDashboard() {
 
           {/* Tabela de usuários com tempo de uso */}
           <div style={{ ...card, marginBottom: "1.5rem", padding: 0, overflow: "hidden" }}>
-            <div style={{ padding: "1rem", borderBottom: "1px solid rgba(201,162,39,0.12)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+            <div style={{ padding: "1rem", borderBottom: "1px solid rgba(184,115,51,0.12)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
               <div>
                 <h2 style={{ color: gold, fontSize: "0.85rem", letterSpacing: "0.1em", textTransform: "uppercase", margin: 0, fontFamily: "var(--font-cinzel,serif)" }}>
                   Usuários Cadastrados ({stats?.totalUsers ?? 0})
@@ -181,7 +181,7 @@ export default function AdminDashboard() {
             <div style={{ overflowX: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.8rem" }}>
                 <thead>
-                  <tr style={{ borderBottom: "1px solid rgba(201,162,39,0.1)" }}>
+                  <tr style={{ borderBottom: "1px solid rgba(184,115,51,0.1)" }}>
                     {["Nome", "Email", "Igreja / Cidade", "Cadastro", "Último Acesso", "Tempo de Uso", "Status"].map((h) => (
                       <th key={h} style={{ color: "var(--gold-label)", fontWeight: 500, padding: "0.6rem 0.75rem", textAlign: "left", whiteSpace: "nowrap", fontSize: "0.68rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>{h}</th>
                     ))}
@@ -248,12 +248,12 @@ export default function AdminDashboard() {
             <p style={{ color: "var(--text-subtle)", fontSize: "0.73rem", margin: "4px 0 0" }}>Análise inteligente da plataforma</p>
           </div>
           <button onClick={handleIaReport} disabled={iaLoading}
-            style={{ background: iaLoading ? "rgba(201,162,39,0.05)" : "rgba(201,162,39,0.12)", border: `1px solid rgba(201,162,39,${iaLoading ? "0.1" : "0.35"})`, borderRadius: 8, color: iaLoading ? "rgba(201,162,39,0.4)" : gold, padding: "0.5rem 1rem", fontSize: "0.82rem", cursor: iaLoading ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 6 }}>
+            style={{ background: iaLoading ? "rgba(184,115,51,0.05)" : "rgba(184,115,51,0.12)", border: `1px solid rgba(184,115,51,${iaLoading ? "0.1" : "0.35"})`, borderRadius: 8, color: iaLoading ? "rgba(184,115,51,0.4)" : gold, padding: "0.5rem 1rem", fontSize: "0.82rem", cursor: iaLoading ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 6 }}>
             {iaLoading ? (<><span style={{ display: "inline-block", width: 14, height: 14, border: `2px solid ${gold}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />Gerando...</>) : <>✦ Gerar Relatório com IA</>}
           </button>
         </div>
         {iaError && <div style={{ marginTop: "0.75rem", background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 8, padding: "0.75rem", color: "#ef4444", fontSize: "0.8rem" }}>{iaError}</div>}
-        {iaReport && <div style={{ marginTop: "0.75rem", background: "rgba(201,162,39,0.04)", border: "1px solid rgba(201,162,39,0.12)", borderRadius: 8, padding: "1rem", color: "var(--text)", fontSize: "0.85rem", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{iaReport}</div>}
+        {iaReport && <div style={{ marginTop: "0.75rem", background: "rgba(184,115,51,0.04)", border: "1px solid rgba(184,115,51,0.12)", borderRadius: 8, padding: "1rem", color: "var(--text)", fontSize: "0.85rem", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{iaReport}</div>}
       </div>
 
       {/* Ações Rápidas */}

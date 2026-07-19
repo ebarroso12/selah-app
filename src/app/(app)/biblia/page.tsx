@@ -85,7 +85,7 @@ export default function BibliaPage() {
       {/* Barra de controles */}
       <div
         className="sticky top-0 z-10 px-4 py-3 flex flex-wrap items-center gap-2 border-b"
-        style={{ background: "var(--bg-primary)", borderColor: "rgba(201,162,39,0.15)" }}
+        style={{ background: "var(--bg-primary)", borderColor: "rgba(184,115,51,0.15)" }}
       >
         {/* Livro */}
         <select

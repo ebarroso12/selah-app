@@ -18,7 +18,7 @@ const STATUS_LABELS: Record<string, string> = {
   open: "Aberto", answered: "Respondido", closed: "Fechado",
 };
 const STATUS_COLORS: Record<string, string> = {
-  open: "#34d399", answered: "#c9a227", closed: "var(--text-subtle)",
+  open: "#34d399", answered: "#B87333", closed: "var(--text-subtle)",
 };
 
 export default function AdminOracoesPage() {
@@ -68,7 +68,7 @@ export default function AdminOracoesPage() {
   return (
     <div className="p-4 md:p-6 space-y-6">
       <div>
-        <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Moderação de Orações</h1>
+        <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#B87333" }}>Moderação de Orações</h1>
         <p className="text-xs mt-1" style={{ color: "var(--text-subtle)" }}>
           Controle total sobre os pedidos de oração da comunidade
         </p>
@@ -85,9 +85,9 @@ export default function AdminOracoesPage() {
           <button key={f.key} onClick={() => setFilter(f.key as typeof filter)}
             className="px-3 py-1.5 rounded-lg text-xs font-semibold tracking-widest uppercase"
             style={{
-              background: filter === f.key ? "rgba(201,162,39,0.15)" : "var(--bg-2)",
-              border: `1px solid ${filter === f.key ? "rgba(201,162,39,0.4)" : "var(--bg-2)"}`,
-              color: filter === f.key ? "#c9a227" : "var(--text-subtle)",
+              background: filter === f.key ? "rgba(184,115,51,0.15)" : "var(--bg-2)",
+              border: `1px solid ${filter === f.key ? "rgba(184,115,51,0.4)" : "var(--bg-2)"}`,
+              color: filter === f.key ? "#B87333" : "var(--text-subtle)",
             }}>
             {f.label}
           </button>
@@ -158,7 +158,7 @@ export default function AdminOracoesPage() {
                   )}
                   {item.status !== "answered" && (
                     <button onClick={() => updateStatus(item.id, "answered")} className="px-3 py-1.5 rounded-lg text-xs"
-                      style={{ background: "rgba(201,162,39,0.1)", border: "1px solid rgba(201,162,39,0.2)", color: "#c9a227" }}>
+                      style={{ background: "rgba(184,115,51,0.1)", border: "1px solid rgba(184,115,51,0.2)", color: "#B87333" }}>
                       Marcar Respondido
                     </button>
                   )}

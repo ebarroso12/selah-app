@@ -47,11 +47,11 @@ export default async function EventosPage() {
             { day: "Domingo", time: "18h00", type: "Culto da Noite" },
           ].map((c) => (
             <div key={c.time} className="p-4 rounded-lg text-center"
-              style={{ background: "rgba(201,162,39,0.05)", border: "1px solid rgba(201,162,39,0.12)" }}>
+              style={{ background: "rgba(184,115,51,0.05)", border: "1px solid rgba(184,115,51,0.12)" }}>
               <p className="text-xs mb-1" style={{ color: "var(--text-subtle)", fontFamily: "var(--font-cinzel)" }}>
                 {c.day}
               </p>
-              <p className="text-2xl font-bold" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)" }}>
+              <p className="text-2xl font-bold" style={{ color: "var(--gold)", fontFamily: "var(--font-cinzel)" }}>
                 {c.time}
               </p>
               <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
@@ -66,7 +66,7 @@ export default async function EventosPage() {
       </div>
 
       {/* RPM Legendários */}
-      <div className="card p-6" style={{ borderColor: "rgba(201,162,39,0.25)" }}>
+      <div className="card p-6" style={{ borderColor: "rgba(184,115,51,0.25)" }}>
         <p className="text-xs tracking-widest uppercase mb-3"
           style={{ color: "var(--gold-label)", fontFamily: "var(--font-cinzel)" }}>
           Ministério Legendários Brasil

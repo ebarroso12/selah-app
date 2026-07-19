@@ -47,7 +47,7 @@ const emptyDev = {
 };
 
 const inp = "w-full px-3 py-2 rounded-lg text-sm outline-none";
-const inpStyle = { background: "var(--bg-2)", border: "1px solid rgba(201,162,39,0.2)", color: "var(--text)" };
+const inpStyle = { background: "var(--bg-2)", border: "1px solid rgba(184,115,51,0.2)", color: "var(--text)" };
 const labelStyle = { color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em", textTransform: "uppercase" as const, fontSize: "0.7rem" };
 
 export default function AdminConteudoPage() {
@@ -152,14 +152,14 @@ export default function AdminConteudoPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Conteúdo</h1>
+          <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#B87333" }}>Conteúdo</h1>
           <p className="text-xs mt-1" style={{ color: "var(--text-subtle)" }}>
             Devocionais · Testemunhos da Comunidade
           </p>
         </div>
         {tab === "devotionals" && (
           <button onClick={openNew} className="px-4 py-2 rounded-lg text-xs font-semibold tracking-widest uppercase"
-            style={{ background: "rgba(201,162,39,0.15)", border: "1px solid rgba(201,162,39,0.4)", color: "#c9a227" }}>
+            style={{ background: "rgba(184,115,51,0.15)", border: "1px solid rgba(184,115,51,0.4)", color: "#B87333" }}>
             + Novo Devocional
           </button>
         )}
@@ -174,9 +174,9 @@ export default function AdminConteudoPage() {
           <button key={t.key} onClick={() => setTab(t.key as "devotionals" | "testimonies")}
             className="px-4 py-2 rounded-lg text-xs font-semibold tracking-widest uppercase"
             style={{
-              background: tab === t.key ? "rgba(201,162,39,0.15)" : "var(--bg-2)",
-              border: `1px solid ${tab === t.key ? "rgba(201,162,39,0.4)" : "var(--bg-2)"}`,
-              color: tab === t.key ? "#c9a227" : "var(--text-subtle)",
+              background: tab === t.key ? "rgba(184,115,51,0.15)" : "var(--bg-2)",
+              border: `1px solid ${tab === t.key ? "rgba(184,115,51,0.4)" : "var(--bg-2)"}`,
+              color: tab === t.key ? "#B87333" : "var(--text-subtle)",
             }}>
             {t.label}
           </button>
@@ -191,7 +191,7 @@ export default function AdminConteudoPage() {
           {/* Formulário */}
           {showForm && (
             <div className="card p-5 space-y-4">
-              <p className="text-sm font-semibold" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)" }}>
+              <p className="text-sm font-semibold" style={{ color: "#B87333", fontFamily: "var(--font-cinzel)" }}>
                 {editing ? "Editar Devocional" : "Novo Devocional"}
               </p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -249,7 +249,7 @@ export default function AdminConteudoPage() {
               {msg && <p className="text-xs" style={{ color: msg.startsWith("✓") ? "#34d399" : "#ef4444" }}>{msg}</p>}
               <div className="flex gap-3">
                 <button onClick={saveDev} disabled={saving} className="px-5 py-2 rounded-lg text-xs font-semibold tracking-widest uppercase"
-                  style={{ background: "rgba(201,162,39,0.2)", border: "1px solid rgba(201,162,39,0.5)", color: "#c9a227", opacity: saving ? 0.6 : 1 }}>
+                  style={{ background: "rgba(184,115,51,0.2)", border: "1px solid rgba(184,115,51,0.5)", color: "#B87333", opacity: saving ? 0.6 : 1 }}>
                   {saving ? "Salvando..." : editing ? "Salvar Alterações" : "Publicar"}
                 </button>
                 <button onClick={() => setShowForm(false)} className="px-5 py-2 rounded-lg text-xs"
@@ -264,7 +264,7 @@ export default function AdminConteudoPage() {
             <div className="card p-10 text-center">
               <p style={{ color: "var(--text-subtle)" }}>Nenhum devocional publicado ainda.</p>
               <button onClick={openNew} className="mt-4 px-4 py-2 rounded-lg text-xs"
-                style={{ background: "rgba(201,162,39,0.1)", border: "1px solid rgba(201,162,39,0.3)", color: "#c9a227" }}>
+                style={{ background: "rgba(184,115,51,0.1)", border: "1px solid rgba(184,115,51,0.3)", color: "#B87333" }}>
                 Criar o primeiro devocional
               </button>
             </div>
@@ -275,7 +275,7 @@ export default function AdminConteudoPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
                       <span className="text-xs px-2 py-0.5 rounded-full"
-                        style={{ background: "rgba(201,162,39,0.1)", color: "#c9a227", border: "1px solid rgba(201,162,39,0.2)", fontFamily: "var(--font-cinzel)", fontSize: "0.62rem" }}>
+                        style={{ background: "rgba(184,115,51,0.1)", color: "#B87333", border: "1px solid rgba(184,115,51,0.2)", fontFamily: "var(--font-cinzel)", fontSize: "0.62rem" }}>
                         {new Date(item.date + "T12:00:00").toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })}
                       </span>
                       {item.generated_by_ai && (
@@ -332,7 +332,7 @@ export default function AdminConteudoPage() {
                             {t.title}
                           </p>
                           <span className="text-xs px-2 py-0.5 rounded-full"
-                            style={{ background: "rgba(201,162,39,0.1)", color: "#c9a227", border: "1px solid rgba(201,162,39,0.2)", fontSize: "0.62rem" }}>
+                            style={{ background: "rgba(184,115,51,0.1)", color: "#B87333", border: "1px solid rgba(184,115,51,0.2)", fontSize: "0.62rem" }}>
                             {TYPE_LABELS[t.type] ?? t.type}
                           </span>
                         </div>

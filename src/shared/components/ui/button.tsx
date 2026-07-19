@@ -26,19 +26,19 @@ const buttonVariants = cva(
         // ── Tokens SELAH ─────────────────────────────────────────────────────
         /** Dourado — ações primárias (oração, devocional) */
         gold:
-          "bg-[var(--gold)] text-[#060A14] font-semibold shadow hover:bg-[var(--gold-light)] active:bg-[var(--gold-dark)]",
+          "bg-[var(--gold)] text-[var(--primary-foreground)] font-semibold shadow hover:bg-[var(--gold-light)] active:bg-[var(--gold-dark)]",
         /** Contorno dourado — ações secundárias com destaque */
         "gold-outline":
           "border border-[var(--gold)] bg-transparent text-[var(--gold)] hover:bg-[var(--gold-bg)]",
         /** Vinho — ações apostólicas / administrativas */
         wine:
-          "bg-[var(--wine)] text-[#F5F2EB] font-semibold shadow hover:bg-[var(--wine-light)] active:bg-[var(--wine-dark)]",
+          "bg-[var(--wine)] text-[var(--secondary-foreground)] font-semibold shadow hover:bg-[var(--wine-light)] active:bg-[var(--wine-dark)]",
         /** Contorno vinho */
         "wine-outline":
           "border border-[var(--wine)] bg-transparent text-[var(--wine)] hover:bg-[var(--wine-bg)]",
         /** Verde cura — ações de confirmação / saúde */
         heal:
-          "bg-[var(--heal)] text-[#F5F2EB] font-semibold shadow hover:bg-[var(--heal-light)] active:bg-[var(--heal-dark)]",
+          "bg-[var(--heal)] text-[var(--accent-foreground)] font-semibold shadow hover:bg-[var(--heal-light)] active:bg-[var(--heal-dark)]",
         /** Contorno cura */
         "heal-outline":
           "border border-[var(--heal)] bg-transparent text-[var(--heal)] hover:bg-[var(--heal-bg)]",

@@ -109,7 +109,7 @@ export default function ProfileForm({ profile }: Props) {
     cursor: "pointer",
     border: "none",
     transition: "all 0.15s ease",
-    background: tab === t ? "#c9a227" : "transparent",
+    background: tab === t ? "var(--gold)" : "transparent",
     color: tab === t ? "#080d1a" : "var(--text-subtle)",
   });
 
@@ -117,7 +117,7 @@ export default function ProfileForm({ profile }: Props) {
     <div className="card p-6">
       {/* Tab bar */}
       <div className="flex gap-1 mb-6 p-1 rounded-lg"
-        style={{ background: "var(--bg-2)", border: "1px solid rgba(201,162,39,0.12)", width: "fit-content" }}>
+        style={{ background: "var(--bg-2)", border: "1px solid rgba(184,115,51,0.12)", width: "fit-content" }}>
         <button style={tabStyle("dados")} onClick={() => setTab("dados")}>Dados Pessoais</button>
         <button style={tabStyle("senha")} onClick={() => setTab("senha")}>Alterar Senha</button>
       </div>
@@ -167,7 +167,7 @@ export default function ProfileForm({ profile }: Props) {
             )}
           </div>
 
-          <div className="pt-2 border-t" style={{ borderColor: "rgba(201,162,39,0.1)" }}>
+          <div className="pt-2 border-t" style={{ borderColor: "rgba(184,115,51,0.1)" }}>
             <p className="text-xs" style={{ color: "var(--text-subtle)", fontFamily: "var(--font-cinzel)" }}>
               Email: {profile.email} — para alterar o email entre em contato com o administrador.
             </p>
@@ -204,7 +204,7 @@ export default function ProfileForm({ profile }: Props) {
             )}
           </div>
 
-          <div className="p-4 rounded-lg" style={{ background: "rgba(201,162,39,0.04)", border: "1px solid rgba(201,162,39,0.1)" }}>
+          <div className="p-4 rounded-lg" style={{ background: "rgba(184,115,51,0.04)", border: "1px solid rgba(184,115,51,0.1)" }}>
             <p className="text-xs leading-relaxed" style={{ color: "var(--text-subtle)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.04em" }}>
               Esqueceu a senha atual? Saia da conta e use &quot;Esqueceu?&quot; na tela de login para recuperar via email.
             </p>

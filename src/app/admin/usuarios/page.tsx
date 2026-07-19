@@ -141,7 +141,7 @@ export default function AdminUsuariosPage() {
   };
 
   const inp = "w-full px-3 py-2 rounded-lg text-sm outline-none";
-  const inpStyle = { background: "var(--bg-2)", border: "1px solid rgba(201,162,39,0.2)", color: "var(--text)" };
+  const inpStyle = { background: "var(--bg-2)", border: "1px solid rgba(184,115,51,0.2)", color: "var(--text)" };
   const labelStyle = { color: "var(--gold-label)", fontFamily: "var(--font-cinzel)", letterSpacing: "0.06em", textTransform: "uppercase" as const, fontSize: "0.7rem" };
 
   return (
@@ -149,14 +149,14 @@ export default function AdminUsuariosPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#c9a227" }}>Usuários</h1>
+          <h1 className="text-xl" style={{ fontFamily: "var(--font-cinzel)", color: "#B87333" }}>Usuários</h1>
           <p className="text-xs mt-1" style={{ color: "var(--text-subtle)" }}>
             {counts.todos} cadastrados · {counts.approved} ativos · {counts.banned} banidos
           </p>
         </div>
         <button onClick={() => { setShowInvite(v => !v); setInviteUrl(""); setInviteMsg(""); }}
           className="px-4 py-2 rounded-lg text-xs font-semibold tracking-widest uppercase"
-          style={{ background: "rgba(201,162,39,0.15)", border: "1px solid rgba(201,162,39,0.4)", color: "#c9a227" }}>
+          style={{ background: "rgba(184,115,51,0.15)", border: "1px solid rgba(184,115,51,0.4)", color: "#B87333" }}>
           + Convidar para o app
         </button>
       </div>
@@ -164,7 +164,7 @@ export default function AdminUsuariosPage() {
       {/* Gerador de link de convite */}
       {showInvite && (
         <div className="card p-4 space-y-3">
-          <p className="text-sm font-semibold" style={{ color: "#c9a227", fontFamily: "var(--font-cinzel)" }}>
+          <p className="text-sm font-semibold" style={{ color: "#B87333", fontFamily: "var(--font-cinzel)" }}>
             Convidar para o app
           </p>
           <p className="text-xs" style={{ color: "var(--text-subtle)" }}>
@@ -174,7 +174,7 @@ export default function AdminUsuariosPage() {
           {!inviteUrl ? (
             <button onClick={generateInvite} disabled={inviting}
               className="px-4 py-2 rounded-lg text-xs font-semibold"
-              style={{ background: "rgba(201,162,39,0.2)", border: "1px solid rgba(201,162,39,0.5)", color: "#c9a227", opacity: inviting ? 0.6 : 1 }}>
+              style={{ background: "rgba(184,115,51,0.2)", border: "1px solid rgba(184,115,51,0.5)", color: "#B87333", opacity: inviting ? 0.6 : 1 }}>
               {inviting ? "Gerando..." : "Gerar link de convite"}
             </button>
           ) : (
@@ -184,7 +184,7 @@ export default function AdminUsuariosPage() {
                 <input readOnly className={inp} style={inpStyle} value={inviteUrl} onFocus={(e) => e.currentTarget.select()} />
                 <button onClick={copyInvite}
                   className="shrink-0 px-3 py-2 rounded-lg text-xs font-semibold"
-                  style={{ background: copied ? "rgba(52,211,153,0.15)" : "rgba(201,162,39,0.15)", border: `1px solid ${copied ? "rgba(52,211,153,0.4)" : "rgba(201,162,39,0.4)"}`, color: copied ? "#34d399" : "#c9a227" }}>
+                  style={{ background: copied ? "rgba(52,211,153,0.15)" : "rgba(184,115,51,0.15)", border: `1px solid ${copied ? "rgba(52,211,153,0.4)" : "rgba(184,115,51,0.4)"}`, color: copied ? "#34d399" : "#B87333" }}>
                   {copied ? "Copiado!" : "Copiar"}
                 </button>
               </div>
@@ -215,9 +215,9 @@ export default function AdminUsuariosPage() {
           <button key={f.key} onClick={() => setFilter(f.key)}
             className="px-3 py-1.5 rounded-lg text-xs font-semibold tracking-widest uppercase"
             style={{
-              background: filter === f.key ? "rgba(201,162,39,0.15)" : "var(--bg-2)",
-              border: `1px solid ${filter === f.key ? "rgba(201,162,39,0.4)" : "var(--bg-2)"}`,
-              color: filter === f.key ? "#c9a227" : "var(--text-subtle)",
+              background: filter === f.key ? "rgba(184,115,51,0.15)" : "var(--bg-2)",
+              border: `1px solid ${filter === f.key ? "rgba(184,115,51,0.4)" : "var(--bg-2)"}`,
+              color: filter === f.key ? "#B87333" : "var(--text-subtle)",
             }}>
             {f.label}
           </button>

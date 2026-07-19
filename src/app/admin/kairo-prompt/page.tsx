@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 
 import { useState, useEffect, useCallback } from "react";
 
-const gold = "#c9a227";
+const gold = "#B87333";
 
 interface PromptData {
   prompt: string;
@@ -98,7 +98,7 @@ export default function KairoPromptPage() {
         </div>
         {data?.is_custom && (
           <span className="text-xs px-3 py-1 rounded-full"
-            style={{ background: "rgba(201,162,39,0.12)", color: gold, border: "1px solid rgba(201,162,39,0.3)" }}>
+            style={{ background: "rgba(184,115,51,0.12)", color: gold, border: "1px solid rgba(184,115,51,0.3)" }}>
             Prompt personalizado ativo
           </span>
         )}
@@ -136,7 +136,7 @@ export default function KairoPromptPage() {
           className="w-full rounded-lg p-4 text-sm font-mono resize-y outline-none"
           style={{
             background: "var(--bg-2)",
-            border: "1px solid rgba(201,162,39,0.2)",
+            border: "1px solid rgba(184,115,51,0.2)",
             color: "var(--text)",
             lineHeight: 1.7,
           }}
@@ -147,8 +147,8 @@ export default function KairoPromptPage() {
           <button onClick={save} disabled={saving}
             className="px-5 py-2 rounded-lg text-sm font-semibold"
             style={{
-              background: "rgba(201,162,39,0.18)",
-              border: "1px solid rgba(201,162,39,0.45)",
+              background: "rgba(184,115,51,0.18)",
+              border: "1px solid rgba(184,115,51,0.45)",
               color: gold,
               opacity: saving ? 0.6 : 1,
               cursor: saving ? "not-allowed" : "pointer",
