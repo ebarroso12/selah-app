@@ -156,6 +156,16 @@ const specialItems: NavItem[] = [
     ),
   },
   {
+    href: "/parceiros",
+    label: "Parceiros",
+    accent: "gold",
+    icon: (
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.87.381-5.783.58-8.741.58s-5.87-.2-8.741-.58C.787 20.436 0 19.494 0 18.4v-4.25m20.25 0a2.25 2.25 0 00-2.25-2.25H4.5a2.25 2.25 0 00-2.25 2.25m20.25 0V9.849c0-1.03-.712-1.92-1.72-2.147a48.868 48.868 0 00-3.02-.5V6.75a2.25 2.25 0 00-2.25-2.25h-3a2.25 2.25 0 00-2.25 2.25v.352a48.877 48.877 0 00-3.02.5c-1.008.228-1.72 1.118-1.72 2.147V14.15" />
+      </svg>
+    ),
+  },
+  {
     href: "/doacao",
     label: "Apoiar SELAH",
     accent: "heal",

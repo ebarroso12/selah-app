@@ -5,6 +5,28 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
 ---
 
+## [1.9] — 2026-07-19
+
+### Página de Parceiros do Selah
+
+#### Nova seção "Parceiros"
+- Nova página `src/app/(app)/parceiros/page.tsx` que lista os parceiros do
+  projeto: logo clicável (link para o site oficial do parceiro), apresentação
+  institucional, áreas de atuação e canais de contato.
+- Fonte de dados em `src/features/parceiros/data/partners.ts` — todo o conteúdo
+  institucional é real, extraído do site oficial de cada parceiro (sem invenção).
+
+#### Primeiro parceiro: Oliveira & Aguilar Advocacia
+- Escritório de advocacia liderado pela Dra. Aline de Oliveira Pinto e Aguilar,
+  especializado em Direito Previdenciário (Franca-SP e Ribeirão Preto-SP).
+- Logo em `public/parceiros/oliveira-aguilar.png`.
+
+#### Navegação
+- Novo item "Parceiros" na `Sidebar.tsx` (desktop) e na grade do
+  `MenuModal.tsx` (menu mobile).
+
+---
+
 ## [1.8] — 2026-07-19
 
 ### Rebrand cobre (lote 3): ícones PWA, navegação, instalação e emblema
