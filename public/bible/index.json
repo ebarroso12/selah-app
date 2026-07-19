@@ -1,0 +1,331 @@
+[
+  {
+    "id": 1,
+    "name": "Gênesis",
+    "key": "GÊNESIS",
+    "testament": "AT",
+    "chapters": 50
+  },
+  {
+    "id": 2,
+    "name": "Êxodo",
+    "key": "ÊXODO",
+    "testament": "AT",
+    "chapters": 40
+  },
+  {
+    "id": 3,
+    "name": "Levítico",
+    "key": "LEVÍTICO",
+    "testament": "AT",
+    "chapters": 27
+  },
+  {
+    "id": 4,
+    "name": "Números",
+    "key": "NÚMEROS",
+    "testament": "AT",
+    "chapters": 36
+  },
+  {
+    "id": 5,
+    "name": "Deuteronômio",
+    "key": "DEUTERONÔMIO",
+    "testament": "AT",
+    "chapters": 34
+  },
+  {
+    "id": 6,
+    "name": "Josué",
+    "key": "JOSUÉ",
+    "testament": "AT",
+    "chapters": 24
+  },
+  {
+    "id": 7,
+    "name": "Juízes",
+    "key": "JUÍZES",
+    "testament": "AT",
+    "chapters": 21
+  },
+  {
+    "id": 8,
+    "name": "Rute",
+    "key": "RUTE",
+    "testament": "AT",
+    "chapters": 4
+  },
+  {
+    "id": 15,
+    "name": "Esdras",
+    "key": "ESDRAS",
+    "testament": "AT",
+    "chapters": 10
+  },
+  {
+    "id": 16,
+    "name": "Neemias",
+    "key": "NEEMIAS",
+    "testament": "AT",
+    "chapters": 13
+  },
+  {
+    "id": 17,
+    "name": "Ester",
+    "key": "ESTER",
+    "testament": "AT",
+    "chapters": 10
+  },
+  {
+    "id": 18,
+    "name": "Jó",
+    "key": "JÓ",
+    "testament": "AT",
+    "chapters": 42
+  },
+  {
+    "id": 19,
+    "name": "Salmos",
+    "key": "SALMOS",
+    "testament": "AT",
+    "chapters": 150
+  },
+  {
+    "id": 20,
+    "name": "Provérbios",
+    "key": "PROVÉRBIOS",
+    "testament": "AT",
+    "chapters": 31
+  },
+  {
+    "id": 21,
+    "name": "Eclesiastes",
+    "key": "ECLESIASTES",
+    "testament": "AT",
+    "chapters": 12
+  },
+  {
+    "id": 23,
+    "name": "Isaías",
+    "key": "ISAÍAS",
+    "testament": "AT",
+    "chapters": 66
+  },
+  {
+    "id": 24,
+    "name": "Jeremias",
+    "key": "JEREMIAS",
+    "testament": "AT",
+    "chapters": 52
+  },
+  {
+    "id": 26,
+    "name": "Ezequiel",
+    "key": "EZEQUIEL",
+    "testament": "AT",
+    "chapters": 48
+  },
+  {
+    "id": 27,
+    "name": "Daniel",
+    "key": "DANIEL",
+    "testament": "AT",
+    "chapters": 12
+  },
+  {
+    "id": 28,
+    "name": "Oséias",
+    "key": "OSÉIAS",
+    "testament": "AT",
+    "chapters": 14
+  },
+  {
+    "id": 29,
+    "name": "Joel",
+    "key": "JOEL",
+    "testament": "AT",
+    "chapters": 3
+  },
+  {
+    "id": 30,
+    "name": "Amós",
+    "key": "AMÓS",
+    "testament": "AT",
+    "chapters": 8
+  },
+  {
+    "id": 31,
+    "name": "Obadias",
+    "key": "OBADIAS",
+    "testament": "AT",
+    "chapters": 1
+  },
+  {
+    "id": 32,
+    "name": "Jonas",
+    "key": "JONAS",
+    "testament": "AT",
+    "chapters": 4
+  },
+  {
+    "id": 33,
+    "name": "Miquéias",
+    "key": "MIQUÉIAS",
+    "testament": "AT",
+    "chapters": 7
+  },
+  {
+    "id": 34,
+    "name": "Naum",
+    "key": "NAUM",
+    "testament": "AT",
+    "chapters": 3
+  },
+  {
+    "id": 35,
+    "name": "Habacuque",
+    "key": "HABACUQUE",
+    "testament": "AT",
+    "chapters": 3
+  },
+  {
+    "id": 36,
+    "name": "Sofonias",
+    "key": "SOFONIAS",
+    "testament": "AT",
+    "chapters": 3
+  },
+  {
+    "id": 37,
+    "name": "Ageu",
+    "key": "AGEU",
+    "testament": "AT",
+    "chapters": 2
+  },
+  {
+    "id": 38,
+    "name": "Zacarias",
+    "key": "ZACARIAS",
+    "testament": "AT",
+    "chapters": 14
+  },
+  {
+    "id": 39,
+    "name": "Malaquias",
+    "key": "MALAQUIAS",
+    "testament": "AT",
+    "chapters": 4
+  },
+  {
+    "id": 40,
+    "name": "Mateus",
+    "key": "MATEUS",
+    "testament": "NT",
+    "chapters": 28
+  },
+  {
+    "id": 41,
+    "name": "Marcos",
+    "key": "MARCOS",
+    "testament": "NT",
+    "chapters": 16
+  },
+  {
+    "id": 42,
+    "name": "Lucas",
+    "key": "LUCAS",
+    "testament": "NT",
+    "chapters": 24
+  },
+  {
+    "id": 43,
+    "name": "João",
+    "key": "JOÃO",
+    "testament": "NT",
+    "chapters": 21
+  },
+  {
+    "id": 44,
+    "name": "Atos",
+    "key": "ATOS",
+    "testament": "NT",
+    "chapters": 28
+  },
+  {
+    "id": 45,
+    "name": "Romanos",
+    "key": "ROMANOS",
+    "testament": "NT",
+    "chapters": 16
+  },
+  {
+    "id": 48,
+    "name": "Gálatas",
+    "key": "GÁLATAS",
+    "testament": "NT",
+    "chapters": 6
+  },
+  {
+    "id": 49,
+    "name": "Efésios",
+    "key": "EFÉSIOS",
+    "testament": "NT",
+    "chapters": 6
+  },
+  {
+    "id": 50,
+    "name": "Filipenses",
+    "key": "FILIPENSES",
+    "testament": "NT",
+    "chapters": 4
+  },
+  {
+    "id": 51,
+    "name": "Colossenses",
+    "key": "COLOSSENSES",
+    "testament": "NT",
+    "chapters": 4
+  },
+  {
+    "id": 56,
+    "name": "Tito",
+    "key": "TITO",
+    "testament": "NT",
+    "chapters": 3
+  },
+  {
+    "id": 57,
+    "name": "Filemom",
+    "key": "FILEMOM",
+    "testament": "NT",
+    "chapters": 1
+  },
+  {
+    "id": 58,
+    "name": "Hebreus",
+    "key": "HEBREUS",
+    "testament": "NT",
+    "chapters": 13
+  },
+  {
+    "id": 59,
+    "name": "Tiago",
+    "key": "TIAGO",
+    "testament": "NT",
+    "chapters": 5
+  },
+  {
+    "id": 65,
+    "name": "Judas",
+    "key": "JUDAS",
+    "testament": "NT",
+    "chapters": 1
+  },
+  {
+    "id": 66,
+    "name": "Apocalipse",
+    "key": "APOCALIPSE",
+    "testament": "NT",
+    "chapters": 22
+  }
+]
