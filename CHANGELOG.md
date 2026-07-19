@@ -5,6 +5,32 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
 ---
 
+## [1.5] — 2026-07-19
+
+### Correção crítica: leitura e busca da Bíblia estavam bloqueadas
+
+Auditoria profunda encontrou que a tela Bíblia (Leitura e Busca) retornava
+sempre 0 versículos em produção desde a recriação do banco, apesar dos
+124.417 versículos estarem corretamente no banco.
+
+**Causa raiz:** `bible_verses` usa um client Supabase sem sessão
+(`createUniversalClient`, anon key, sem JWT de usuário) por design — mas a
+policy de RLS criada exigia `is_approved()`/`is_admin()`, que dependem de
+`auth.uid()` (sempre `NULL` nesse client). Resultado: toda leitura era
+bloqueada silenciosamente pelo RLS, sem erro visível na tela.
+
+**Correção:** `bible_verses` agora tem leitura pública (`for select using
+(true)`) — é conteúdo bíblico, sem necessidade de aprovação para ler.
+Escrita continua restrita a admin. Migration `005_fix_bible_verses_public_read.sql`.
+
+Confirmado corrigido em produção: leitura de capítulos e busca full-text
+(RPC `search_bible_verses`) voltaram a funcionar normalmente.
+
+### Outras correções da auditoria
+- Removida variável não utilizada (`adminActive`) em `BottomNav.tsx`
+
+---
+
 ## [1.4] — 2026-07-19
 
 ### Lojinha editável pelo admin + amostras bíblicas

@@ -69,7 +69,6 @@ export default function BottomNav({ isAdmin = false }: { isAdmin?: boolean }) {
   const { updateAvailable } = useAppUpdate();
 
   const kairoActive = pathname === "/dr-edson" || pathname.startsWith("/dr-edson/");
-  const adminActive = pathname.startsWith("/admin");
 
   const leftTabs = [
     { href: "/home", label: "Início", Icon: IconHome, activeColor: "#c9a227" },
