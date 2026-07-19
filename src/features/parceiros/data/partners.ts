@@ -6,6 +6,8 @@ export interface Partner {
   url: string;
   summary: string[];
   areas: string[];
+  googleReviewUrl?: string;
+  video?: { url: string; thumbnail: string; caption?: string };
   contacts: {
     phones: string[];
     whatsapp: { label: string; url: string };
@@ -26,9 +28,10 @@ export const partners: Partner[] = [
     logo: "/parceiros/edson-barroso.png",
     url: "https://www.dredsonbarroso.com.br/",
     summary: [
-      "O Dr. Edson Barroso, idealizador do SELAH, é psiquiatra pós-graduado em Saúde Mental e Medicina Integrativa, com sólida formação em Saúde Mental Adulto e Infantil, TDAH, Transtorno do Espectro Autista (TEA), Burnout e uso medicinal de Canabidiol. Sua abordagem une ciência e sensibilidade para investigar as raízes do sofrimento psíquico — não só tratar o sintoma que aparece, mas entender o que, no corpo e na história de vida de cada pessoa, sustenta aquela dor.",
-      "Cuidar da mente é também cuidar da vida espiritual: é difícil orar, servir, amar e sonhar quando o corpo e a mente vivem em exaustão silenciosa. Por isso o acompanhamento vai além da consulta — é um verdadeiro plano de medicina de alta performance, com exames laboratoriais que avaliam vitaminas, hormônios, minerais, colesterol e glicemia, porque corpo e mente devem caminhar em harmonia para que exista saúde real.",
-      "Muitos adultos carregam décadas de TDAH ou traços de autismo nunca diagnosticados — e passaram a vida sendo chamados de difíceis, dispersos ou frios, sem nunca saber o motivo real. Casamentos se desgastam e terminam por dores que ninguém sabe nomear. É para essas histórias — as que não cabem numa consulta de 15 minutos — que existe esse cuidado: profundo, ético e humano, para quem finalmente precisa ser ouvido de verdade.",
+      "Existe uma diferença enorme entre tratar o sintoma e tratar a causa. O Dr. Edson Barroso, idealizador do SELAH, é médico psiquiatra pós-graduado em Saúde Mental e Medicina Integrativa, com formação sólida em TDAH, Transtorno do Espectro Autista (TEA), Burnout e uso medicinal de Canabidiol — e construiu sua prática recusando a pergunta rápida e a receita genérica. Antes de qualquer diagnóstico, ele investiga: exames laboratoriais completos avaliando vitaminas, hormônios, minerais, colesterol e glicemia, porque corpo e mente caminham juntos, e não existe saúde mental real sem entender o corpo que a sustenta.",
+      "É esse o princípio da Medicina de Alta Performance que ele pratica: não uma consulta isolada, mas um plano de acompanhamento contínuo — com metas claras, reavaliação constante e ajuste fino de cada detalhe que o seu corpo e a sua mente realmente precisam para funcionar no melhor nível possível, não apenas sobreviver ao dia.",
+      "Há uma dimensão que a medicina tradicional costuma ignorar: a espiritual. É quase impossível orar com profundidade, servir com alegria ou amar com presença quando a mente vive em exaustão silenciosa. Cuidar da saúde mental é também cuidar da capacidade de viver a fé — por isso esse cuidado nasce de dentro do próprio SELAH.",
+      "Muitos adultos passaram a vida inteira sendo chamados de difíceis, dispersos ou frios — sem nunca saber que carregavam TDAH ou traços de autismo nunca diagnosticados. Casamentos se desgastam e terminam por dores que ninguém sabe nomear, silêncios que ninguém consegue explicar. Se essa história parece com a sua, ou com a de alguém que você ama, o primeiro passo é simples: alguém finalmente ouvir de verdade.",
     ],
     areas: [
       "Saúde Mental Adulto",
@@ -36,9 +39,16 @@ export const partners: Partner[] = [
       "TDAH",
       "TEA (Autismo)",
       "Burnout",
+      "Medicina de Alta Performance",
       "Canabidiol Medicinal",
       "Compulsão Alimentar",
     ],
+    googleReviewUrl: "https://g.page/r/CQjM3735Wd8QEAE/review",
+    video: {
+      url: "https://www.instagram.com/reel/DXC8GN-kYOb/",
+      thumbnail: "/parceiros/edson-barroso-reel-thumb.jpg",
+      caption: "O vídeo que mais viralizou — mais de 50 mil curtidas",
+    },
     contacts: {
       phones: ["(16) 99312-0938"],
       whatsapp: { label: "Agendar Consulta no WhatsApp", url: "https://wa.me/5516993120938" },

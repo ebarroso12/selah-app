@@ -4,6 +4,7 @@ import Sidebar from "@/shared/components/layout/Sidebar";
 import BottomNav from "@/shared/components/layout/BottomNav";
 import SessionTracker from "@/shared/components/layout/SessionTracker";
 import { FirstVisitRedirect } from "@/shared/components/layout/FirstVisitRedirect";
+import { UpdateBanner } from "@/shared/components/layout/UpdateBanner";
 
 export default async function AppLayout({
   children,
@@ -38,6 +39,9 @@ export default async function AppLayout({
 
       {/* Rastreamento de sessão — atualiza last_seen_at e user_metrics a cada 2 min */}
       <SessionTracker />
+
+      {/* Botão flutuante de atualização — visível para todos, admin incluso */}
+      <UpdateBanner />
 
       {/* Redireciona para /bem-vindo na primeira vez que o usuário acessa */}
       <FirstVisitRedirect />

@@ -5,6 +5,34 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
 ---
 
+## [1.14] — 2026-07-19
+
+### Dr. Edson Barroso: logo, texto, avaliação Google e vídeo + botão flutuante de atualização
+
+#### Perfil do Dr. Edson aprimorado
+- Logo oficial em `public/parceiros/edson-barroso.png` substituído por versão de
+  alta resolução (antes era um recorte de screenshot de baixa qualidade).
+- Texto de apresentação do Dr. Edson totalmente reescrito com mais autoridade e
+  persuasão em `src/features/parceiros/data/partners.ts` (conteúdo real, sem
+  invenção), com nova área de atuação "Medicina de Alta Performance".
+- Novos campos opcionais na interface `Partner`: `googleReviewUrl` (link de
+  avaliação no Google) e `video` (`{ url, thumbnail, caption }`).
+- Nova thumbnail `public/parceiros/edson-barroso-reel-thumb.jpg` do reel mais
+  viral do Instagram.
+
+#### Subpágina do parceiro
+- `src/app/(app)/parceiros/[slug]/page.tsx` renderiza um card de vídeo clicável
+  que abre o reel no Instagram, e um botão "Avaliar no Google" quando os
+  respectivos campos existem.
+
+#### Botão flutuante de atualização
+- Novo componente `src/shared/components/layout/UpdateBanner.tsx` — botão
+  flutuante de atualização visível para todos os usuários (inclusive admin) em
+  qualquer tela.
+- Montado globalmente em `src/app/(app)/layout.tsx`.
+
+---
+
 ## [1.13] — 2026-07-19
 
 ### Dr. Edson Barroso adicionado como parceiro principal
