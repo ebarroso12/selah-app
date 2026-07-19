@@ -5,6 +5,26 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
 ---
 
+## [1.12] — 2026-07-19
+
+### Página "Propósito Social" com primeira causa social
+
+#### Nova página de causas sociais
+- Nova rota `src/app/(app)/proposito-social/page.tsx` apresentando a(s) causa(s)
+  social(is) apoiada(s) pelo app: história da fundadora, missão, urgência,
+  contatos e CTAs de voluntariado.
+- Dados da primeira causa em `src/features/proposito-social/data/causes.ts` —
+  Instituto Princesa Rivânia, ONG de combate à violência doméstica e ao
+  feminicídio (conteúdo real extraído do site oficial, sem invenção).
+- Logo oficial em `public/proposito-social/princesa-rivania.png`.
+
+#### Navegação
+- Novo item "Propósito Social" no menu principal (`Sidebar.tsx`), fora da
+  seção "Casa de Oração".
+- Novo item "Propósito Social" na grade do menu mobile (`MenuModal.tsx`).
+
+---
+
 ## [1.11] — 2026-07-19
 
 ### Página de Parceiros reestruturada + segundo parceiro
